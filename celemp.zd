@@ -1,0 +1,3020 @@
+% Documentation for Celestial Empire 
+% (c) 1992
+% $Id: celemp.zd,v 1.13 1993/11/02 03:19:24 dwagon Exp $
+% $Header: /nelstaff/edp/dwagon/rfs/RCS/celemp.zd,v 1.13 1993/11/02 03:19:24 dwagon Exp $
+% $Log: celemp.zd,v $
+% Revision 1.13  1993/11/02  03:19:24  dwagon
+% Updated the example turn sheet to account for recent and not so recent
+% changes.
+% Added new changes to the recent additions list
+%
+% Revision 1.12  1993/11/02  02:36:55  dwagon
+% Changed table to show new ship types
+%
+% Revision 1.11  1993/10/20  03:15:24  dwagon
+% Added variable turn length command, and the turn winning condition
+%
+% Revision 1.10  1993/10/11  10:11:59  dwagon
+% Detailed new restricted Earth ore selling behaviour
+%
+% Revision 1.9  1993/09/17  07:29:00  dwagon
+% Planets start of named.
+%
+% Revision 1.8  1993/09/17  05:45:08  dwagon
+% Fixed up some typos, added new features since
+% the previous version. Results of game 15
+%
+% Revision 1.7  1993/07/26  06:08:09  dwagon
+% Added ability to have comments on command lines
+%
+% Revision 1.6  1993/06/16  08:51:37  dwagon
+% Described Earth retaliation
+%
+% Revision 1.5  1993/05/24  04:49:15  dwagon
+% Fixed up some typos and grammatical errors.
+% Added income as a possible winning condition.
+%
+% Revision 1.4  1993/05/21  01:06:20  dwagon
+% Added new changed list, fixed up some typos etc.
+%
+% Revision 1.3  1993/05/20  03:38:45  dwagon
+% Added version number to footer of page using headerfooter
+%
+% Revision 1.2  1993/05/19  03:59:04  dwagon
+% Changed graf.tex into inline code
+% Changed turn sheet example to reflect new scaling of shields and PDUs
+% Add the winning results for game 10, 12 and 13
+% Put details of shield and PDU scaling in, including graphs
+% Changed prelude to roman page numbers
+%
+% Revision 1.1  1993/05/19  03:07:59  dwagon
+% Initial revision
+%
+%
+% Old header and log
+%
+% Header: /nelstaff/edp/dwagon/rfs/RCS/celemp.zd,v 1.1 1993/05/19 03:07:59 dwagon Exp dwagon 
+% Log: celemp.zd,v 
+% Revision 1.1  1993/05/19  03:07:59  dwagon
+% Initial revision
+%
+% Revision 1.53  1993/05/13  02:31:06  dwagon
+% Made research teleporting ship more specific, allowing ships to start from
+% enemy controlled space
+%
+% Revision 1.52  1993/04/25  06:31:47  dwagon
+% Adjusted some research orders.
+%
+% Revision 1.51  1992/12/14  03:14:06  dwagon
+% Added monopoly player to strategy section
+%
+% Revision 1.50  1992/12/01  06:14:25  dwagon
+% Updated game 14 details, fixed type in ore attack. Clarified teleporting
+% ship by research planets to prevent sneak attacks.
+%
+% Revision 1.49  1992/12/01  01:58:22  dwagon
+% Added game #14 victory and fixed minor wording problem with ore attacks.
+%
+% Revision 1.48  1992/11/25  00:10:44  dwagon
+% Clarified research teleport message
+%
+% Revision 1.47  1992/11/17  06:31:46  dwagon
+% Fixed bug, jase pointed out in the transfer dox. Had a `P' instead of `D'
+%
+% Revision 1.46  1992/11/09  03:26:45  dwagon
+% Added dox for attacking ore
+%
+% Revision 1.45  1992/09/23  06:01:58  dwagon
+% Expanded research unit conversion details
+%
+% Revision 1.44  1992/09/16  14:03:59  dwagon
+% Initial RCS'd version
+%
+
+\documentstyle[multicol,headerfooter,a4]{article}
+\newlength{\sepspace}
+\setlength{\sepspace}{2em}
+%\addtolength{\textheight}{5cm}
+%\addtolength{\textwidth}{3.6cm}
+%\addtolength{\oddsidemargin}{-2cm}
+%\addtolength{\topmargin}{-2cm}
+\hyphenation{space-mine space-mines hyper-drive hyper-drives}
+\newcommand{\ie}{{\em i.e. \/}}
+\newcommand{\smiley}{$\ddot{\smile}$}
+\pagefooter{\verb$Id: celemp.zd,v 1.13 1993/11/02 03:19:24 dwagon Exp $}{}{\thepage}
+
+\newenvironment{zdchunk}{\nopagebreak[3]}{}
+
+\begin{document}
+\title{CELESTIAL EMPIRE}
+\author{Dougal Scott\\Email: Dougal.Scott@FCIT.monash.edu.au}
+\date{\today}
+\maketitle
+\thispagestyle{empty}
+\newpage
+\pagenumbering{roman}
+
+\tableofcontents
+\newpage
+\listoftables
+\listoffigures
+
+\newpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{General Overview\label{genover}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Celestial Empire is a play-by-email game based on Return From
+Sirius, a play-by-snail-mail game by The Missing Tiger.  Using the Unix
+mail system, the game sends out turn sheets to  the  players,  who
+then mail all their actions back to the game  within  a  certain
+number of days.
+
+     Celestial Empire is a long term game for 9 players at a time.
+Each  of  the  players start off by owning one  planet, their  home
+world, and five small spaceships.
+As the game progresses each player will build new ships and claim
+more planets using these ships.
+By about the third
+turn,  players  should be meeting their neighbors in the  galaxy,
+and here diplomacy takes over,  in the form of trade or war. There
+are  a  variety of winning conditions determined before  the  game
+starts. These include:
+
+\begin{itemize}
+\item Scoring 30,000 pts or greater.
+\item Taking $\frac{1}{4}$ of the galaxy (64 planets).
+\item Owning Earth for a full turn.
+\item Having an income of 2000.
+\item Having more than 2500 Earth Credits.
+\end{itemize}
+
+Another sort of winning condition is having the greatest of some commodity
+(ships, credits, score, income etc.) at the end of a specified number of
+turns. The number of turns can be either fixed for the whole game, or be
+dynamically changed by the players as the game progresses.
+
+     Planets  are the main source of income for  players.  Planets
+can  have 10 different sorts of mines (types 0--9) and  their  respective
+ore  types;  the more mines the more ore is produced  every  turn.
+Some  planets will also have industry which enables the player  to
+build  various  items  on that  planet from the ore.
+Planetary  Defense  Units
+(PDUs)  can  be built or unloaded onto a planet to make  it  more
+difficult  for other players to take it  over. Connecting  planets
+together are planetary links, down which ships travel; all planets
+have  at least one and many have up to four.  The link operates  in
+both directions,  if you can go from planet A to B you can also go
+from planet B to A.
+
+     Ships are the means of expansion for player's  empires.  Ships
+consist  of various units.  There is the main hull and  hyperdrive
+unit,  which cannot be destroyed. To build a ship you build one of
+these.  Attached  to  the hull/hyperdrive unit are  other smaller
+units:  fighter,  cargo,  tractor,  and shield units, which can be
+built  on  after  the ship has been  built.  Fighter  units
+allow you to attack other ships or planets.  Cargo units
+allow  you to carry ores,  mines etc. from one planet  to  another.
+Tractor units allow you to lock onto another ship and take it with
+you when your ship jumps down a link.  Finally shield units protect
+the ship from other player's attacks.
+
+Commands are mailed, one per line, to the address listed at the top of
+the turn sheet, see section~\ref{exheader} for an example.  Comments
+can be put in the turn sheet, if the first character is a semi-colon
+`;' then the line will be ignored, and all characters after a `;' on a
+command line will also be ignored. Blank lines are also permitted.  If
+everyone gets their turns in early, the game turn will be run early,
+however if some people get their turns in late, the game will not be
+delayed for them.  If you mail off your commands, and then realize you
+have made a massive blunder, mail a correct list of commands in (not
+just the different ones) to the mail address and ask that they be run
+instead. If you get your commands in in time, they will be fixed.
+
+If you are interested in the workings of Celestial Empire, the source is
+available by ftp from {\tt yoyo.\-cc.\-monash.\-edu.\-au} in the
+{\tt /pub/celemp} directory. The latest version of the documentation is also
+in this directory.
+
+As well there is a low volume mailing list that discusses various
+new aspects of the game. To get on the mailing list, mail {\tt
+listserv@yoyo.\-cc.\-monash.\-edu.\-au} and put the line
+``{\tt SUB celemp-list}'' in the body of the message.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{multicols}{2}[\section{Turn Sequence\label{turnseq}}]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{enumerate}
+\item Research Planet orders\footnote{Every 4 turns starting on turn 10.}
+\item Game length adjustment\footnote{Only for games where this is
+applicable.}
+\item Naming of ships and planets
+\item Gifting
+\item Changing Formal Alliances
+\begin{enumerate}
+        \item{Increasing Alliances}
+        \item{Decreasing Alliances}
+\end{enumerate}
+\item Unloading spaceships
+\begin{enumerate}
+        \item{Unloading Industry}
+        \item{Unloading Spacemines}
+        \item{Unloading PDUs}
+        \item{Unloading Ore}
+        \item{Unloading Mines}
+        \item{Global Unloading}
+\end{enumerate}
+\item Loading spaceships
+\begin{enumerate}
+        \item{Loading Industry}
+        \item{Loading Spacemines}
+        \item{Loading PDUs}
+        \item{Loading Ore}
+        \item{Loading Mines}
+        \item{Global Loading}
+\end{enumerate}
+\item Selling or buying ore on Earth
+\begin{enumerate}
+        \item{Global Ore Selling}
+        \item{Selling Ore}
+        \item{Buying Ore}
+\end{enumerate}
+\item Contracting industry on Earth\footnote{These are processed in order from
+the highest bid to the lowest bid.}
+\begin{enumerate}
+        \item{Contracting for Cargo Units}
+        \item{Contracting for Fighter Units}
+        \item{Contracting for Tractor Units}
+        \item{Contracting for Shield Units}
+\end{enumerate}
+\item Deploying and undeploying Spacemines
+\begin{enumerate}
+        \item{Deploying from a Planet}
+        \item{Deploying from a Ship}
+        \item{Retrieving from orbit}
+\end{enumerate}
+\item Battle
+\begin{enumerate}
+        \item{PDUs attacking Ships}
+        \item{PDUs attacking Spacemines}
+        \item{Ships attacking Ships}
+        \item{Ships attacking PDUs}
+        \item{Ships attacking Industry}
+        \item{Ships attacking Mines}
+        \item{Ships attacking Ore}
+        \item{Ships attacking Spacemines}
+        \item{Earth attacking enemy ships}
+        \item{Damage Resolution}
+        \item{Ships engaging tractor beams}
+\end{enumerate}
+\item Tending Ships
+\begin{enumerate}
+    \item Tending Industry
+    \item Tending Spacemines
+    \item Tending PDUs
+    \item Tending Ore
+    \item Tending Mines
+    \item Global Tending
+\end{enumerate}
+\item Removing Units from Ships
+\begin{enumerate}
+    \item{Unbuild Cargo units}
+    \item{Unbuild Fighter units}
+    \item{Unbuild Tractor units}
+    \item{Unbuild Shield units}
+\end{enumerate}
+\item Ore Transmutation
+\item Building on planets
+\begin{enumerate}
+        \item{Building Industry}
+        \item{Building Spacemines}
+        \item{Building PDUs}
+        \item{Building Mines}
+        \item{Building Hyperdrives}
+\end{enumerate}
+\item Building on ships
+\begin{enumerate}
+        \item{Building Cargo Units}
+        \item{Building Fighter Units}
+        \item{Building Tractor Units}
+        \item{Building Shield Units}
+\end{enumerate}
+\item Movement\footnote{If your ship hasn't initiated battle.}
+\begin{enumerate}
+        \item{Jumping 1 link}
+        \item{Jumping 2 link}
+        \item{Jumping 3 link}
+        \item{Jumping 4 link}
+        \item{Jumping 5 link}
+\end{enumerate}
+\item Scanning
+\item Standing Orders entered\footnote{Note the standing orders are executed in 
+the place normal orders of the same type are, next turn.}
+\item Spacemine attack resolution (automatic)
+\item Mining (automatic)
+\item Damage Resolution (automatic)
+\item Change of Ownership (automatic)
+\item Score adjustment (automatic)
+\end{enumerate}
+\end{multicols}
+
+The sequence of execution is important. For example if you tell a planet
+to build 10 Spacemines, and it only has enough industry to build 8, then
+any other orders for building, like PDUs will be ignored as all the
+industry has already been used.
+
+     The events that are labeled automatic are automatically performed by the
+computer and no  orders  concerning
+them need by given.  All of the actions can be given for the  same
+ship except for battle and movement. If your ship initiates combat
+it then cannot move by itself, however it can still be towed by another
+ship with enough tractor beams.
+
+     All  orders concerning ships (except the  initial  hyperdrive
+construction  order)  begin with an `S' followed by the  number  of
+the ship and then the order. Orders concerning planets should just
+have the planet number first, no `P' should be placed in front. There
+should be no spaces in the order itself,  except possibly in a name.
+Case does not matter when giving orders (except when naming things).
+
+     Note  that the name  of the ship or planet is  for the player
+use only,  all instructions to the computer should list the number,
+NOT the name.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Naming\label{naming}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A ship or planet that belongs to you may be named whatever you wish.
+The only restriction is that the name should
+be less than 24 characters long, including spaces. \ie up to 23 characters
+long. The Game Administrator will change any that are deemed unfit.
+Planets are given an initial name, but these may be changed in the usual
+manner.
+
+Before the game starts, the players mail the Game Administrator with
+the name of their empire. These can be up to 9 characters long. If an
+empire changes hands sometime during the game, if for example a player
+couldn't continue and gave control to another person, then the
+Administrator can change the empire's name.
+
+\subsection{Naming Ships} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}={\em shipname} \hspace{\sepspace} \= Call ship {\em xxx} {\em shipname}\\
+
+Examples:\\
+\> \verb+S123=BLACKGUARD+ \> Call ship 123 BLACKGUARD\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Naming Planets}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= {\em xxx}={\em planetname} \hspace{\sepspace} \= Call planet {\em xxx} {\em planetname}\\
+
+Examples:\\
+\> \verb+234=ARAKOS I+ \> Call planet 234 ARAKOS I\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Gifts\label{gifts}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Diplomacy is very important in Celestial Empire,  you  cannot
+survive  if  everyone  hates  you,   unless  of  course  they  are
+incompetent.  To assist in diplomacy,  you can bribe players  with
+gifts of ore, mines, industry, PDUs, ships or even planets.
+Money is not able to be gifted directly (Indirect methods include gifting
+ships full of ore around Earth).
+
+To give ores, mines, industry or PDUs just unload them on the other player's
+planet. To give ships and planets, use the commands below.
+
+\subsection{Gifting Ships}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+You cannot give away more than two ships in a single turn, otherwise your
+merchant families will have you assassinated.
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}G{\em playername} \hspace{\sepspace} \= Give ship {\em xxx} to {\em playername}\\
+
+Examples:\\
+\> \verb+S244GMASTER+ \> Give ship 244 to MASTER\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Gifting Planets}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+You cannot gift away your home planet, your populace will think you are a 
+traitor and imprison you.
+Also you cannot give away more than three planets in a single turn, otherwise
+your populace will think you are trying to destroy their empire.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= {\em xxx}G{\em playername} \hspace{\sepspace} \= Give planet {\em xxx} to {\em playername}\\
+
+Examples:\\
+\> \verb+345GWARLORD+ \> Give planet 345 to WARLORD\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Formal Alliances\label{alliances}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Modified 2/5/92 to include new ALLY status
+     Celestial Empire has a four level alliance system, whereby a
+player can rate other players as an ally, friend, neutral or enemy. At the
+beginning  of the game all players are  considered  neutral.  Each
+turn  you are allowed to change your ratings, but you cannot  go
+from  friendly to enemy or from neutral to ally or vice versa in one turn
+you must first pass through neutral. \ie you can only change your alliance
+level with a player one level per turn.
+
+% Added 2/5/92
+    If you declare a player as an ally, they can do almost anything that you
+can. They can jump through your systems without getting your PDUs firing on 
+them. They can load ore and pdus from your planets and even mines and industry
+from your home planet. You cannot fire onto an allies planets or ships, except
+at spacemines. You can build units onto an allies ships. An ally can
+use your research planets, if you do not use it. If a player wins, all his 
+allies are considered joint winners. Having an allies ship in orbit above your
+planet will not change ownership if it would otherwise. To sum all this up, only
+declare a player an ally if you trust him with your empires life, and only if
+they declare you an ally at the same time.
+
+     If you declare a player as a friend,  your PDUs treat  their
+ships as they would yours.  That is,  you cannot order your PDU to
+fire  at  his ships and they will not automatically  fire  at  his
+armed ships as they jump through your planets.  This means that he
+can move his ships rapidly through your empire to help participate
+in  a battle.  Your ships will also be unable to fire upon his ships.
+(It also means that he can quickly reach your  home
+planet to stab you in the back; but then what are friends for?)
+
+     Declaring a player neutral returns the PDU to  automatic,  so
+that  they will attack the fighter units on any armed ships  making
+multiple jumps above your planets.
+
+     Declaring  a  player an enemy retains the  automatic  defense
+function,  but  also allows you to order your PDU to fire  at  his
+stationary ships, whether they are armed or not.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= +playername \hspace{\sepspace} \= Become more friendly with playername\\
+\> -playername \> Become more hostile with playername\\
+
+Examples:\\
+\> \verb@+Assassin@ \> Become more friendly with Assassin\\
+\> \verb+-PsiNinja+ \> Become more hostile with PsiNinja\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Unloading\label{unloading}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     The following objects may be carried on ships, in their cargo
+units,  these  can  be unloaded onto any  planet:  ore  (including
+fuel),  PDUs,  industry,  mines and spacemines.
+
+\subsection{Unloading Mines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Mines are the largest item that can be carried on ships, they each take 20
+cargo units to carry. Mines can only be loaded from the player's home planet,
+but can be unloaded upon any planet. Mines can be unloaded as a different type
+than what they were loaded as. The only restriction is that to unload a mine onto
+a planet, there has to be already a mine of that type there. You can even unload
+them on another players planet. Mine type changing is especially
+useful on your home planet, where you get a large cargo ship, load up on mines
+that you have a surplus of and unload them as a type that you are short of,
+continually adjusting your production to meet your needs.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}U{\em yy}R{\em z} \hspace{\sepspace} \= Unload {\em yy} of ore type {\em z} from ship {\em xxx}\kill
+\> S{\em xxx}U{\em yy}M{\em z} \> Unload {\em yy} mines of type {\em z} from ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S276U4M3+ \> Unload 4 mines of type 3 from ship 276\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Unloading PDUs}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Each PDU takes two cargo units to carry. They can be unloaded on any planet,
+even ones that you do not own, but they defend whatever planet they are unloaded
+on, even against the player who unloaded them.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}U{\em yy}R{\em z} \hspace{\sepspace} \= Unload {\em yy} of ore type {\em z} from ship {\em xxx}\kill
+\> S{\em xxx}U{\em yy}D \> Unload {\em yy} PDUs from ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S234U3D+ \> Unload 3 PDUs from ship 234\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Unloading Industry}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Each industry takes 10 cargo units to carry. They can be unloaded on any planet.
+However they can only be loaded from the player's home planet.
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}U{\em yy}R{\em z} \hspace{\sepspace} \= Unload {\em yy} of ore type {\em z} from ship {\em xxx}\kill
+\> S{\em xxx}U{\em yy}I \> Unload {\em yy} industry from ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S286U2I+ \> Unload 2 industry from ship 286\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Unloading Ore}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ore of a specific type can be unloaded onto any planet, irrespective of what ore
+types there are already present. Each unit of ore takes 1 cargo unit to carry.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}U{\em yy}R{\em z} \hspace{\sepspace} \= Unload {\em yy} of ore type {\em z} from ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S132U42R2+ \> Unload 42 of ore type 2 from ship 132\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Unloading Spacemines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Spacemines take up one cargo unit each. They can be unloaded on any planet,
+including those belonging to other players. However when unloaded they go to
+the planetary stockpile, they are not deployed around the planet. See
+Section~\ref{spacemines} for details on deploying spacemines from ships.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}U{\em yy}R{\em z} \hspace{\sepspace} \= Unload {\em yy} of ore type {\em z} from ship {\em xxx}\kill
+\> S{\em xxx}U{\em yy}S \> Unload {\em yy} spacemines from ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S322U23S+ \> Unload 23 spacemines from ship 322\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Global Unloading}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+There is a global unload command to facilitate unloading of large amounts
+of ore onto a single planet. This command unloads ALL ore except type 0
+onto the planet below. If you want to unload ore type 0 you will have to
+give a specific order to do so. If you want to unload all except ore type
+4 for example, you can do a global unload, and then load the ore 4 back
+onto the ship (as long as you own the planet), as loading occurs after
+unloading.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}U{\em yy}R{\em z} \hspace{\sepspace} \= Unload {\em yy} of ore type {\em z} from ship {\em xxx}\kill
+\> S{\em xxx}U \> Unload all ore except fuel (ore 0) from ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S309U+ \> Unload all ore except type 0 from ship 309\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Loading\label{loading}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Loading  can occur only if the player owns the  planet.
+The ship on which you are loading the item must be large enough to
+carry it. Table~\ref{cargo} shows the size each item takes up in a
+cargo hold.
+
+Loading occurs after unloading, so cargo can be transferred between
+ships if the player owns the planet they are on at the start of the turn.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{lc}
+    Item         &            Number of cargo units needed\\\hline
+     1 unit of ore or fuel  &      1\\
+     1 spacemine            &      1\\
+     1 PDU                  &      2\\
+     1 industry             &      10\\
+     1 mine                 &      20\\
+\end{tabular}
+\end{center}
+\caption{Number of cargo units to carry items\label{cargo}}
+\end{table}
+
+\subsection{Loading Mines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Mines can only be loaded from the players home planet. They take up 20 cargo
+units each. They can be loaded as any type that is present
+and unloaded as any type (as long as that type exists
+on the planet being unloaded onto).
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}L{\em yy}R{\em z} \hspace{\sepspace} \= Load {\em yy} of ore type {\em z} onto ship {\em xxx}\kill
+\> S{\em xxx}L{\em yy}M{\em z} \> Load {\em yy} mines of type {\em z} onto ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S306L10M4+ \> Load 10 mine type 4's onto ship 306\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Loading PDUs}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Each PDU takes up two cargo units. They can be loaded from any planet that is
+owned by the player. More PDUs cannot be loaded from the players home planet
+than have been built since the start of the game. \ie You can't remove PDUs
+that were there at the start of the game. The population insist on retaining
+their level of protection. If the PDUs are reduced, due to enemy attacks,
+to below
+the initial level (100 PDUs) they will have to built to the initial level
+again before you can load any.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}L{\em yy}R{\em z} \hspace{\sepspace} \= Load {\em yy} of ore type {\em z} onto ship {\em xxx}\kill
+\> S{\em xxx}L{\em yy}D \> Load {\em yy} PDUs onto ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S243L34D+ \> Load 34 PDUs onto ship 243\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Loading Industry}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+You can only load industry from your home planet, and like PDUs you cannot load
+industry that was there at the start of the game. The planetary population
+insist on retaining their standard of living. Like PDUs if the number of
+industry is reduced below the initial amount (60 industry) they will have to
+be built above that level before they can get loaded again. Each industry takes
+10 cargo units to carry.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}L{\em yy}R{\em z} \hspace{\sepspace} \= Load {\em yy} of ore type {\em z} onto ship {\em xxx}\kill
+\> S{\em xxx}L{\em yy}I \> Load {\em yy} industry onto ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S345L3I+ \> Load 3 industry onto ship 345\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Loading Ore}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ore is perhaps the most common thing to carry, usually bringing ore from
+the mines of your
+outer planets into your inner planets for processing. Each ore takes up one
+cargo unit. They can be loaded from any planet that the player owns. See
+Section~\ref{earth} for details on loading ore from Earth.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}L{\em yy}R{\em z} \hspace{\sepspace} \= Load {\em yy} of ore type {\em z} onto ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S123L120R2+ \> Load 120 of ore type 2 onto ship 123\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Loading Spacemines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Spacemines  can be loaded only from the  planetary  stockpile,  to
+load  spacemines from active duty,  they must be undeployed  using
+the Retrieve command, detailed in Section~\ref{spacemines} on spacemines.
+Each spacemine takes 1 cargo unit to carry.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}L{\em yy}R{\em z} \hspace{\sepspace} \= Load {\em yy} of ore type {\em z} onto ship {\em xxx}\kill
+\> S{\em xxx}L{\em yy}S \> Load {\em yy} spacemines onto ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S234L34S+ \> Load 34 spacemines onto ship 234\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Global Loading}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is like the global unload command. It
+loads all the ore it can beginning with type 1 and working its way up to type
+9. If the ship runs out of cargo units the loading will stop. Note that
+fuel, type 0 ore, is not loaded with this command and must be loaded
+separately. Global loading occurs after all other loading.
+
+An option to global loading is to specify which ore types have priority in the
+loading. After all the ores specified in the priority list have been loaded
+the other ore types are loaded as before. PDUs and spacemines may also be
+loaded with this option. To use this option, include after the normal global
+load command the ore numbers that you wish to give priority to in the order
+you wish them to be loaded in parenthesis `(' and `)'. Specify `D' or `P' for
+PDUs and `S' for spacemines.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}L{\em yy}R{\em z} \hspace{\sepspace} \= Load {\em yy} of ore type {\em z} onto ship {\em xxx}\kill
+\> S{\em xxx}L \> Load ore, starting from type 1 to type 9 onto ship {\em xxx}\\
+\> S{\em xxx}L({\em spec}) \> Load ore, in the order specified by {\em spec}
+and then from type 1 to type 9 onto ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S276L+ \> Load ore from 1 to 9 onto ship 276\\
+\> \verb+S276L(78D)+ \> Load all ore 7, then all ore 8, then PDUs and then load ore from 1 to 9 onto ship 276\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Trading and Earth Contracting\label{earth}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Earth is the center of the Celestial Empire galaxy, and is four
+jumps away by the shortest route from every players home planet.
+Earth is different from the other
+planets in that it is neutral, but players may still make use of its
+resources in various ways. Any player that successfully takes over Earth and
+holds it for a turn
+wins the game. However be warned Earth takes an active interest in its
+defense. 
+In order to encourage trade, Earth will remove 10\% of spacemines orbiting it
+every turn during the planetary building phase.
+There are a variety of options available to a player while
+his or her ships orbit Earth:
+
+\begin{itemize}
+\item  Use of Earth Industry.
+\item  Purchase of needed types of ore.
+\item  Selling of a surplus of ore for credits.
+\end{itemize}
+
+    Note that no player may fire while on Earth, or at ships on Earth,
+until turn 15 when
+this  restriction is lifted;  the order will be ignored until that
+turn.  Ships destroyed while over Earth, \ie stripped of
+all units except the base hyperdrive unit, become neutral, but can
+be towed using tractor beams to a friendly planet for refitting.
+Units cannot be built onto an empty ship over Earth,
+because when that ship is over Earth, it is owned by Earth.
+
+\subsection{Earth Contracting\label{contract}}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    A ship may use the industry on Earth  by offering to pay
+for it. The highest bidder that turn then uses as much industry as
+they want to,  but the  required ore  must be  in the ship's  cargo
+holds to succeed, although it can be bought from Earth in the same
+turn. The ore must be in the ship being built on, not any other ship.
+This is the  opposite to normal  planet operations where the
+ore  must  be  on the  planet not  the  ship.   If the bid  is not
+successful then nothing will be built, but no credits will be lost.
+There is a minimum bid for Earth industry depending on the type of unit begin
+built. This is shown at the top of the turn sheet. Any bid below the specified
+amount will be ignored.  The bid is on a per industry basis, not a lump sum.
+
+Only fighter,  cargo,  tractor and  shield units  may be built  on
+Earth,  as  these  are built  onto  the ship,  not on the  planet,
+everything else built would be owned  by Earth,  so such  orders
+are not valid. Although you can contract for Earth industry there is
+still a limit on how much industry you can use, that being the number
+of industries that Earth actually has. 
+If there is a high demand for Earth industry then more industries will be
+automatically built to cope with the demand over time.
+To pay for the use of Earth industry, you use Earth Credits, which are 
+obtained by selling ore to Earth. If you do not have any of these, your
+score will be deducted instead at a rate specified at the top of the turn sheet.
+For example if the multiplier rate is 3 it takes 3 points of score to equal one
+earth credit.
+
+If Earth has been damaged, it reserves some of its industry and ore for its
+defense, so even though there might be 50 industry left on Earth, it might
+not have all 50 available for players to use.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}B{\em yy}C{\em oz} \hspace{\sepspace} \= Bid {\em zz} credits/industry used in the building of {\em yy} cargo units onto ship {\em xxx}.\\
+\> S{\em xxx}B{\em yy}F{\em zz} \> Same as above except for fighter units not cargo units.\\
+\> S{\em xxx}B{\em yy}T{\em zz} \> Same as above except for tractor units not cargo units.\\
+\> S{\em xxx}B{\em yy}S{\em zz} \> Same as above except for shield units not cargo units.\\
+
+Examples: \\
+\> \verb+S178B43F45+ \> Bid 45/industry to build 43 fighter units  on ship 178\\
+\> \verb+S179B23C10+ \> Bid 10/industry to build 23 cargo  units  on ship 179\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Buying Ore}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     If  your  empire is  short of a certain  type of  ore that is
+needed,  then you can  purchase ore from Earth at a price per unit
+that is  stated at the top of  the turn sheet.  This ore is loaded
+directly into the cargo units of the ship that does the purchasing.
+Note that you can  buy ore from the  Earth market  and build units
+onto the  ship using  Earth industry in the  same turn,  this is a
+very fast method of building up the size of cargo ships,  with the
+number of cargo units almost doubling every turn,  other units are
+not nearly as efficiently built using the resources of Earth. There are
+limits to the amount of ore that can be bought from Earth, this is
+shown in the turn sheet in the Earth details section under {\tt Amount}.
+However if there is a demand for a certain type of ore, more mines of that
+type will be be automatically built over time. Again the unit of currency in
+the trade is the Earth credit.
+
+    The ship must be over Earth to make use of this facility.
+% Added 26/4/92
+If Earth has been under attack, and has less than a certain number of PDUs there
+could be a limited amount of some ores, as Earth reserves various ore types for
+its defense.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}P{\em yy}R{\em z} \hspace{\sepspace} \= Purchase {\em yy} units  of ore type {\em z} and load them onto ship {\em xxx} \\
+
+Examples:\\
+\> \verb+S123P12R1+ \> Buy and load 12 units of ore 1 onto ship 123\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Selling Ore}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      If you have a surplus of a certain type of ore  or you need
+Earth credits then you can sell  the surplus ore to the Earth
+market.  The ship,  which needs to be  over Earth to sell ore must
+have the ore in its  cargo hold to sell it to Earth.  The price is
+$\frac{2}{3}$ that of the selling price listed on the turn sheet.
+There are a number of different behaviours to selling ore to Earth.
+\begin{itemize}
+\item Earth will buy all ore that is sold to it. This will be indicated on the
+turnsheet near the ore prices by ``Unlimited Selling''.
+\item There are limits on the amount you can sell to Earth. Earth will
+not buy more ore than it thinks it needs. Currently Earth thinks it needs
+about 100 of each type of ore. So if Earth has 30 of ore type 0, it will not
+buy more than 70 of that type of ore. This will be indicated on the turnsheet
+near the ore prices by ``Limited Selling''.
+\end{itemize}
+This is the only way a player can get Earth credits.
+
+There is also a global sell command which sells all ore that a ship has
+except ore type 0.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}X{\em yy}R{\em z} \= Sell {\em yy} units of ore type {\em z} from ship {\em xxx}\\
+\> S{\em xxx}X \> Sell all ore except 0 from ship {\em xxx}\\
+
+Examples:\\
+\> \verb+S123X23R2+ \> Sell 23 units of ore type 2 from ship 123\\
+\> \verb+S123X+ \> Sell all ore from ship 123\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Spacemines\label{spacemines}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+     Spacemines are semi-intelligent orbiting boxes of explosives
+that home in on any ship that enters the system.  However they are
+only semi-intelligent and attack all ships,  whether friendly or
+not.  Spacemines are less effective than PDUs,  but are easier  to
+build, and can also be used in ways that PDUs can't be.
+
+     Spacemines exist in two modes:  inactive or active.  In their
+inactive  stage they are stored on the planet,  and are  harmless,
+and  safe from external attack.  Active,  they are  orbiting  the
+planet,  homing  in on any ships that are present in  the  system.
+Spacemines automatically hit any ship that enters the system  that
+they  are  in,  doing half as much damage  as  PDUs  do,  \ie  two
+spacemines  are  needed  to destroy one  ship  unit.
+They do not attack ships that are already in the system, or have just
+been built in the system. Spacemine attacks can destroy cargo units,
+unlike PDU attacks.  10\%  of  all
+spacemines will be destroyed in any attack that they perform (losses are
+rounded up). The spacemines suffer losses immediately when
+they attack. Spacemine attacks are resolved after all
+movement, so a spacemine attack will not prevent a ship from completing
+its jump. They attacks ships in order of jumping, so length 1 jumps will
+be affected before and jump 2 attacks and so forth.
+
+     Spacemines  can  be  loaded  and  unloaded  directly  from  a
+planetary store,  and transported to other systems where they  are
+needed. They can also be deployed (put into active mode) from both
+ships  and planets.  When a planet changes ownership, the planetary
+stockpile is unaffected, and the new owner will inherit all of the
+spacemines there. Note that you do not need to own a planet  to
+deploy  spacemines from a ship into its system (see  section~\ref{strategy}
+on Strategy  and
+Tactics).  However spacemines can only be  undeployed  or
+retrieved (put into inactive mode) by spaceships that have tractor
+beams and cargo units enough to store the spacemines. It takes one
+tractor unit to retrieve each spacemine,  and also one cargo  unit
+to store the mine in.
+
+Spacemines can be deployed on Earth before the attack restriction is lifted
+on turn 15, however every turn that there are spacemines above Earth, 10\% of
+them will be destroyed during the planetary building phase.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}D{\em yy} \hspace{\sepspace} \= Ship {\em xxx} deploy {\em yy} spacemines\\
+\> {\em xxx}D{\em yy} \> Planet {\em xxx} deploy {\em yy} spacemines\\
+\> S{\em xxx}R{\em yy} \>  Ship {\em xxx} retrieve {\em yy} spacemines\\
+
+Examples:\\
+\>   \verb+S123D34+ \>         Ship 123 deploy 34 spacemines\\
+\>   \verb+234D2+    \>        Planet 234 deploy 2 spacemines\\
+\>   \verb+S123R23+   \>       Ship 123 retrieve 23 spacemines\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Battle\label{battle}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+All  battle  is  simultaneous.  A ship may  attack spacemines, mines, industry,
+PDUs or other ships. The ships may attack multiple targets in the same system in
+the same turn, but may only use each fighter unit once per turn. If the number
+of fighter units is not specified in an attack command, all fighter units are
+assumed to be used.
+
+Some targets, like
+mines, take multiple shots to destroy; if not enough shots are received per
+attack
+then no damage is done. For example, it takes 10 shots to destroy a mine.
+If the mine took 9 shots in a turn from a single ship it would not be affected.
+If another ship came and did another 9 shots to it, it would still not be
+destroyed. Fractional damage amounts are not kept from turn to turn. Normal
+maintenance repairs the damage inflicted during the turn. If your ship initiates
+combat, it cannot then jump on its own, however it can still be engaged by
+tractor units from another ship.
+
+\subsection{Shot Calculation}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To calculate the damage your ship will do:
+
+\begin{enumerate}
+\item Calculate the mass of the ship\footnote{
+Where $ecu$ is the number of empty cargo units, $fcu$ is the number of full
+cargo units, $fu$ is the number of fighter units, $tu$ is the number of tractor units, and $su$ is the number of
+shield units.}.
+      \[ Mass=1+(ecu)+1.5*(fcu)+(tu)/2+(su)/2+(fu)/10.\]
+
+For example a ship has 102 fighter units, 20 cargo units,
+10 of which are full, 10 tractor units, and 20 shield units\footnote{
+This is a very powerful and expensive ship, a Super Battleship.}.
+Its mass is:
+\[1+10+1.5*10+10/2+20/2+102/10=51.2\]
+\item Calculate the ratio between the number of fighter units used in the 
+attack and the mass of the ship. In the above example $Ratio=\frac{102}{51.2}\approx 2.0$
+\item Cross reference this number to get shots per fighter  unit
+from Figure~\ref{ratio}. In this example it is around 1.25
+% Added footnote 26/4/92 for those without latex capabilities
+\footnote{For those of you who want the precise details the vertices of the
+graph are at $(0,0)$, $(1,1)$, $(10,3)$ and $(16,3)$.}.
+\item Calculate the number of shots fired by the ship.  Multiply
+the  number  of  shots fired per fighter unit  by  the  number  of
+fighter  units and round down to a whole number.  So  our  example
+ship will have $1.25\times102=127.5$ rounded down to 127 shots.
+\end{enumerate}
+
+\begin{figure}
+\begin{center}
+%# gnuplot
+set terminal latex
+set nokey
+set grid
+set xrange [0:12]
+set xlabel "Ratio of Fighter Units to Mass"
+set ylabel "Shots\\per\\Fighter\\Unit"
+plot (x>10)?2.99:0 + (x<1)?x:0 + (x>1 && x<10)?0.222*x+0.777:0
+%#
+\end{center}
+\caption{Graph of shots/fighter unit vs mass ratio\label{ratio}}
+\end{figure}
+
+\subsection{Ship Design}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The number of shots that a combat ship can apply depends on many factors.
+The mass is one of the most important factors. Shield units are
+useful but they mass a fair bit. Also try and reduce the number of cargo units
+that the ship will have, it needs a few if it is to be mobile.  Tractor units
+are not very useful for battle-ships as they mass too much in the large numbers
+that you need them in, it is better to have a dedicated battleship and a
+cargo vessel that has lots of tractor units.
+One of the skills in Celestial Empire is the ability to design ships
+that are useful in a wide range of areas, and have little or no weakness.
+
+For a cargo ship mass does not matter, they are going to mass heaps and
+have very low shot ratios if you bother putting fighter units on them. However
+shield units are very useful for cargo vessels, as the mass does not matter,
+and it allows a heavily laden cargo ship to get past enemy raiders.
+\vspace{3ex}
+
+     There are five types of targets:
+\subsection{Ships}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Ships are unpredictable targets.  You know the type of  ship,
+but you never know exactly how big the target ship is. For details
+on this see the section~\ref{shiptypes} on ship types.
+The targeted ship does not
+lose  the  ability  to  move  unless  the  attack  has   destroyed
+sufficient cargo units to make it impossible to carry the required
+fuel. Each  shield unit will absorb a number of shots depending on the
+proportion of units that are shields, as shown in Figure~\ref{f-shields}%
+\footnote{Vertices are $(0,1)$,$(20,2)$, and $(90,4)$.}.
+If there  are  any
+excess, each shot will destroy a shield unit until there are  none,
+and then destroy fighter units until there are none. If there are
+still any shots left the tractor units start to be destroyed  and
+finally  cargo units are removed, all for one  shot/unit. The
+hyperdrive/hull unit cannot be destroyed. If the ship, after being
+attacked, does not have sufficient cargo units to hold all  its
+cargo, the excess is unloaded onto the  planet, starting with
+% 2/5/92 Added footnote
+mines\footnote{These mines will be randomly distributed amongst the mines
+that exist on the planet below. If there are no mines on that planet, then
+these mines will be destroyed}, industry, PDUs, spacemines, then ore from
+type 9 down to type 0. However spacemines released in this way do not end up
+on the planet like everything else, they end up orbiting the planet,
+\ie they are deployed.
+
+\begin{figure}[hbtp]
+\begin{center}
+%# gnuplot
+set terminal latex
+set nokey
+set grid
+set xrange [0:100]
+set xlabel "Percentage of units that are shields"
+set ylabel "Shots\\absorbed\\per\\unit"
+plot (x>90)?3.99:0 + (x>20 && x<90)?x*0.0286+1.4286:0 + (x<20)?x/20+1:0
+%#
+\end{center}
+\caption{Graph of shots absorbed per shield unit\label{f-shields}}
+\end{figure}
+
+You cannot attack a ship that is owned by a player you consider FRIENDLY.
+However that does not stop them attacking you if you are NEUTRAL or HOSTILE
+in their eyes. Also your ship cannot attack itself, but can attack other
+ships owned by you, for whatever nefarious reasons you may wish to do this.
+
+When you attack a ship you will get a report in your command history of how
+much damage that ship had done to it that turn, and how much of it you did.
+Likewise if your ship is damaged, you will be told how much damage it took, and
+what effect it had.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}AS{\em yyy} \hspace{\sepspace} \= Ship {\em xxx} attack ship {\em yyy} with all fighter units\\
+\> S{\em xxx}A{\em zz}S{\em yyy} \> Ship {\em xxx} attack ship {\em yyy} with {\em zz} fighter units\\
+
+Examples:\\
+\> \verb+S231AS321+ \> Ship 231 attack ship 321\\
+\> \verb+S231A34S321+ \> Ship 231 attack ship 321 with 32 fighter units.
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Planetary Defense Units}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     The  PDUs  on a planet must be removed before  ownership  can
+change,  unless it is gifted away by the owner. This is the normal
+reason for attacking them. PDUs can be ordered to attack ships only
+if the owner of those ships is considered hostile in the formal alliance table.
+
+When a ship that does not belong to the player or to one of their formal
+allies, jumps {\em through} a planet that has PDUs defending it, the PDUs
+will automatically fire upon that ship. A ship that finishes its turn
+on the planet will not be fired upon automatically.
+
+     When attacked, PDUs will fire at each attacking ship. Each PDU
+will destroy units as for ship to ship combat. The number of shots each PDU
+generates is a function of how many PDUs there are on that planet, as shown in
+Figure~\ref{f-pdus}.
+This occurs simultaneously, so the ship will
+attack with its full strength at the same time that the PDUs attack at their
+full strength. However at the end of the turn both will be damaged.
+Each three shots from a ship will destroy one PDU.
+
+When you attack PDUs you will be told in your command history how many you
+destroyed. The player whose planet they were around will also be told how
+many you destroyed.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}AD \hspace{\sepspace} \= Ship {\em xxx} attack PDUs\\
+\> S{\em xxx}A{\em zz}D \> Ship {\em xxx} attack PDUs with {\em zz} fighter units\\
+
+Examples:\\
+\> \verb+S309AD+ \> Ship 309 attack PDUs\\
+\> \verb+S309A2D+ \> Ship 309 attack PDUs with 2 fighter units\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Mines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     To attack a mine the firing ship must specify the mine  type.
+It takes 10 shots to destroy 1 mine. The PDUs on the planet  will
+react as if they had been attacked and will attack the  ship
+at the same time that it attacks the mine. If there are some
+shots  left  after  all  the  mines  of  the  specified  type  are
+destroyed,  stored  ore  of  that type will be  destroyed  at  one
+unit/shot.
+
+When you attack mines you will be told in your command history how many you
+destroyed, as well as how much ore. The player whose planet they were around
+will also be told how many you destroyed.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}AMy \hspace{\sepspace} \= Ship {\em xxx} attack mine type {\em y}\\
+\> S{\em xxx}A{\em zz}My \> Ship {\em xxx} attack mine type {\em y} with {\em zz} fighter units\\
+
+Examples:\\
+\> \verb+S165AM0+ \> Ship 165 attack mine type 0\\
+\> \verb+S165A10M0+ \> Ship 165 attack mine type 0 with 10 fighter units\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Ore}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     To attack ore the firing ship must specify the ore type.
+The PDUs on the planet  will
+react as if they had been attacked and will attack the  ship
+at the same time that it attacks the ore. If there are some
+shots  left  after  all  the  ore  of  the  specified  type  have been
+destroyed,  the shots are wasted. It takes one shot to destroy one unit of
+ore.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}ARy \hspace{\sepspace} \= Ship {\em xxx} attack ore type {\em y}\\
+\> S{\em xxx}A{\em zz}Ry \> Ship {\em xxx} attack ore type {\em y} with {\em zz} fighter units\\
+
+Examples:\\
+\> \verb+S165AM0+ \> Ship 165 attack ore type 0\\
+\> \verb+S165A10M0+ \> Ship 165 attack ore type 0 with 10 fighter units\\
+\end{tabbing}
+\end{zdchunk}
+\subsection{Industry}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     The  same rules apply for industry as for  mines,  except  of
+course there's no need to specify type,  and all excess shots  are
+wasted.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}AI \hspace{\sepspace} \= Ship {\em xxx} attack industry\\
+\> S{\em xxx}A{\em zz}I \> Ship {\em xxx} attack industry with {\em zz} fighter units\\
+
+Examples:\\
+\> \verb+S164AI+ \> Ship 164 attack industry\\
+\> \verb+S164A20I+ \> Ship 164 attack industry with 20 fighter units\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Spacemines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Ships  with  fighter  units can attack  spacemines  that  are
+active around a planet.  Spacemines that are stockpiled cannot  be
+attacked  by  ships,  or  by any other  means.  One  spacemine  is
+destroyed per shot. You will be told how many you destroyed, as will the
+owner of the planet.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}ASM \hspace{\sepspace} \= Ship {\em xxx} attack space mines\\
+\> S{\em xxx}A{\em zz}SM \> Ship {\em xxx} attack space mines with {\em zz} fighter units\\
+Examples:\\
+\> \verb+S123ASM+ \> Ship 123 attack space mines\\
+\> \verb+S123A6SM+ \> Ship 123 attack space mines with 6 fighter units\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Planetary Attacks vs Ships}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     If you  have listed another  player as Hostile on  the formal
+alliances, your PDUs can, if you so direct, fire at his ship, when it
+has stopped over the planet.  This attack form will not work
+if the player who owns the ship is not listed as Hostile. 
+The more PDUs are in the attack the more shots they do per PDU. For the exact
+amount see Figure~\ref{f-pdus}\footnote{The vertices on this graph are
+$(0,1)$,$(20,2)$,$(100,3)$,$(500,4)$.}.  See above for details on
+the power of a single shot. 
+
+\begin{figure}[hbtp]
+\begin{center}
+%# gnuplot
+set terminal latex
+set nokey
+set xlabel "Number of PDUs"
+set ylabel "Shots/\\PDU"
+set grid
+set xrange [0:600]
+set samples 600
+plot (x>500)?3.99:0 + (x>100 && x<500)?2.75+x*0.0025:0 + (x>20 && x<100)?1.75+0.0125*x:0 + (x<20)?1+0.05*x:0
+%#
+\end{center}
+\caption{Shots per PDU\label{f-pdus}}
+\end{figure}
+
+When you attack a ship you will get a report in your command history of how
+much damage that ship had done to it that turn, and how much of it you did.
+Likewise if your ship is damaged, you will be told how much damage it took, and
+what effect it had.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= {\em xxx}AS{\em yyy} \hspace{\sepspace} \= Planet {\em xxx} attack ship {\em yyy}\\
+\> {\em xxx}A{\em zz}S{\em yyy} \> Planet {\em xxx} attack ship {\em yyy} with {\em zz} PDUs\\
+
+Examples:\\
+\> \verb+123AS234+ \> Planet 123 attack ship 234\\
+\> \verb+123A120S234+ \> Planet 123 attack ship 234 with 120 PDUs\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Planetary Attacks vs Spacemines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+If some other player, or even yourself has deployed spacemines around your
+planet, and you want to get rid of them before your ship jumps into the
+system, you can get your PDUs to fire upon the spacemines, destroying one
+spacemine for every PDU. You will be told in your command history how many
+were destroyed.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= {\em xxx}ASM \hspace{\sepspace} \= Planet {\em xxx} attack
+spacemines\\
+\> {\em xxx}A{\em zz}SM \> Planet {\em xxx} attack spacemines with {\em zz} PDUs\\
+
+Examples:\\
+\> \verb+123ASM+ \> Planet 123 attack spacemines\\
+\> \verb+123A20SM+ \> Planet 123 attack spacemines with 20 PDUs\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Earth attacking Enemy Ships}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Once a player has fired upon Earth that player is listed as hostile by
+NEUTRAL. That player will, from then on, be attacked by any neutral planet that
+has PDUs that have not been fired yet. This is after all normal attacks.
+
+Note that this happens even if you do not put a turn in, so if you attack
+Earth be careful.
+
+% Added 6/5/92
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ship Tending\label{tend}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Sometimes you need to move cargo from one ship to another without first
+unloading it on the planet below, usually when you do not own the planet below.
+To do this you give a tend command, telling one ship to transfer cargo into
+another ships cargo hold. Naturally you can only do this to your own ships, or
+those of your allies. At the moment if two ships try to tend to each other with
+the same type of unit (ore, mines, industry, etc.) it is undefined which will
+occur first, so if you have no free space on your ships your order could fail
+due to lack of space.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}T{\em yy}S{\em zzz}R{\em w} \hspace{\sepspace} \= Ship {\em xxx} load {em yy} of ore type {\em y} onto ship {\em zzz}\kill
+\> S{\em xxx}T{\em yy}S{\em zzz}R{\em w} \> Ship {\em xxx} transfer {\em yy} of ore type {\em w} onto ship {\em zzz}\\
+\> S{\em xxx}T{\em yy}S{\em zzz}I \> Ship {\em xxx} tend {\em yy} industry onto ship {\em zzz}\\
+\> S{\em xxx}T{\em yy}S{\em zzz}M \> Ship {\em xxx} transfer {\em yy} mines onto ship {\em zzz}\\
+\> S{\em xxx}T{\em yy}S{\em zzz}D \> Ship {\em xxx} tend {\em yy} PDUs onto ship {\em zzz}\\
+\> S{\em xxx}T{\em yy}S{\em zzz}S \> Ship {\em xxx} tend {\em yy} spacemines onto ship {\em zzz}\\
+\> S{\em xxx}TS{\em zzz} \> Ship {\em xxx} transfer all ore from 1 to 9 onto ship {\em zzz}\\
+
+Examples:\\
+\> \verb+S276T4S123R5+ \> Load 4 ore type 5 onto ship 123 from ship 276\\
+\> \verb+S123T1S276I+ \> Tend 1 industry from ship 123 to ship 276\\
+\> \verb+S134T9S200M+ \> Tend 9 mines from ship 134 to ship 200\\
+\> \verb+S145T120S206D+ \> Transfer 120 PDUs from ship 145 to ship 206\\
+\> \verb+S100T59S270S+ \> Tend 59 spacemines from ship 100 to ship 270\\
+\> \verb+S103TS104+ \> Ship 103 transfer all ore from types 1 to 9 to ship 104\\
+\end{tabbing}
+\end{zdchunk}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Unbuilding\label{unbuilding}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The owner of a ship can remove units from a ship to change the profile of the
+ship, and also to recover the ore used in their construction. It takes the
+same amount of industry to destroy units as it does to create them in the
+first place, however not all the ore is recovered, half of the ore is lost in
+the process, rounded down. The order syntax is shown below, `Z' was chosen
+basically because all the other nice letters had been taken. Just think of
+`Z' for zap.
+
+Only ship units can be unbuilt. Mines, industry, spacemines, PDUs and
+hyperdrives cannot be unbuilt.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{cccc}
+Item & Amount recovered & Types recovered & Industry Needed\\\hline
+cargo unit            &   $\frac{1}{2}$    &        1      &       1 \\
+fighter unit          &   $\frac{1}{2}$     &        2,3    &       2\\
+tractor unit          &  1     &        7      &       2\\
+shield unit           &  $\frac{1}{2}$      &        5,6    &       2\\
+\end{tabular}
+\end{center}
+\caption{Unbuilding requirements\label{unbuild}}
+\end{table}
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}Z{\em yy}C \hspace{\sepspace} \= Ship {\em xxx} unbuild {\em yy} cargo units\\
+\> S{\em xxx}Z{\em yy}F \> Ship {\em xxx} unbuild {\em yy} fighter units\\
+\> S{\em xxx}Z{\em yy}T \> Ship {\em xxx} unbuild {\em yy} tractor units\\
+\> S{\em xxx}Z{\em yy}S \> Ship {\em xxx} unbuild {\em yy} shield units\\
+
+Examples:\\
+\> \verb+S123Z30C+ \> Ship 123 unbuild 30 cargo units\\
+\> \verb+S234Z5F+ \> Ship 234 unbuild 5 fighter units\\
+\> \verb+S309Z9T+ \> Ship 309 unbuild 9 tractor units\\
+\> \verb+S276Z25S+ \> Ship 276 unbuild 25 shield units\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Building\label{building}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     The owner of a planet may order the planet to build items  if
+the planet has enough industry and ore.  The ore is consumed, the industry
+is not, however an `industry' can only be used once per turn.
+Table~\ref{build} contains all the relevant information for building.
+
+For  example  if a planet had 60 industry it could be  ordered  to
+build 1 hyperdrive with 8 cargo units,  1 industry and 2 PDUs,  if
+it had the required ore\footnote{This build order would need 8 units of
+type 1 ore, 12 type 4, 10 each of types 5, 6 and 7, and 5 each of types 8 and
+9 on the planet doing the building.}.
+
+If you try to build using more than you have of industry or ore, the amount you
+will build will be reduced to the amount that can be produced. For example,
+if you tell a planet to build 20 mine 3s and it only has ore for 5 mines, then
+only 5 mines will be produced. With hyperdrives, only whole units will be built,
+so if you ask for 3 hyperdrives, each with 10 fighter units, and you have
+enough ore for only 25 fighter units, but enough for the three actual
+hyperdrives themselves, then only two hyperdrives will be built, both with
+10 fighter units on them. A hyperdrive with only 5 units will NOT be produced.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{cccc}
+Item & Amount of each type & Types needed & Number of Industry\\\hline
+cargo unit            &  1     &        1      &       1 \\
+fighter unit          &  1     &        2,3    &       2\\
+tractor unit          &  2     &        7      &       2\\
+shield unit           &  1     &        5,6    &       2\\
+PDU                   &  1     &        4      &       1\\
+industry              &  5     &        8,9    &       10\\
+mine                  &  5     &        8,9    &       10\\
+spacemine             &  1     &        any    &       1\\
+hyperdrive (new ship) &  10    &      4,5,6,7  &       40\\
+\end{tabular}
+\end{center}
+\caption{Manufacturing Needs\label{build}}
+\end{table}
+
+\subsection{Planetary Building}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+You can build industry, mines, PDUs, spacemines and hyperdrives on planets.
+You do not need to have a ship on the planet to do any of this building, just
+the ore and the industry. You can build mines on a planet even if there are
+not any mines of that type there at the moment.
+
+Note that spacemines use any sort of ore, the type being specified
+in the order to build.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace}\= S{\em xxx}B{\em yy}C \hspace{\sepspace} \hspace{\sepspace}\= Ship {\em xxx} build {\em yy} cargo units\kill
+\> {\em xxx}B{\em yy}D \> Planet {\em xxx} build {\em yy} PDUs\\
+\> {\em xxx}B{\em yy}M{\em z} \> Planet {\em xxx} build {\em yy} mines of type {\em z}\\
+\> {\em xxx}B{\em yy}I \> Planet {\em xxx} build {\em yy} industry\\
+\> {\em xxx}B{\em yy}S{\em z} \> Planet  {\em xxx} build {\em yy} spacemines using  type  {\em z} ore\\
+\> {\em xxx}B{\em yy}Hff/cc/tt/ss \> Planet {\em xxx} build {\em yy} hyperdrives with  ff
+fighter  units,\\
+\>\>cc cargo units,  tt tractor units and  ss  shield units each.\\
+
+Examples:\\
+\> \verb+345B50D+ \> Planet 345 build 50 PDUs\\
+\> \verb+235B5M8+ \> Planet 235 build 5 mines of type 8\\
+\> \verb+103B10I+ \> Planet 103 build 10 industry\\
+\> \verb+100B50S0+ \> Planet 100 build 50 spacemines using type 0 ore\\
+\> \verb+327B1H0/5/0/7+ \> Planet 327 build 1 hyperdrive with 0 fighter units,\\
+\>\>5 cargo units,  0 tractor units and  7  shield units each.\\
+\end{tabbing}
+\end{zdchunk}
+
+\subsection{Shipboard Building}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Shipboard units: fighter, cargo, tractor
+and  shield units must be built directly onto ships --- they  cannot
+be  stockpiled  on  a planet,  and cannot be  built  onto  another
+player's ships.  The orders to build these units begin with an  `S'
+and the ship number that they are being built on. The ore required has to
+be on the planet, not in the ship's cargo hold. The exception to this is
+contracting units on Earth, see section~\ref{contract} for details.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}B{\em yy}C \hspace{\sepspace} \= Ship {\em xxx} build {\em yy} cargo units\\
+\> S{\em xxx}B{\em yy}F \> Ship {\em xxx} build {\em yy} fighter units\\
+\> S{\em xxx}B{\em yy}T \> Ship {\em xxx} build {\em yy} tractor units\\
+\> S{\em xxx}B{\em yy}S \> Ship {\em xxx} build {\em yy} shield units\\
+
+Examples:\\
+\> \verb+S123B30C+ \> Ship 123 build 30 cargo units\\
+\> \verb+S234B5F+ \> Ship 234 build 5 fighter units\\
+\> \verb+S309B9T+ \> Ship 309 build 9 tractor units\\
+\> \verb+S276B25S+ \> Ship 276 build 25 shield units\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Movement\label{movement}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     If  a  ship  has enough fuel (type 0 ore) it  can  jump  from
+planet to planet if the order can be written,  \ie if you know the
+correct planet numbers.  There are two ways to find out the planet
+number --- visit the planet,  or ask another player (or a  research
+planet). Trading in information is common. A ship can jump as many
+as  5 planets in one turn by listing the intermediate planets  and
+the  final planet.  The fuel requirements are listed  in Table~\ref{jump}. 
+Note that  fuel  must be carried by the cargo units  of  the  ship. 
+If another  ship  that has successfully engaged  yours  with  tractor
+beams, you will follow it through the jumps, but at no expenditure
+of fuel, even if you wish to jump elsewhere. Your ship cannot jump
+if it initiated battle, either against another ship or a planet.
+
+The fuel used in long jumps (greater than 1) is dependent
+on the efficiency of the drive.  The initial efficiency is 0.
+The only way to increase the efficiency of a drive unit is
+using a  research planet  order.  The ship must  be on the  planet
+during the research turn.  See section~\ref{research} on research planets
+for more details.  The amount of fuel used  for the length of jump and
+the efficiency of the drive is given in Table~\ref{jump}. Note that
+the maximum effective efficiency is 4, but the drives efficiency can exceed
+4. When a ship is stripped of all its units, to
+become a hull, its drive efficiency remains what it was. This is because the
+hull/hyperdrive unit is indestructible, and not affected by the attack.
+
+Effective efficiency is modified by the size of the ship.
+For every 200 units the
+ship has, apart from the first 200, the effective efficiency goes down by 1.
+A ship can have an effective efficiency of -1 and still move, however it
+will be expensive in fuel costs. If the effective efficiency goes below -1
+the ship will not be able to move. For example if a ship has an efficiency
+of 1, and has 100 units, its effective efficiency will still be 1; if the
+same ship had 210 units, its effective efficiency would be 0.
+
+If you specify a multiple jump and the ship can only jump part of the way,
+for example if you got one of the intermediary planet numbers wrong, the
+ship will jump as far as it is able along the route specified, but will use
+fuel as if it had completed the jump. If the jump cannot be started, \ie you
+got the first planet wrong, no fuel will be lost.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{lc|cccccc}
+\multicolumn{7}{c}{Drive Efficiency}\\\hline
+      &   & -1 &  0 & 1  & 2  & 3  & 4+\\\hline
+      & 1 & 2  &  1 & 1  & 1  & 1  & 1\\
+    J & 2 & 8  &  4 & 2  & 2  & 2  & 2\\
+    U & 3 & 18 &  9 & 6  & 3  & 3  & 3\\
+    M & 4 & 32 & 16 & 12 & 8  & 4  & 4\\
+    P & 5 & 50 & 25 & 20 & 15 & 10 & 5\\
+\end{tabular}
+\end{center}
+\caption{Fuel requirements for jumping\label{jump}}
+\end{table}
+
+     As  you  jump through a system in a  multiple  jump,  if  the
+planets  you  jump through are not owned by you and have  PDUs  on
+them, then the PDUs will fire on your ship in the normal manner  as
+if  you attacked them,  but you cannot fire  back.  If a player
+has {\em you} listed as friendly in the formal alliance table then
+the PDUs will not fire in this manner. However if they have you listed as
+neutral or hostile they will fire at you.
+
+     If  a  planet  has  spacemines they  will  attack  your  ship
+independent  of which player you are,  even if you own the  planet
+you will be attacked.  If you go on a multiple jump, spacemines on
+any of the intervening planets will also attack your ship. The attacks
+by the spacemines are resolved at the end of the turn. See
+section~\ref{spacemines} for details.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}[J{\em yyy}]J{\em zzz} \hspace{\sepspace} \= Ship {\em xxx} to jump to planet {\em zzz} via {\em yyy}\\
+Examples:\\
+\>Note that there can be up to 4 {\em yyy} planets.
+So a jump 5 order could look like:\\
+\> \verb+S123J120J240J320J101J322+ \\
+\>\> Ship 123 jump to 120 to 240 to 320 to 101 and to 322\\
+\>Or be as simple as:\\
+\> \verb+S123J120+ \> Ship 123 jump to 120.\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ore Transmutation\label{trans}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+If you desperately need ore of a specific type and you have an excess of
+industry you can transmute one sort of an ore into another sort. This is
+expensive in industry, but if you need the ore, or have industry surplus to 
+your needs it can be worth while. 
+
+It takes 10 industry to transmute 1 unit of ore from one type to another.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= {\em xxx}X{\em yy}R{\em z}R{\em w} \hspace{\sepspace} \= Planet {\em xxx} transmute {\em yy} ore type {\em z} into type {\em w}\\
+Examples:\\
+\> \verb+145X4R5R6+ \> Transmute 4 ore 5 into ore 6 on planet 145\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Planet Scans\label{scans}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Your home planet is able to obtain information on one  planet
+per  turn,  each research planet is also able to provide one  scan
+per  turn.  The  information  you get is exactly  what  you  would
+receive if you had a ship on the planet. When a planet is scanned,
+by either you or someone else, everyone who has an interest in that
+planet (\ie owns it, has a ship above it, or is scanning it) will see
+that it is being scanned by having the following line appear above the
+planet in the turn sheet:
+
+\begin{verbatim}
+             *******  PLANET SCANNED THIS TURN *******
+\end{verbatim}
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= SCAN{\em xxx} \hspace{\sepspace} \= Scan planet number {\em xxx}\\
+
+Examples:\\
+\> \verb+SCAN123+ \> Scan planet 123\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Standing Orders\label{standing}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A standing order can be given to each planet and ship that the player owns.
+This order will be treated like a standard player order, but will be executed 
+every turn, even if the player does not put in a turn sheet for that turn.
+Only orders that directly concern the planet or ship in question can be
+given (\ie No changing alliances or scanning using standing orders is allowed).
+The standing orders will be included in the players COMMAND HISTORY along with
+all the commands that the player gave that turn.
+
+Standing orders will not be executed the turn they are set but the next turn, 
+and every turn thereafter until they are turned off. The syntax for setting
+a standing order is the same as doing a normal order except precede the 
+commands with an `O'. To clear a standing order just put an `X' in front of
+the ship or planet name. The order will not be cleared until the turn after the
+order is given. \ie When the clear order is given the standing order will still
+be executed that turn.
+
+Note that no syntax checking of the order is done until the command is executed
+in the following turns, so if you get the order wrong you will get an error
+message every turn until you change the standing order.
+
+The standing orders will be executed before they are cleared in the same turn,
+due to them being placed after they are executed. \ie If you have a planets
+standing order to building industry, and then set it to build PDUs, it will
+still build industry on the turn you tell it to change its standing order.
+
+Standing orders are cleared when ownership changes.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= OS{\em xxx}{\em order} \hspace{\sepspace} \= Set the standing order of ship {\em xxx} to {\em order}\\
+\> O{\em xxx}{\em order} \> Set the standing order of planet {\em xxx} to {\em order}\\
+\> XS{\em xxx}\> Clear standing order for ship {\em xxx}\\
+\> X{\em xxx} \> Clear the standing order for planet {\em xxx}\\
+
+Examples:\\
+\> \verb+OS123AI+ \> Set a standing order for ship 123 to attack industry every turn\\
+\> \verb+O234B3D+ \> Set the standing order for planet 234 to build 3 PDUs every
+turn\\
+\> \verb+XS123+ \> Clear ship 123's standing order\\
+\> \verb+X234+ \> Clear the standing order for planet 234\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Change of Ownership\label{ownership}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Ownership of a planet is determined automatically at the  end
+of the turn, there is no need to do it formally.
+
+     Spacemines do not affect ownership in any way,  planets  that
+have spacemines deployed will change their ownership by the normal
+methods specified below.
+
+\subsection{Planet Ownership}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ownership of planet cannot change while there are PDUs  on
+it (unless gifted away). If there are no PDU, the ownership:
+\begin{itemize}
+  \item is unchanged if there are no ships on the planet, or
+  \item changes to the player who owns the ship if there is  only
+one ship there as long as it is not an {\bf empty hull},
+  \item is unchanged if more than one player has a ship there.
+\end{itemize}
+Before any player has visited a planet, it is neutral,  and for the
+purposes of this section the planet can be considered to belong to
+another player called NEUTRAL. If two players land on a previously
+unclaimed  planet  in the same turn,  it continues to  be  neutral
+until  there is only one player's ship there and there are no  PDU
+on  the  planet.  If  a player drops PDU on a  neutral  planet  it
+becomes an armed neutral planet.  Also,  it is possible to gift  a
+planet to NEUTRAL.
+
+% Added 26/4/92
+When a player takes over a planet a message will appear in the 
+command history: ``{\tt Planet 102 liberated from PsiNinja}''. The
+player who lost the planet will get ``{\tt Planet 102 defeated by 
+Space Attack}''. You are not told who took your planet, you have to
+that yourself with scans or moving a ship over that planet.
+
+    To summarize,  a planet will  only change ownership if you are
+the only player  with ships over  a planet that is not defended by
+PDUs. Empty hulls do not count as ships for this purposes. Gifting
+is the only other way to change ownership of a planet.
+
+    Most of the planets owned by NEUTRAL are unarmed, less then 5\%
+have  PDUs  on them  at  the start  of the game.  Earth is  always
+defended, and will rebuild its defences if it is attacked.
+
+\subsection{Ship Ownership} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ownership of ships which have not been gifted is:
+\begin{itemize}
+      \item unchanged if any units remain on the hull.
+      \item changed to the player who owns the planet the ship is on if
+the ship is just a hull.
+\end{itemize}
+
+    Ownership  of a  ship with any  units on it  is not changeable
+except by  gifting.  A hull (\ie  a ship with no units) belongs to
+the owner of the planet it is orbiting around. Hulls will not affect the
+ownership of the planet however. 
+% Added 26/4/92
+When a ship changes ownership the person
+who now owns it gets the message ``{\tt Ship S103 has been boarded by your
+space marines}'' while the original owner gets ``{\tt Ship S103 lost to space
+pirates}''.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Mining\label{mining}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Most planets have some mines of several different types. Each
+mine  of each type will produce 1 unit of ore per  turn.  This  is
+automatic and requires no orders from the player.  Neutral planets
+will  not produce ore --- a planet must be owned by a player  before
+its mines will produce. The exception to this rule is Earth, which produces
+all the time. Spacemines do not produce anything, except casualties.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Research Planets\label{research}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     About  10\% of all planets are Research  Planets.  These  have
+various  effects on the game.  The player who owns  them  receives
+additional credits as shown in section~\ref{score}.  Also on turn  10
+and every 4 turns thereafter,  each research planet will allow its
+owner to choose one of the benefits listed below.  Also they
+allow  more planet scans, which are described in section~\ref{scans}.
+Finally, after every research turn a list of the owners and nearby planets
+will appear  on the turn sheet sent to the players. This list contains all
+research planets that were owned at the end of the research planet turn,
+irrespective of whether they were used that turn or not.
+Available benefits:
+\begin{itemize}
+\item Creation  of a permanent link between two  planets,  both  of
+which  are owned by the player giving the order,  and  neither  of
+them having four connecting planets already
+\item Building of four cargo units with four units of fuel  already
+loaded onto a ship at the research planet.
+\item Creation of an industry on the research planet.
+\item Creation of a mine,  regardless of the existence
+of mines of that type on the research planet.
+% Added 12/5/92
+\item Creation of 10 PDUs on the research planet, or 5 on another planet.
+\item Transmutation  of  ore.  This  can be done  in  fairly  large
+quantities. 100 units of ore on the research planet, and about 25 for not on
+the research planet. Only a single ore type can be done per research planet.
+\item Transmutation of mines. Two mines on the research planet can be converted
+to mines of a different type. One mine off the research planet can be converted.
+% Added 10/5/92
+\item Changing of mines to industry or vice versa. If the mines and industry are
+on the research planet, 3 mines can be converted to 2 industry, or 3 industry
+can be converted to 2 mines. Off the research planet, 2 mines can be converted
+to 1 industry, or 2 industry can be converted to one mine. Note that this 
+cannot be used to reduce your home planets industry below its initial level.
+\item Random positioning of one of your ships. Note that random means getting
+the dice out, you have no control over where your ship will end up. Your ship
+does not have to start on the research planet.
+\item Specific positioning of a ship onto an either neutral or planet owned by
+you. It does not have to be on a research planet, but it cannot be on another
+players planet. This takes TWO research planets in the same turn.
+\item Loading one unit of fuel onto another player's ship.
+\item About  50\%  increase in the number of units of any type  on  a
+ship on the research planet, or about 20\% increase for one off the
+research planet. If an industry is sacrificed on the research planet, at
+the start of a research planet turn, then an extra 10\% increase per industry
+in either of these figures, to a maximum of 100\%. Note that the industry can
+be on a ship above the research planet as well as on the planet.
+There will be a minimum growth of 5 units unless specified. There is also a 
+maximum rate of increase, no ships units can more than double in a single turn,
+no matter how many research planets you use. Research planets can only
+increase the number of units upto 250. Any units beyond this will be ignored.
+\item Decrease in the number on units on one of your ships. The rate of
+decrease is double that of unit increase. \ie 100\% decrease for a ship on the
+research planet, 40\% for a ship off the research planet. If you want a lesser
+number destroyed remember to write it clearly on your turn sheet.
+\item Transferring units from one ship to another; 30 units if both ships are
+over the research planet, or 20 if only one is over the research planet, or 10
+if neither ship are over the research planet.
+\item Details of another player's ships --- you are told the number of
+each type, {\em not} the specific unit numbers, locations, cargo etc.
+\item Details on ownership of planets, \ie Who owns how many planets.
+\item Destruction  of  a link.  The player must  own  both  planets
+involved,  must have a battleship on each planet and must have  at
+least two industries on one of the planets.  the  two  industries
+will  be destroyed in the process of destroying  the  link.
+\item Increase  the  drive  efficiency  of  a  ship that  is on the
+research planet at the start of the research turn.
+\item Moving a ship around (by teleport) without using fuel. The range that it
+can move is 4 if the ship is on a research planet, 2 if it is not. This cannot
+move a ship over or through space not controlled by you. Please give the path
+that you want the ship to take. Note that the ship cannot end up on a planet
+that you do not own. Also no planets that you pass through can have either
+deployed spacemines or non-aligned ships on them. You can still start your
+ship at an enemy controlled planet however.
+\item Converting one sort of unit to another on a single ship. This can be done
+in unlimited amounts. The ratio of units changed will be different depending
+on what units you are changing from and to. For example 3 shield units will
+be converted to 2 fighter units, or if the ship is not on the research planet
+then 3 shield units get converted to 1 fighter unit.
+For cargo to fighters the ratio is 4 to 1, cargo to shields 3 to 1.
+\item Transporting two industry or mines from a research planet to a ship.
+Or transporting one industry or mine from another planet to a ship. In either
+case the ship must be orbiting the planet where the mines or industry are.
+\item As  requested  by a player.  The  following  restraints  must
+apply:
+\begin{itemize}
+     \item   The  request  must  be  physically  realistic,   and  be
+possible to implement in the game.
+     \item   It must not be too powerful, anything more powerful than
+a 50\% increase in fighter units will probably not be allowed.
+     \item   It cannot create new game elements.  The effects must be
+instantaneous.
+\end{itemize}
+\end{itemize}
+
+     When giving research planet orders please be clear. Note that
+these orders are carried out before any others so ships must be on
+the  research planet at the end of the previous turn if they  wish
+to use some of the ship based options on the research planet turn.
+If you want a special request, mail it in early so that I can
+discuss it with you, otherwise just mail me your requests with your
+normal commands. Be sure to say which planet is doing which request.
+
+The actual syntax of these orders is open as they are human read, not
+machine read. Place the research orders at or near the top of the turn
+sheet in a comment. For example:
+\begin{verbatim}
+;RP103 Increase efficiency of S100
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Diplomacy\label{diplo}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+To communicate with other players there are various sorts of message
+facilities available. These messages should be included in the turn sheet just
+like any other command. 
+
+There are three sorts of message:
+\begin{description}
+\item[Global Messages] The message gets sent to all players in the game.
+\item[Personal Messages] This message gets sent to just one player.
+\item[Alliance Messages] This message will be sent to people who are of the
+same alliance status to you. So you can send messages to all people who are
+your allies, friends, enemies etc.
+\end{description}
+Each message must be only
+one line long. If you want to send a message longer than one line send
+multiple messages, the order will be preserved. Having a terminator at the end
+of the line is optional but recommended.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= \& {\em playername} {\em personal message} [\&] \hspace{2 \sepspace} \= Send {\em personal message}\kill
+\> \{ {\em broadcast message} [\}] \> Send {\em message} to every player.\\
+\> \&{\em playername} {\em personal message} [\&] \> Send {\em personal message}
+to {\em playername}.\\
+\> ({\em allnce} {\em allnce msg} [)] \> Send {\em allnce msg} to
+all players who you have at {\em allnce} status.\\
+
+Examples:\\
+\> \verb+{Death to Grok the infidel.}+ \> Send
+``\verb+Death to Grok the infidel.+'' to every player.\\
+\> \verb+&Winter Leave #306 now or face war.&+ \> Send
+``\verb+Leave #306 now or face war+'' to Winter.\\
+\> \verb+(ALLY We must strike at P304 now)+ \> Send ``\verb+We must
+strike at P304 now+'' to all allies.\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ship Types\label{shiptypes}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Another  player's ships will not appear on your  printout  in
+the same detail as your own ships.  The only information you  will
+be  given is the type of ship that it is,  as well as its  number,
+name  and  who  the owner is.  Ships  are  divided  into  classes
+according  to  the number of fighter and cargo  units  they  have.
+Shield and tractor units have no effect. Table~\ref{types} lists
+all ship types.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{rlll}
+Ship Type     &   F-units  &C-units & Ratio (fighter:cargo units)\\\hline
+Empty Ship    &     0      &  0        & na\\
+Small Cargo   &            &  1--10    & less than 0.5      \\
+Medium Cargo  &            & 11--30    & ''\\
+Large Cargo   &            & 31--75    & ''\\
+Super Cargo   &            & 76--150   & ''\\
+Mega Cargo    &            & 151--250  & ''\\
+Ultra Cargo   &            & 251+      & ''\\ \hline
+Small Ship    &    1--10   &           & between 0.5 and 2, inclusively\\
+Medium Ship   &   11--30   &           & ''\\
+Large Ship    &    31--75  &           & ''\\
+Super Ship    & 76--150    &           & ''\\
+Mega Ship     & 151--250   &           & ''\\
+Ultra Ship    &     251+   &           & ''\\ \hline
+Small Battle  &    1--10   &           & more than 2 and less than 9\\
+Medium Battle &    11--30  &           & ''\\
+Large Battle  &   31--75   &           & ''\\
+Super Battle  &   76--150  &           & ''\\
+Mega Battle   &   151--250 &           & ''\\
+Ultra Battle  &   251+     &           & ''\\ \hline
+Small Deathstar  & 1--10    &          & 9 or more \\
+Medium Deathstar & 11--30   &          & ''\\
+Large Deathstar  & 31--75   &          & ''\\
+Super Deathstar  & 76--150  &          & ''\\
+Mega Deathstar   & 151--250 &          & ''\\
+Ultra Deathstar  & 251+     &          & ''\\ \hline
+\end{tabular}
+\end{center}
+\caption{Ship Types\label{types}}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Tractor Beams\label{tractors}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     Tractor  beams may be used to capture and tow ships.  If  the
+tractors are successfully attached,  the target ship will  accompany
+the towing ship when it moves, for no extra cost in fuel. They can
+also be used in the retrieval of spacemines from active duty.
+
+     To  determine if tractor beams will engage  successfully  the
+following rules must be followed.
+\begin{itemize}
+     \item   The engaging ship must have equal or greater tractor units
+ than  the target  ship has mass,  using the same formula as in  the  battle
+section.
+     \item  A  ship  which  is engaged by  one  ship  cannot  engage
+another, \ie no daisy chaining.
+     \item If two ships engage the same target,  the ship with  the
+most tractor units wins.
+\end{itemize}
+
+     A  ship can only attach its tractor beams to  one  ship.  The
+target  ship  is then prevented from moving,  or  tractor  beaming
+another ship. The tractor beams disengage at the end of the turn.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= S{\em xxx}ES{\em yyy} \hspace{\sepspace} \= Ship {\em xxx} engage ship {\em yyy} with tractor beams.\\
+
+Examples:\\
+\> \verb+S123ES234+ \> Ship 123 attempt to engage ship 234 with tractor beams\\
+\end{tabbing}
+\end{zdchunk}
+
+     Tractor beams can only be used to engage ships or retrieve
+spacemines, not both. When retrieving spacemines, the tractor
+beams automatically succeed in locking on. It takes one tractor
+beam for every spacemine, as well as the cargo unit to hold the
+spacemine. See the section on spacemines for more details.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Score\label{score}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Score is one of the ways to win the game.
+The score you have and that all the other players have is listed at the
+top of the turn sheet as shown in section~\ref{exheader}.
+Table~\ref{income} lists the returns from various items.
+
+\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{ll}
+     Item           &Return (Credits/turn)\\\hline
+     mine              & 1\\
+     industry          & 5\\
+     planet            & 20\\
+     1 research planet & 1 (in addition to everything else)\\
+     2 research planets & 16\\
+     3 research planets & 81\\
+    4+ research planets & 256\\
+\end{tabular}
+\end{center}
+\caption{Income gained\label{income}}
+\end{table}
+
+For example a planet has 12 mines and 3 industry on it. Its income would be
+\[ 20+12+3\times 5=47 \]
+The bonus for the research planets is on an empire basis, so a planet being
+a research planet does not increase its own income, just that of the empire
+that it belongs to.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Further Improvements\label{improve}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+     The  game  administrator  is  open  to  discussion  for   any
+improvements  that  you  might  have  thought  of.  They  will  be
+implemented,  if  everyone  approves, as soon  as  possible  in  the
+current game, and in all subsequent games.
+
+Current improvements on the drawing board include:
+\begin{itemize}
+     \item  Space patrol vessels wandering through the galaxy  slowly,
+who attack any one who attacks Earth, but otherwise do little.
+     \item Having the chance to hit ships in combat vary with the size
+of the ship.
+     \item  Automatic  retaliation if a ship does not have  an  attack
+order and is itself attacked.
+    \item A system where players can trade with one another, rather than just
+Earth.
+    \item Change the way players buy ore at Earth to a bidding system like
+contracting where the current price is the minimum bid.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Adjusting Game Length\label{gamelength}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+There are three different lengths to the game
+\begin{itemize}
+\item The game is over when one of the winning conditions is met. The player
+or players who meet the winning conditions are the winners, as are their
+allies.
+\item The game is over after a number of turns specified at the start of the
+game. The player with the most of a certain resource at the end of the game,
+such as score or credits is the winner, as are their allies.
+\item The game is over after a number of turns specified by the players
+themselves. This number can change from turn to turn.
+When this number of turns is completed the player with the most of a
+certain resource, such as score or credits is the winner, as are their allies.
+\end{itemize}
+
+In the last case each player can issue a turn command to adjust the length of
+the game. The program will take each players desired turn length and produce a
+compromise between them, which will be displayed with the players current
+desired turn at the top of the turn sheet. This means that a player who has
+got a good score or whatever, and knows that noone has a better score, will
+put the turn low, so as to try and win sooner, while someone with a low score
+will put the turn high to give them time to build up their score. There are
+minimum and maximum limits to the desired ending turn, at the moment these are
+10 and 100 respectively.
+
+\begin{zdchunk}
+\begin{tabbing}
+Syntax:\\
+\hspace{\sepspace} \= TURN {\em xx} \hspace{\sepspace} \= Finish the game on
+turn {\em xx}.\\
+
+Examples:\\
+\> \verb+TURN30+ \> Finish the game on turn 30.\\
+\end{tabbing}
+\end{zdchunk}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Changes to last version\label{changes}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The following changes have been made to the game and/or documentation since
+version 1.43.
+\begin{itemize}
+\item Introduced transmutation of ore
+\item Ship numbers are allocated at random at the start instead of sequentially
+\item Introduction of ship unbuilding
+\item Priority list to global loading introduced.
+\item Alliance Messages introduced.
+\item Earth now removes spacemines from itself.
+\end{itemize}
+
+The following changes have been made to the game and/or documentation since
+version 1.44.
+\begin{itemize}
+\item Shields are scaled according to the percentage of the ship that are
+shields.
+\item Fighters now have mass, shields now weigh half as much.
+\item PDUs get more shots each the more there are of them.
+\item Further restrictions and clarifications for research planet orders.
+\item PDUs no longer fire on empty hulls.
+\item Changed the documentation to use inline gnuplot commands.
+\end{itemize}
+
+The following changes have been made to the game and/or documentation since
+version 1.45.
+\begin{itemize}
+\item Internal change in code, changing NEUTRAL to plr0 rather than plr9.
+\item Income and Earth credits are now winning conditions.
+\item Planets are given an name on galaxy creation.
+\item There are now two modes to selling ore on Earth. Unlimited, where all
+ore can be sold at once, or Limited, where Earth will only buy a limited
+amount of ore.
+\item In certain games the players can change the game length themselves each
+turn.
+\item The ship types have been changed around and rationalized.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Example move\label{egmove}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The following is a sample move mailed to the game.
+
+\begin{verbatim}
+% mail celemp1@sola.fcit.monash.edu.au
+Subject: PsiNinjas Turn
+
+; RP 123 increase f-units on s123 by 20%
+; RP 190 create industry on planet
+
+; Naming
+S123=BLACKGUARD
+234=ARAKOS
+
+; Give some stuff to MASTER or he will attack me
+S244GMASTER
+345GMASTER
+
+S123P12R1
+S276U4M3
+S234U3D
+S286U2I
+S309AD
+123A120S234
+S132U42R2
+S322U23S
+S306L10M
+S243L34D
+
+; Get S123 to research planet in time for combat.
+S123J120J240J320J101J322
+S123L120R2
+S234L34S
+100B50S0
+SCAN123
+SCAN223
+OS123AI
+{Death to Grok the infidel.}
+&Winter Leave #306 now or face war.&
+S123ES234
++Assassin
+\end{verbatim}
+
+Note that the order is not important. When sending turns in please put your
+empire name in the subject line, it makes it much easier for me.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Turn Sheet Example\label{turnexample}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+There may be some small discrepancies between the example turn sheet shown
+here and the one that the game sends out. This is due to constant improvements
+in the turn sheet format and the details of the game. If you find a major
+discrepancy please mail the author.
+
+\subsection{Header\label{exheader}}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This section contains the basic information about the game, like turn number,
+date that
+the turn sheet has to be mailed back, where they must be mailed to.
+The scores of the players are read across so player 2s score is 1660.
+Winning conditions are listed here, make sure that you know what you are aiming
+for when you play the game. ``{\tt Earth}'' means that you need to take earth
+for a turn to win, the others should be fairly self explanatory. If one of the
+conditions such as ``{\tt score}'' does not appear in the list it means that it
+is not part of the winning conditions.
+The minimum bid accepted by Earth for each of the different unit types is also
+listed. Bids below these amounts will not be accepted.
+Also listed is the number of scans that you have this turn.
+\begin{verbatim}
+                         CELESTIAL EMPIRE 1.42
+                                  by
+                             Zer Dwagon
+
+        *********   PsiNinja   player number=1     *********
+        score=1559       turn number=3        Game number=1
+        date due= before 12 Aug     player scores   1559   1660   1667
+        your income=539                             1655   1506   1644
+        Earth Credits=2344 Credits:Score=2          1585   1661   1682
+
+        Winning Conditions: Earth Score=30000 Planets=64
+           Mail commands to Zer Dwagon dwagon@wyrm.cc.ascii.edu
+        Minimum bids: Cargo=1 Fighter=3 Shield=2 Tractor=2
+        You have 3 scans this turn
+\end{verbatim}
+
+The following section should not be here for this turn, but shows what
+is produced at the start of every research planet turn.
+\begin{verbatim}
+Remember to give research orders this turn
+You have 2 research planets
+They are  219 227
+\end{verbatim}
+
+\subsection{Ship Type Summary}
+This summary occurs every second turn. It shows how many ships of what type
+exist in the galaxy at that time.
+
+\begin{verbatim}
+SUMMARY OF SHIP TYPES
+Empty Ship      1               Small Cargo     0
+Medium Cargo    11              Large Cargo     32
+Super Cargo     2               Mega Cargo      0
+Ultra Cargo     0               Small Ship      1
+Medium Ship     0               Large Ship      0
+Super Ship      0               Mini Battle     0
+Small Battle    2               Medium Battle   7
+Large Battle    1               Super Battle    0
+Dreadnought     0               Death Star      0
+Mega DthStar    0               Ultra DthStar   0
+\end{verbatim}
+
+\subsection{Ship Summary}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is a summary of all the player's ships. It shows all the details of the
+ships. What units they have, their name, where they are, and what cargo they
+have loaded. The number in brackets after the number of cargo units is the
+number of empty cargo units. The number in brackets after the number of shield
+units is the number of shots that the ship will absorb before taking damage.
+The number in brackets after the efficiency is the effective efficiency.
+\begin{verbatim}
+SUMMARY OF SHIPS
+S100 f=1  c=10( 6) t=0  s=0(0) eff=0(0) shots=0   Death           
+          Planet 239 Small Cargo 
+          R0 4.
+S101 f=1  c=10( 6) t=0  s=0(0) eff=0(0) shots=0   Destruction     
+          Planet 126 Small Cargo 
+          R0 4.
+S102 f=1  c=10( 6) t=0  s=0(0) eff=0(0) shots=0   Devastation     
+          Planet 127 Small Cargo 
+          R0 4.
+S103 f=1  c=10( 6) t=0  s=0(0) eff=0(0) shots=0   Disintegration  
+          Planet 193 Small Cargo 
+          R0 4.
+S104 f=0  c=40(16) t=0  s=0(0) eff=2(2) shots=0   Decimation      
+          Planet 119 Large Cargo  
+          R0 4.R1 10.I 1.
+\end{verbatim}
+
+\subsection{Planet summary}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is a summary of all the player's planets. It shows the amount of ore
+stored on each planet and its production, as well as the number of PDUs and
+industry there. The first number in each column is the production(\ie the
+number of mines of that type) of the ore on that planet. After the slash is the
+amount of ore stored on the planet. For example in the following sample output
+planet 104 has 2 mine types 3, and 6 ores stored on the planet. With the ore
+type 6 on planet 107 there is no production of that mine type, just some ore.
+The amount of ore, industry and PDUs on ships is also shown, as is the total
+amounts for the players empire at the bottom. This total includes the amount
+on all the players planets and ships.
+\begin{verbatim}
+SUMMARY OF PLANETS.
+planet   0     1     2     3     4     5     6     7     8     9    PDU  IND
+------  ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---  ---
+104      /     /     /    2/6    /     /     /     /     /     /     -   -
+107      /     /     /    1/3    /     /     /5    /     /     /     -   -
+113      /     /    2/2    /     /     /     /     /    3/7   1/2    -   -
+123     4/53  3/9   3/39  3/25  2/11  1/18  1/18   /15  5/6   5/6   120  60
+126      /     /     /    2/2   1/3    /    1/3    /     /     /     -   -
+127      /     /     /     /    1/1    /     /    5/5    /     /     -   -
+152     2/7    /     /     /     /     /     /     /     /     /     -   -
+250      /     /     /    1/3    /     /     /     /     /     /     -   -
+290      /     /     /     /    3/3    /     /    2/6    /     /     -   -
+Ships:   /20   /10   /     /     /     /     /     /     /     /     0   1
+------  ---   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---  ---
+Total:   6/    3/    5/    9/    7/    1/    2/    7/    8/    6/   120  61
+         80    19    41    39    18    18    26    26    13    8
+
+total number of planets owned = 9
+\end{verbatim}
+
+\subsection{Ally Status}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This shows the status of the player with respect to other players in the game.
+If you are neutral to a player and they are neutral to you, they will not show
+up in this table.
+\begin{verbatim}
+ALLY STATUS
+Empire Name         You are     They are
+Grok                 : ALLY      : FRIENDLY
+Master               : HOSTILE   : HOSTILE
+\end{verbatim}
+
+\subsection{Earth Listing}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This section shows the prices of ore on Earth, and which ships are on
+Earth. It also lists the nearby planets, making it easier to find Earth.
+If you scan the right planet you can get to Earth by turn 2 at the earliest.
+This is the area that various details of Earth are printed, such as Earth
+Amnesty and the type of selling permitted.
+\begin{verbatim}
+ 119  ******** EARTH ********
+Earth amnesty in effect. No shots allowed.
+Limited Selling.
+NEARBY PLANETS 294 109 160
+                   EARTH   Trading Prices
+type         0    1    2    3    4    5    6    7    8    9
+price       10   16    6    6   15    6    5    3   12   14
+amount      89   76   99   98   71  100   95   90   81   74
+- - - - - - - - - - - - - - - - - - - -
+S104 PsiNinja : f=0  c=40(36) t=0  s=0(0)   eff=0(0) shots=0 Decimation
+               Large Cargo    Standing Order:None 
+            R0 4
+S109 Grok     : Alienoid                : Large Cargo
+
+--------------------------------------------------
+
+\end{verbatim}
+
+\subsection{Planet List}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is the main body of the turn sheet. It lists all the information about
+every planet that the player has an interest in. Ships that are orbiting the
+planet are listed as well. You can get this information even if you do not
+own the planet in question. The number in brackets after the number of PDUs is
+the number of shots that all the PDUs fired together will generate.
+\begin{verbatim}
+                   *******  PLANET SCANNED THIS TURN *******
+101 NEUTRAL  :
+Nearby Planets   247  332  307      Industry= 0      PDU= 4(4)    Income= 21
+Spacemines: Stored= 0     Deployed= 0
+       Mine Type              2
+       Amount stored          2
+       Production             1
+--------------------------------------------------
+\end{verbatim}
+Above is a neutral planet that was scanned this turn.
+
+\begin{verbatim}
+104 PsiNinja :Abduco
+Nearby Planets   123  290  337  127  Industry= 0      PDU= 0(0)     Income= 22
+Spacemines: Stored= 0     Deployed= 0
+       Mine Type              3
+       Amount stored          6
+       Production             2
+
+--------------------------------------------------
+
+119 NEUTRAL  :**** EARTH ****
+Nearby Planets   294  109  160      Industry= 60     PDU= 200(650) Income= 320
+Spacemines: Stored= 0     Deployed= 0
+       Mine Type
+       Amount stored
+       Production
+
+S104 PsiNinja : f=0  c=40(36) t=0  s=0(0) eff=0(0) 
+           Large Cargo
+           Decimation     R0 4
+S109 Grok     : Alienoid                : Large Cargo
+--------------------------------------------------
+\end{verbatim}
+
+Above is the long listing of Earth; also shown is a ship that belongs to another
+player. Note that with the other ship very little detail is shown. The only
+information available is the ship number, the owner, the name of the ship, and
+the type of the ship.
+
+\begin{verbatim}
+123 PsiNinja :Affirmare
+Nearby Planets   250  175  104  152  Industry= 60     PDU= 120(366) Income= 347
+Spacemines: Stored= 0     Deployed= 10
+       Mine Type              0    1    2    3    4    5    6    7    8    9
+       Amount stored          53   9    39   25   11   18   18   15   6    6
+       Production             4    3    3    3    2    1    1    0    5    5
+--------------------------------------------------
+\end{verbatim}
+Above is the player's home planet. It has been built up a bit from the original
+layout.
+
+\begin{verbatim}
+126 PsiNinja :
+Nearby Planets   300  175  221      Industry= 0      PDU= 0(0)  Income= 24
+Spacemines: Stored= 0     Deployed= 0
+       Mine Type              3    4    6
+       Amount stored          2    3    3
+       Production             2    1    1
+
+
+S101 PsiNinja : f=1  c=10(6) t=0  s=0(0)   eff=0(0) shots=0  Destruction    
+            Medium Cargo
+            R0 4
+--------------------------------------------------
+
+250 PsiNinja :Abicio
+Nearby Planets   265  239  123  229  Industry= 0      PDU= 0(0)  Income= 21
+Spacemines: Stored= 0     Deployed= 0
+       Mine Type              3
+       Amount stored          3
+       Production             1
+
+--------------------------------------------------
+\end{verbatim}
+Above are some more of PsiNinja's planets. Note that in this section quite a
+few of the planets have been removed for brevity.
+
+\subsection{Messages}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This section comes at the end of the turn sheet, and contains messages from
+other players.
+\begin{verbatim}
+GENERAL MESSAGES
+PsiNinja: PsiNinja desires allies. Please mail psininja@host.va
+Master:Anyone with information about PsiNinjas empire please send to me
+
+PERSONAL MESSAGES
+From Grok: You use Earth Ind this turn, I will use it next turn
+\end{verbatim}
+These are messages from other players. General messages go to all players,
+while personal messages are just to a specific player. See Section~\ref{diplo}
+on Diplomacy for more details on how to send messages.
+
+\subsection{Command History}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is a list of all the actions that the computer processes by you, in the
+order they were processed\footnote{Messages will not appear in this list.}.
+The order on the left is the order desired and the one on the right is the
+actual order carried out. If for some reason the command cannot be executed, say
+because the planet you tried to jump to did not exist, you will have the reason
+printed after the desired order. If a
+command could only be partially carried out, like an attempt to build 20
+industries, when there was only enough ore to build 3, then the actual order
+will be {\tt 123B3I}. In these limited cases the limiting factor will be
+shown between the two orders. In the example below, this was industry.
+Scans will only appear once in the desire list.
+
+The results of attacks, changes in ownership, and other details will also
+be printed here. For attacks both the attacker and the attackee get details on
+the damage done.
+
+\begin{tabbing}
+Abbreviations include:\=\hspace{5em}\=\\
+\>I\>Industry\\
+\>R1\>Ore Type 1\\
+\>\$\>Credits\\
+\>C\>Cargo units\\
+\>F\>Fighter units\\
+\>SM\>Spacemines\\
+\>PDU\>PDUs\\
+\>POP\>Population standards. See Section~\ref{loading}\\
+\>EL\>Earth limit on ore selling reached\\
+\>M\>Mines\\
+\end{tabbing}
+\begin{verbatim}
+COMMAND HISTORY
+113=Aeternus         113=Aeternus
+265=Affabilis        265=Affabilis
+290=Affero           290=Affero
+123=Affirmare        123=Affirmare
+107=Aetas            107=Aetas
+S104U1M3             S104U1M3
+S104L10R0            S104L10R0
+123B1M3              123B1M3
+123B1M8              123B1M8
+123B1M9              123B1M9
+S104B60C      I      S104B10C
+S100J250J239         S100J250J239
+S101J175J126         S101J175J126
+S102J104J127         S102J104J127
+S103J152J193         S103J152J193
+S104J175J140J294J119 S104J175J140J294J119
+SCAN101
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Strategy and Tactics\label{strategy}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+     This  section  is only to give hints on what can be  done  in
+Celestial  Empire.  It is not the definitive list of what  can  be
+done;  indeed the list will grow as people play the game and their
+successful  strategies  are enshrined in this section  for  future
+generations  of players to marvel over (Credit will  naturally  be
+given  to those players who first performed the given strategy  or
+tactic). If you want to keep your strategies secret just drop me a
+message and I will remove them from the list.
+
+\subsection{Planet Scans}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{description}
+\item[Piggy in the Middle --- Granny Smith]
+     Use  your scans to trace a path to a  neighbor's  homeworld.
+Then  you scan outwards in another direction from that  homeworld.
+Once you establish the player's neighbors in that region give them
+the  route to your enemies homeworld and offer a joint  or  triple
+attack.
+
+\item[Scans for Sale --- Granny Smith]
+     You  are  operating a self contained empire  of  three  rings
+width  readying  yourself  for that lunge  to  Earth.  Industry  is
+humming along,  supplies are regular, ship production constant and
+smooth.  So what do you need scans for?  Probably nothing.  So why
+not sell them to players who are desperate for information.
+
+\item[Magic Eye --- Granny Smith]
+     A combination of ``Piggy in the Middle'' and ``Scans for  Sale''.
+Once  a homeworld is found, you place your scan there  every  turn.
+Such a ``magic eye'' will provide reams of information.  Numbers  of
+ships,  what  is  being built,  industries/fighter  units,  obvious
+scarce resources etc.
+\end{description}
+
+\subsection{Planetary Defense Units}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{description}
+\item[Speed Trap --- Zarg]
+     To  stop an enemy from jumping straight to your  home  world,  and
+then  blasting  away  all your industry before you  can  recall  your
+battle ships to defend your capital, place buffer zones of PDUs on
+the  planets surrounding your homeworld,  ideally about 20 PDUs  on
+the  first three layers surrounding your homeworld.  Then if  your
+enemy comes in at full speed to attack your home planets,  he will
+have lost 60 Fighter units off every ship that participated in the
+attack,  almost  certainly  stopping the  attack  cold.  If on the
+other hand he comes in slowly, single jumping it, not only can you
+fire on his ships as the come through with your PDUs, it also gives
+you time to either recall your battleships or even build new ones.
+\end{description}
+
+\subsection{Battleships}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{description}
+\item[Security Blanket --- Missing Tiger]
+     If  other players know that you have a  superbattle  cruising
+around  your  inner planets they will be a bit  more  cautious  in
+attacking,  just  like  the superpowers  build  nuclear  warheads.
+However  the  construction of a SuperBattle is expensive  and  can
+take over 20\% of your empires industrial capacity.  It is  cheaper,
+though less threatening to build several smaller ships, say medium
+battles.
+
+\item[Piracy --- Missing Tiger]
+     Sit  on  a trade route used by another player and wait  for  a
+large  cargo ship to stop there on its way back to a  home  planet
+all loaded up with goodies.  Attack it.  Severely maim it.  Most of
+the cargo drops to the planet,  as the ship is unable to carry  it
+due to lack of cargo units.  If you own the planet,  the cargo  is
+yours.
+
+\item[Ambush --- Missing Tiger]
+     An extension of piracy.  If the battle ship is big enough  in
+relation  to  its target,  you will destroy it  totally  when  you
+attack.  Then if you own the planet the ship is yours. However you
+will  need to transport some type-1 ore and some industry to  make
+use of the ship, or you can use tractor beams.
+
+\item[Hunting --- Missing Tiger]
+     This is a high risk operation as you are usually much  nearer
+the other player's home planet than you are to your own.  Send your
+super  or large battle ship accompanied by a large cargo ship  carrying
+industry,  PDUs and ore types 0, 1, 2 and 3 into another player's area
+until you find a ship.  Attack the ship with your superbattle  and
+the  planet  with  your cargo ship.  Next  turn,  drop  the  cargo
+including industry,  and build fighter and cargo units on your new
+ship.  Now, since you cannot reload the industry you just dropped,
+you  can choose between destroying it to stop your enemy using  it
+or attempt to hold the planet.
+\end{description}
+
+\subsection{Spacemines}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{description}
+\item[Dwagons Devastator --- Zer Dwagon]
+     Have a large cargo ship full of spacemines lay spacemines  on
+the  route  from his home planet to  his  producing  planets,  the
+nearer  to the home planet the better,  and dump the whole lot  of
+them  on a few planets.  If you can dump them all on your  enemies
+home planet you are laughing,  as his ships take major destruction
+every time they jump to his home planet.
+\item[Vux's Vulture --- Bruno Wolff]
+    Get to Earth early, dump a large stack of spacemines there and wait. Another
+ship will come screaming in, and get destroyed by the spacemines. With the 
+tractor units on your original ship, load all the spacemines, then engage the
+hull and jump out of there with a new ship. An alternative is to leave the
+spacemines there, and remember to have enough shields on your ship when you jump
+back to Earth, there might even be a few hulls waiting for you.
+\end{description}
+
+\subsection{Earth}%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{description}
+\item[Monopoly Player --- Greg James]
+Get a super cargo ship to Earth with at least 100 cargo units. Buy all
+of the cheapest commodity. Sell it all next turn and corner another one.
+Repeat until bored.
+
+This will allow you to amass huge amounts of Earth credits, basically
+allowing you to use Earth's industry and mines as a second home. The ideal
+situation is one ship at Earth playing broker, another becoming very large
+off the fruits of the first, and a third shipping ore back to your home
+planet in massive quantities.
+
+{\bf Note:} due to the spectacular success of this method the first time it
+was tried, game changes have been implemented that will hopefully make this
+difficult/impossible in future. The main change has been the introduction of 
+Earth credits, and the credit/score ratio.
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Winners\label{winners}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+These are the empire names of the people who have won previous games.
+\begin{description}
+\item[Game 2]
+{\raggedright
+Duration: 24 turns, Ended Apr 14 1992, Winner: Ishmolin\\
+    Ishmolin won by getting 30,000pts\\
+}
+\item[Game 3]
+{\raggedright
+Duration: 23 turns, Ended Apr 9 1992, Winner: Zethrin\\
+    Zethrin won by getting 30,000pts\\
+}
+    At the end of the game, only Wumpsters had withdrawn, however a number
+of players had stopped sending in turns. Benden when he decided to leave the game gave all his planets to Zethrin, which helped him win. This lead to the
+introduction of gift limitation, so you cannot give all your planets away in a
+single turn, and you cannot give your home planet away ever.
+\item[Game 4]
+{\raggedright
+Duration: 25 turns, Ended Apr 23 1992, Winner: ISH\\
+ISH won by getting 30,000+ pts\\
+}
+Here is what ISH recalls of the game, and the way he played it.
+\begin{quotation}
+I began the game when I had more spare time than
+now, and spent a lot of time on diplomacy.  I made friends with neighbors
+and patched up a quarrel with Klicknex after they took over the Iron-Gang
+spot.  I gave the Klicknex the benefit of my vast (a few turns) CE
+experience.  Later, when they decided to play only a token role in the
+game, they gave me several planets and ships out of gratitude.  That was
+basically the key to the game.
+
+Since the worlds around my home were fairly rich, I didn't bother sending
+any ships to Earth: I would need the points later, and in the time it
+would take to get a ship to Earth and back, it could make two round trips
+to a nearer planet.  I didn't realize until late in the game that I could
+build R7, R8, and R9 mines on my home planet.  I did a lot of exploring,
+and held the lead in points for several turns before the Klicknex gifts.
+I tried to build a new ship every other turn, and I believe I had more
+ships than any other player even before the Klicknex gifts.  Some were
+kept small, to shuttle PDUs to outer worlds or claim more planets.  Wherever
+possible, I put an industry on a planet with R4 mines and steadily built
+PDUs.
+
+When Bude and Antigone tried to take some of my planets at the end, I just
+kept claiming new ones.  I sent a cargo ship to each threatened world to
+postpone its fall.  I kept my only super battle at home to protect the
+home world or jump to Earth to postpone its fall.  As it turns out, I
+doubt that anyone realized how difficult it is to take Earth. \smiley
+
+So basically the game was won by friendly diplomacy.
+\end{quotation}
+
+\item[Game 5]
+Duration: 23 Turns, Ended Apr 11 1992, Winner: Feline
+
+\begin{quotation}
+Imperium Feline Rex in Celestial Empire 5
+
+When I started with celemp5 I didn't have any strategies in mind, just 
+play and find see where my empire will end up. So I expanded freely and 
+happily, I reacted on some e-mail addresses posted and let the Empires 
+know where I could be reached. My best contact was Alpha, we were fairly 
+close to each other but didn't have things to trade yet. So we decided 
+to stay in touch until one of us needed help. Not much later I made 
+contact with Meloria both by links and e-mail. We made traded planet-
+and player-info. 
+
+Around turn10 I found out, I had made some mistakes. The most important 
+thing in the beginning is to build mines of type 8 and 9, until at least 5 
+each exist on your home planet. And drop on any planet you own at least 1 
+PDU, so you see who entered your hemisphere.
+
+Another mistake was building 20 cargo on each ship I owned, in the early 
+phases it came in handy but when I needed an Battleship, it didn't have 
+much firepower. 
+
+Lucky for me my ally Meloria had to leave the game and because we had 
+been trustful allies he gifted every single planet and Ship to me. So I 
+had 40+ planets and 13 ships to my disposal. They came in useful because 
+the Empire Kaspar became more annoying every turn. He took 3 planets from 
+me and I took 3 planets from him. But I could build any ship I wanted so 
+after some maneuvering I had a planet near his homeplanet and an empty 
+hull became mine.
+
+But this happened in the last turn, I reached the 30K points and became 
+winner of this game of Celestial Empire.
+
+{\raggedright
+Niels Koerse\\
+        Slin de Morque Lord High Commander\\
+        Imperium Feline Rex\\
+        Miaaow!\\
+        }
+\end{quotation}
+
+\item[Game 6]
+Duration: 28 turns, Ended: 17th May 1992, Winner; Warlus.\\
+Vendetta gets an honourable mention for almost taking Earth. In one turn he
+destroyed all of Earths PDUs, and other players ships that were on Earth.
+There are now 13 hulks orbiting Earth. And as a parting gesture, dropped
+200 spacemines to prevent any other ships arriving. Unfortunately the effort
+drained his empire dry, and he was on the slow road to recovery when the game
+ended.
+
+In the last turn, BlueAdepts home planet was turned to slag, along with about
+half a dozen ships, by Tragins new toy, the Ultra Death Star. At the end of the
+game almost a third of the ships in the galaxy were hulks.
+
+\item[Game 7]
+Duration:22 turns, Ended: Feb 3 1992, Winners: Vux \& Kartheige\\
+    This was the first turbo game with 3 updates a week but unfortunately was
+hampered by bugs. Retchian and Skynet dropped out early on in the game.\\
+Vux won by getting 30,000pts by using speculating on Earth,
+forcing the introduction of Earth credits by getting more than 8,000pts in a
+single turn.\\
+Kartheige won by getting over 64 planets, 88 in total, a large number of which
+were given to him at the last moment by ZPZX when it was obvious Vux was about
+to win.
+
+\item[Game 8]
+Duration:29 turns, Ended: Jun 19 1992, Winner: Kartheige\\
+Kartheige won by getting 65 planets. Honourable second goes to
+ISH who got 63 planets on the last turn. The winning condition was 64
+planets. This game saw the start of the new ship class, the Death Star. At
+the end of the game there were two Ultra Death Stars in the galaxy.
+
+\item[Game 9] Duration: 29 turns, Ended Jun 19 1992, Winner Darmak\\
+Darmak won by taking over Earth, after reducing it to slag with his Ultra
+Death Star.
+
+\item[Game 10] Duration: 41 turns, Ended Feb 5 1993, Winner BlueAdept and
+ally Winter \\
+Game 10 was finally over after a massive drawn out battle over Earth that
+lasted about half the game. At the end
+of the battle 14 ships lay hulks on Earth, and another 7 over the other
+trouble spot in the galaxy, Greybeards home planet, where Winter and
+Myrtha/Algoria/Greybeard slugged it out.
+
+\item[Game 12] Duration: 27 turns, Ended Mar 12 1993, Winner Endarian and
+allied Godoraith and Meines. \\
+Won by taking Earth.
+
+\item[Game 13] Duration: 32 turns, Ended May 19 1993, Winner Salish and ally
+Hogarth \\
+Won by taking Earth.
+
+\item[Game 14] Duration: 20 turns, Ended Nov 28 1992, Winner VAXXUS and ally
+Guht \\
+Won by taking Earth.
+Here is what they had to say about the game:
+
+\begin{quote}
+Game 14 was won by a strong alliance formed early, and kept secret,
+between Guht and VAXXUS.  The key to its success was two-fold.  First, we
+both sent ships to Earth early and built up ships with every bit of score
+we could muster. Second, VAXXUS played to consumate diplomat, while
+continuing to build massive warships; and Guht developed a reputation as a
+madman, harassing the other players with a few ships, while giving some
+ships and planets to VAXXUS.  VAXXUS then descended to Earth and preceded
+to lay waste, while Guht diverted attention.
+\end{quote}
+
+\item[Game 15] Duration: 16 turns, Ended Sep 16 1993, Winner OuToLunch \\
+Won by getting over 1500 income.
+
+\begin{quote}
+This was the first game with income as a winning condition, and the
+income level required was set a bit too low, so the empires were only
+beginning to collide when the game finished. The key to my being first
+to reach the required income level was that all resources must be as
+fully utilised as possible. Ships which don't move are wasted, unless
+they are achieving some purpose by not moving. Industry which doesn't
+build things is wasted. Large stockpiles of ore without sufficient
+industry to process them are wasted. This overriding philosophy is
+particularly important around turn 6, when the initial stockpiles of ore
+on a home planet start to dwindle away.
+
+Brief Hint: \\
+High resource utilisation $\Rightarrow$ high efficiency. \\
+
+Emperor OuToLunch
+\end{quote}
+
+\end{description}
+
+\section{Hints on Play\label{hints}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Here are some hints given by players who have won their games:
+
+{\bf Zethrin's Hints} (Howard Bampton) Winner of Game 3.
+\begin{enumerate}
+\item Don't think that you have to go to, or even find Earth. I didn't put
+in an appearance there until turn 20. Of course, if your next door
+neighbors start dropping in, some strategically placed mines might be
+of use\ldots.
+
+\item Building industry seems to not be very useful (at least in the
+first 10--15 turns), instead I should have concentrated on building more
+mines. Type 0 \& 1 ore was in particularly short supply. Once you
+start running low on fuel, you are in serious trouble ---\\
+no fuel = little ship movement $\Rightarrow$ little new resources to build with
+$\Rightarrow$ wasted industry \& no new sources of fuel.
+
+\item Initially, I would recommend building as much cargo capacity as
+possible. I would concentrate on bringing back type 1, 8 \& 9 ores.
+Type 8 \& 9 can be used to build more type 1, 8 \& 9 mines.
+
+\item When exploring, try to send along PDUs in the cargo hold. As you
+acquire a planet, drop a PDU on it. This keeps other players from
+accidentally capturing your planets.
+
+\item Scanning: I used my scans to get a list of as many systems as
+possible. In a long game, or one that is more violent than this one
+was, even knowing a single link to a system is useful. A couple of
+times, I would scan a system that was near (2 jumps) one of my systems
+and one of my opponents.
+
+\item Probably the most important: try to plan 2 turns ahead. Don't
+just send ships out to pick up ore. Send them out to get enough ore of
+some type so that you can build something. If you don't do this, you
+may end up with part of your industry being idle each turn.
+
+\item Don't bother to build warships until you need them. If you really
+need one, just convert a Medium Cargo. Don't forget to put shields on
+things, especially that new warship.
+
+\item Look for the pattern that was used to set up the galaxy. In game
+3, there were a number of research planets equidistant between 2
+players.
+\end{enumerate}
+
+{\bf Ishmolins's Hints} (Rich Staats) Winner of Game 2.
+\begin{enumerate}
+\item Ishmolin Icon:  ``Do unto others as you would have them do unto you,
+and be the type of player that people do not feel bad to let win.''
+
+\item Ishmolin Icon:  ``React to any betrayal with overwhelming
+aggression.''
+
+\item Ishmolin Icon:  When fighting above a planet you own, you can use a
+cargo ship.  Cargo units are easier to replace than fighter units if destroyed,
+and you can pack the hull with PDUs which you drop on the planet prior to
+battle.
+
+\item  Produce a mixture of PDUs and Industry early on.  Use lightly armed
+ships to do scouting, and drop off a PDU on each planet you find.
+
+\item Talk to any race you discover --- what's the worst thing that could
+happen.
+\end{enumerate}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{multicols}{2}[\section{Quick Reference\label{quickr}}]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is a summary of all the commands and tables present in the rest of the
+rules. For details see the sections involved.
+
+\begin{tabbing}
+broadcast mesg \= S{\em xxx}U{\em yy}R{\em z} \kill
+{\bf Naming:}\\
+        \>S{\em xxx}={\em shipname}\\
+        \> {\em yyy}={\em planetname}\\
+{\bf Gifting:}\\
+        \> S{\em xxx}G{\em playername}\\
+        \> {\em xxx}G{\em playername}\\
+\\
+{\bf Unloading:}\\
+mine    \> S{\em xxx}U{\em yy}M{\em z} \\
+pdu     \> S{\em xxx}U{\em yy}D\\
+industry\> S{\em xxx}U{\em yy}I\\
+ore     \> S{\em xxx}U{\em yy}R{\em z}  \\
+spacemine\> S{\em xxx}U{\em yy}S\\
+global  \> S{\em xxx}U                  \\
+\\
+{\bf Loading:}\\
+mine      \>  S{\em xxx}L{\em yy}M{\em z}\\
+pdu       \>  S{\em xxx}L{\em yy}D\\
+industry  \>  S{\em xxx}L{\em yy}I\\
+ore       \>  S{\em xxx}L{\em yy}R{\em z}\\
+spacemine  \>  S{\em xxx}L{\em yy}S\\
+global    \>  S{\em xxx}L \\
+priority global    \>  S{\em xxx}L({\em spec}) \\
+\\
+{\bf Earth Contracting:}\\
+\>      S{\em xxx}B{\em yy}C{\em zz} \\
+\>      S{\em xxx}B{\em yy}F{\em zz} \\
+\>      S{\em xxx}B{\em yy}T{\em zz} \\
+\>      S{\em xxx}B{\em yy}S{\em zz} \\
+\\
+{\bf Buying Ore (Earth):}\\
+\> S{\em xxx}P{\em yy}R{\em z} \\
+{\bf Selling Ore:}\\
+\> S{\em xxx}X{\em yy}R{\em z} \\
+\> S{\em xxx}X\\
+\\
+{\bf Planet Attack:}\\
+ship  \>  {\em xxx}AS{\em yyy}\\
+      \> {\em xxx}A{\em zz}S{\em yyy}\\
+spacemines \>  {\em xxx}ASM\\
+      \> {\em xxx}A{\em zz}SM\\
+{\bf Ship Attack:}\\
+ship    \>   S{\em xxx}AS{\em yyy}\\
+        \>   S{\em xxx}A{\em zz}S{\em yyy}\\
+pdu     \>  S{\em xxx}AD\\
+        \>  S{\em xxx}A{\em zz}D\\
+mine    \>  S{\em xxx}AM{\em y} \\
+        \>  S{\em xxx}A{\em zz}M{\em y} \\
+industry \> S{\em xxx}AI\\
+         \> S{\em xxx}A{\em zz}I\\
+spacemines \> S{\em xxx}ASM\\
+           \> S{\em xxx}A{\em zz}SM\\
+\\
+{\bf Tending:}\\
+mine      \>  S{\em xxx}T{\em yy}S{\em zzz}M\\
+pdu       \>  S{\em xxx}T{\em yy}S{\em zzz}D\\
+industry  \>  S{\em xxx}T{\em yy}S{\em zzz}I\\
+ore       \>  S{\em xxx}T{\em yy}S{\em zzz}R{\em w}\\
+spacemine \>  S{\em xxx}T{\em yy}S{\em zzz}S\\
+global    \>  S{\em xxx}T \\
+\\
+{\bf Unbuilding:}\\
+cargo units \>     S{\em xxx}Z{\em yy}C \\
+fighter units \>     S{\em xxx}Z{\em yy}F \\
+tractor units \>     S{\em xxx}Z{\em yy}T \\
+shield units \>     S{\em xxx}Z{\em yy}S \\
+\\
+{\bf Build:}\\
+pdu        \>  {\em xxx}B{\em yy}D\\
+mine       \>  {\em xxx}B{\em yy}M{\em z} \\
+industry   \>  {\em xxx}B{\em yy}I\\
+spacemines  \>  {\em xxx}B{\em yy}S{\em z} \\
+ship  \>     {\em xxx}B{\em yy}H{\em ff}/{\em cc}/{\em tt}/{\em ss} \\
+cargo units \>     S{\em xxx}B{\em yy}C \\
+fighter units \>     S{\em xxx}B{\em yy}F \\
+tractor units \>     S{\em xxx}B{\em yy}T \\
+shield units \>     S{\em xxx}B{\em yy}S \\
+\\
+{\bf Jumping:}\\
+\> S{\em xxx}J{\em yy}y[J{\em yy}y[J{\em yy}y[J{\em yy}y[J{\em yy}y]]]]\\
+\\
+{\bf Transmutation:}\\
+\> {\em xxx}X{\em yy}R{\em z}R{\em w} \\
+\\
+{\bf Scans:}\\
+\> SCAN{\em xxx}\\
+\\
+{\bf Messages:}\\
+broadcast msg \>   \{Hello all you players\}\\
+private msg   \>   \&playername personal message\&\\
+\\
+{\bf Tractors:}\\
+\>      S{\em xxx}ES{\em yyy}\\
+\\
+{\bf Alliances:}\\
+ally         \>    +{\em playername}\\
+hostilize    \>    -{\em playername}\\
+\\
+{\bf Spacemines:}\\
+ship deploy \> S{\em xxx}D{\em yy}\\
+planet deploy \> {\em xxx}D{\em yy}\\
+retrieve \> S{\em xxx}R{\em yy} \\
+\end{tabbing}
+\end{multicols}
+
+\parbox{0.4\textwidth}{
+%\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{lc}
+                 & Nmbr of cargo\\
+    Item         & units needed\\\hline
+     1 unit of ore or fuel  &      1\\
+     1 spacemine            &      1\\
+     1 PDU                  &      2\\
+     1 industry             &      10\\
+     1 mine                 &      20\\
+\end{tabular}
+\end{center}
+%\caption{Number of cargo units to carry items}
+%\end{table}
+}
+\ \ \
+\parbox{0.4\textwidth}{
+%\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{cccc}
+Item & Amnt & Types & Ind\\\hline
+cargo unt            &  1     &        1      &       1\\
+fighter unt          &  1     &        2,3    &       2\\
+tractor unt          &  2     &        7      &       2\\
+shield unt           &  1     &        5,6    &       2\\
+PDU                   &  1     &        4      &       1\\
+industry              &  5     &        8,9    &       10\\
+mine                  &  5     &        8,9    &       10\\
+spacemine             &  1     &        any    &       1\\
+hyperdrive            &  10    &      4,5,6,7  &       40\\
+\end{tabular}
+\end{center}
+%\caption{Manufacturing Needs}
+%\end{table}
+}
+
+\parbox{0.4\textwidth}{
+%\begin{table}[hbt]
+\begin{tabular}{lc|ccccc}
+\multicolumn{7}{c}{Drive Efficiency}\\\hline
+      &   & 0 & 1  &2 & 3  &4\\\hline
+      & 1 & 1 & 1  &1 & 1  &1\\
+    J & 2 & 4 & 2  &2 & 2  &2\\
+    U & 3 & 9 & 6  &3 & 3  &3\\
+    M & 4 & 16& 12 &8 & 4  &4\\
+    P & 5 & 25& 20 &15& 10 &5\\
+\end{tabular}
+%\caption{Fuel requirements for jumping}
+%\end{table}
+}
+\ \ \
+\parbox{0.4\textwidth}{
+%\begin{table}[hbt]
+\begin{tabular}{ll}
+     Item           &Return (Cr/turn)\\\hline
+     mine              & 1\\
+     industry          & 5\\
+     planet            & 20\\
+     1 rsrch plnt & +1\\
+     2 rsrch plnts & +16\\
+     3 rsrch plnts & +81\\
+    4+ rsrch plnts & +256\\
+\end{tabular}
+%\caption{Income gained}
+%\end{table}
+}
+
+%\begin{table}[hbt]
+\begin{center}
+\begin{tabular}{rlll}
+Ship Type     &   F-units  &C-units & Ratio (fighter:cargo units)\\\hline
+Empty Ship    &     0      &  0        & na\\
+Small Cargo   &            &  1--10    & less than 0.5      \\
+Medium Cargo  &            & 11--30    & ''\\
+Large Cargo   &            & 31--75    & ''\\
+Super Cargo   &            & 76--150   & ''\\
+Mega Cargo    &            & 151--250  & ''\\
+Ultra Cargo   &            & 251+      & ''\\ \hline
+Small Ship    &    1--10   &           & between 0.5 and 2, inclusively\\
+Medium Ship   &   11--30   &           & ''\\
+Large Ship    &    31--75  &           & ''\\
+Super Ship    & 76--150    &           & ''\\
+Mega Ship     & 151--250   &           & ''\\
+Ultra Ship    &     251+   &           & ''\\ \hline
+Small Battle  &    1--10   &           & more than 2 and less than 9\\
+Medium Battle &    11--30  &           & ''\\
+Large Battle  &   31--75   &           & ''\\
+Super Battle  &   76--150  &           & ''\\
+Mega Battle   &   151--250 &           & ''\\
+Ultra Battle  &   251+     &           & ''\\ \hline
+Small Deathstar  & 1--10    &          & 9 or more \\
+Medium Deathstar & 11--30   &          & ''\\
+Large Deathstar  & 31--75   &          & ''\\
+Super Deathstar  & 76--150  &          & ''\\
+Mega Deathstar   & 151--250 &          & ''\\
+Ultra Deathstar  & 251+     &          & ''\\ \hline
+\end{tabular}
+\end{center}
+%\caption{Ship Types\label{types}}
+%\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

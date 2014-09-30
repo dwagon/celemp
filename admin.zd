@@ -1,0 +1,569 @@
+% Administrators guide to Celestial Empire
+% (c) 1993 Dougal Scott
+% $Id: admin.zd,v 1.4 1993/10/20 03:16:01 dwagon Exp $
+% $Header: /nelstaff/edp/dwagon/rfs/RCS/admin.zd,v 1.4 1993/10/20 03:16:01 dwagon Exp $
+% $Log: admin.zd,v $
+% Revision 1.4  1993/10/20  03:16:01  dwagon
+% Added turn winning condition to the prototype description
+%
+% Revision 1.3  1993/09/17  07:24:38  dwagon
+% Fixed up some typogrphic mistakes
+%
+% Revision 1.2  1993/09/16  04:16:17  dwagon
+% Added earth credits as a possible winning condition
+%
+% Revision 1.1  1993/07/06  04:39:04  dwagon
+% Initial revision
+%
+\documentstyle[a4,headerfooter]{article}
+\pagefooter{\verb$Id: admin.zd,v 1.4 1993/10/20 03:16:01 dwagon Exp $}{}{\thepage}
+\begin{document}
+\title{Administrators Guide to Celestial Empire}
+\author{Dougal Scott\\Dougal.Scott@FCIT.monash.edu.au}
+\maketitle
+\thispagestyle{empty}
+\tableofcontents
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Overview}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this document should be all the information needed to successfully run a
+game of Celestial Empire. A description of each of the major programs is
+included, as well as inbuilt diagnostics features. Finally a list of the
+purpose of each code module is included to aid in the tracking down of bugs,
+or the addition of new features.
+
+If any bugs are found, code improvements, new features, comments or complaints
+please mail them to {\tt Dougal\-.Scott\-@FCIT\-.monash\-.edu\-.au} so that I
+can keep the master copy upto date.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{What to do to start a new game}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+OK, you have unpacked the source, and you want to run your own game. Now what?
+
+First a few things have to be changed in the source to reflect your setup. In
+{\tt def.h} you will need to change the {\tt NAME}, {\tt HOST} and {\tt
+ADDRESS} definitions to ones appropriate for your site. These defines are used
+to specify the mail address at the top of the turn sheet. 
+
+Make all the
+programs, this can be done with {\tt make all}. Depending on your operating
+system and hardware they should compile. I have tested them on all the types
+of machines that I have access to, and haven't had any problems with them. If
+they do not compile first time, find out why, and mail me the diffs so I can
+incorporate them into the source.
+
+Decide on the sort of game that you want. What the winning conditions will be,
+what the galaxy will look like. Modify the protofile appropriately. Create the
+subdirectory that the game data files will reside in. See
+Section~\ref{s-environ} for details on environment variables that should be
+set.
+
+Find nine people who want to play. Get them to send you their empire names and
+mail addresses. Create the galaxy with their player names using {\tt
+galcreat}. Create the first turn sheet using {\tt turn} and mail your players
+their first turn sheet. 
+
+When they all send you their orders, run {\tt trans} on them, then run {\tt
+celemp} to process the orders, and finally {\tt turn} to generate the new turn
+sheets. Mail these off to them. Repeat until the game is over.
+
+Mail me any comments or criticisms, interesting strategies used, or anything
+that you think of to me.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Environment variables\label{s-environ}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{CELEMPGAME}    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The {\tt CELEMPGAME} environment variable should be set when running any of
+the celemp programs, this tells the program what game you are talking about.
+Alternatively you can specify the game number on the command line, which
+takes precedence over the environment variable. All programs that make up
+Celestial Empire game use this environment variable, likewise it can be
+overridden on all of them by specifying the game number on the command line.
+
+\subsection{CELEMPPATH}    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The {\tt CELEMPPATH} environment variable has to be set before running
+any of the the celemp programs. It tells the programs where to find the
+data files for a particular game, and where to put the output files. The
+game number will be appended to this variable to get the full path.
+E.g. if the game was 1 and {\tt CELEMPPATH} was set to {\tt
+/usr\-/games\-/celemp\-/data} then the program will try and put its
+data files in a directory called {\tt /usr\-/games\-/celemp\-/data1}. If this
+is not defined none of the programs will run.
+
+\subsection{CELEMPDEBUG}   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+If for some reason you need to know how a program is running, then the
+internal debugging can be turned on for each module selectively by setting
+this environment variable. This will turn on various print statements
+throughout the selected modules, which should give enough information to track
+down the error. These print statements give such details as which procedures
+are entered, what arguments were passed, and various decisions made along the
+way. The string that needs to be placed in the environment variable is shown
+in Table~\ref{t-debug}. Note that any number of modules may be debugged at
+once. Case is sensitive in the string. Use either all uppercase, or all
+lowercase. Some modules have more than one level of debugging, for example
+product.c has three. Each level is independent of the others, but more
+detailed. In most cases you will only need the first level of debugging. The
+other levels produce a large amount of output, more than is useful for usual
+debugging. What each module does is shown in Section~\ref{s-code}.
+
+\begin{table}[hbtp]
+\begin{center}
+\begin{tabular}{cccc}
+Module & String & Module & String \\ \hline
+atk.c & atk & bld.c & bld \\
+earth.c & earth & edit.c & edit \\
+file.c & file & galcreat.c & galc \\
+galcreat.c & gal2 & jump.c & jump \\
+libproto.c & proto & librfs.c & lib \\
+librfs.c & li2 & load.c & load \\
+main.c & main & misc.c & misc \\
+product.c & prod & product.c & pro2 \\
+product.c & pro3 & tend.c & tend \\
+trans.h & trans & trans.h & tran2 \\
+turn.h & turn & turn.h & turn2 \\
+unbld.c & unbuild & unload.c & unload \\
+\end{tabular}
+\end{center}
+\caption{Debugging strings for Celemp modules\label{t-debug}}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{galcreat\label{s-galcreate}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+{\tt galcreat} is the galaxy creator. It sets up the entire galaxy, all the
+planets, links, mines, and ships. 
+
+The galaxy creation program galcreat needs to be only run once before each
+game starts. {\tt galcreat} takes two arguments, the game number, and the
+protofile which describes various aspects of the game\footnote{Its syntax is
+described in Section~\ref{s-protofile}.}. However both of these arguments are
+optional. If the game number is not specified it is taken from the environment
+variable {\tt CELEMPGAME} and if the protofile is not specified it is assumed
+to be {\tt ./protofile}. The order that these are specified is not important,
+however the protofile must not begin with a number or the program will get
+confused. 
+
+When the program is run it will ask for the name of each of the nine players
+in turn. It then creates the galaxy file, called {\tt galfile} in the
+appropriate subdirectory. Note that this directory has to have been created
+before or the program will fail. The program takes as its random seed the game
+number, so each time you create the same game, the galaxies produced should be
+identical. This is a useful feature if you accidentally blow away your
+data files. You should be able to create the same galaxy, run the same commands
+through the game (assuming that you kept them) and get the same galaxy out the
+other end.
+
+\begin{verbatim}
+galcreat [gamenumber] [protofile]
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{trans\label{s-trans}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\tt trans} is the turn translator. It takes the players commands and turns
+them into a format more useful for the computer. This program also takes all
+the messages from the player commands and puts them in the specified files as
+detailed below. Standing orders are set and cleared in this program, as well
+as existing standing orders inserted into the normal command list.
+
+This program should be run every turn. It takes only one optional argument,
+which is the game number. If this is not specified, the game number is taken
+from the environment variable {\tt CELEMPGAME}. The {\tt trans} program uses
+or creates the following files. They are all in the subdirectory specific to
+the game. Some temporary files are created in {\tt /tmp} to aid in the
+creation of the following files, but they are deleted after use, unless
+debugging for {\tt trans.c} is turned on.
+
+\begin{description}
+\item[plr[0-8]] These files contain the commands that the players have
+submitted, one to a line. These are parsed in turn, line by line.
+\item[bids] If anyone is using Earth to build units, the bids are placed in
+this file, and then sorted in decreasing order according to the amount bid.
+This is then read in by the {\tt celemp} program to determine who gets to use
+Earth's industry.
+\item[cmdout] This is the main output of the {\tt trans} program. The user
+commands having being parsed are then placed in this file in a numerical
+format and then sorted according to command priority. This is then read in by
+the {\tt celemp} program and each command is executed in turn.
+\item[exhist.[0-8]] If any problems are encountered with the commands specified
+by the players, the error messages are placed in these files, which are then
+read in by the {\tt turn} program and become the {\tt COMMAND HISTORY} part of
+the turn sheet.
+\item[sord.[0-8]] The standing orders of all planets and ships are written
+into this file after the players own commands and parsed normally along with
+the rest of the commands.
+\item[transout] If {\tt OUTTR} has been defined\footnote{In {\tt trans.h.}}
+which it is by default, then as the commands are being parsed, they are
+written in a pseudo english format to this file. This can help in debugging
+what the computer thinks it read.
+\item[motd] The message of the day file. This is taken by {\tt turn} and used
+to create the {\tt GENERAL MESSAGES} part of the turn sheet. All the global
+messages are placed here upon being parsed by the {\tt trans} program.
+\item[spec.[0-8]] Any player specific messages are placed here. These are read
+in by {\tt turn} to create the {\tt PERSONAL MESSAGES} part of the turn
+sheet.
+\item[galfile] This is the galaxy file. It is read in to get the standing
+orders, as well as the names of the players. It is modified by setting or
+clearing standing orders and written out again. This file can be wither
+compressed or uncompressed.
+\end{description}
+
+\begin{verbatim}
+trans [gamenumber]
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{celemp}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This is the main part of the game, where all the commands are executed. The
+command file {\tt cmdout} generated by {\tt trans} is read in and executed
+line at a time. At the start the data file is copied to a backup file just
+in case. This backup file is named \verb$galfile.<turn>$ where \verb$<turn>$ is
+the turn number. This reads in the galaxy data file, the bids file and writes
+out the modified galaxy, and appends to the {\tt exhist} files with all the
+commands that it executed.
+
+\begin{verbatim}
+celemp [gamenumber]
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{turn\label{s-turn}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This program generates the turn sheets from the various files left by the
+other programs. When it is run the program asks the due date for the next
+turn, which is placed at the head of each turn sheet. It then generates nine
+files, one for each player named \verb$turn<turn>.<player>$ where
+\verb$<turn>$ is the current turn number and \verb$<player>$ is the player
+number.
+
+If two numbers are specified on the command line, the first being the game
+number and the second being a filename, {\tt turn} will create a single file
+which contains all the information about the galaxy.
+
+\begin{verbatim}
+turn [gamenumber] [filename]
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{edit\label{s-edit}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+This program edits almost all features of the data structures used in the game,
+and saved in the {\tt galfile}. This is useful for a large number of things,
+including testing new features, fixing the results of bugs, and most
+importantly doing research planet turns. These should be done before {\tt
+trans} is run. The program is menu driven and should be fairly simple to run.
+It uses the editor you have specified in your {\tt EDITOR} environment
+variable or {\tt vi} by default.
+
+Before doing any modification {\tt edit} automatically copies the {\tt
+galfile} to {\tt /tmp}.
+
+\begin{verbatim}
+edit [gamenumber]
+\end{verbatim}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Operation\label{s-make}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I use the {\tt make} utility to make the running of each game easier. The one
+I use in game~15 can be seen in Figure~\ref{f-makefile}. A lot of things will
+have to be changed in it to match your setup. A few things to note about my
+setup so you can follow what the {\tt Makefile} is doing. All of the turns are
+sent to a machine {\tt sola\-.fcit} which are then placed in a directory for
+each game, and named after the empire name. When the game is run these are
+copied onto the machine that the games are run on. The game is then run, the
+turns posted out, and a backup of all the data is sent to a third set of
+machines {\tt cgl03}. It sounds messy but there are, or were, reasons for it
+all, some of which are lost in the mists of time, and even I can't remember.
+It works, so I am not going to change it, yet. The {\tt poster} is just a
+shell script that mails the turn sheet off to all nine players.
+
+\begin{figure}[hbtp]
+\begin{verbatim}
+all: get copy edplr trans celemp turn edpos post clean
+
+clean:
+    -rm -f plr? exhist.? motd spec.? sord.?
+    -rm -f cmdout transout maxbid bids
+    -rm -f mud* slo* zor* rai* hum* atl* pmi* out* mon*
+    -rsh sola.fcit rm -f celemp/g15turns/*
+    -rcp * cgl03:bak/rfs/data15/.
+    -rcp oldturns/t15* cgl03:bak/rfs/data15/oldturns/.
+    -mv turn* oldturns
+
+get:
+    rcp sola.fcit:celemp/g15turns/* .
+
+copy:
+    -cp mud* plr0
+    -cp slo* plr1
+    -cp zor* plr2
+    -cp rai* plr3
+    -cp hum* plr4
+    -cp atl* plr5
+    -cp pmi* plr6
+    -cp out* plr7
+    -cp mon* plr8
+
+edplr: 
+    -rm -f cmnds/plr?
+    -vi plr?
+    -cp plr? cmnds
+
+trans:
+    trans 15
+
+celemp:
+    celemp 15
+
+turn:
+    turn 15
+
+edpos:
+    -vi poster
+
+post:
+    poster
+\end{verbatim}
+\caption{Makefile used to control game\label{f-makefile}}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{protofile\label{s-protofile}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The protofile is a list of lines that define various parameters of the game,
+such as winning conditions. Each line is self contained and independent of the
+others. Lines beginning with a `\#' are comments. See the example protofile
+that you received with the source distribution for an example.
+\begin{description}
+\item[Winning] This determines the type of winning conditions. At the moment
+there are four different types of winning conditions. Any number of winning
+conditions from one to four can be used. If you do not want to have a winning
+condition active, just don't include it in the file.
+	\begin{description}
+	\item[score] A certain score must be achieved to win. E.g
+\verb$Score=30000$.
+	\item[planets] A certain number of planets must be owned to win. E.g
+\verb$Planets=32$.
+	\item[income] A certain income must exceeded to win. E.g. \verb$Income=2500$.
+	\item[credits] A certain number of earth credits must exceeded to win. E.g. \verb$Credits=2500$.
+	\item[earth] Earth must be taken and held to win. E.g. \verb$Earth$.
+	\item[turn] If there is a number associated with the ``turn'', e.g.
+\verb$Turn=30$, then there is a fixed number of turns. If the ``turn'' appears
+on its own, then the number of turns is dynamically selectable by the
+players.
+	\end{description}
+\item[Earthmult] This is the number of score points that it takes to equal one
+Earth Credit. E.g. \verb$Earthmult=4$. The higher the number the more people
+must sell ore at Earth to be able to use its industry.
+\item[Amnesty] What turn does the amnesty on Earth forbidding combat expire.
+E.g $Amnesty=10$. The lower it is, the earlier the violence starts.
+\item[Home] Various parameters defining the home planets are defined on this
+line.
+	\begin{description}
+	\item[Ind] The number of industry that each home planet gets to start
+with. This is also the minimum that the players can take the industry down to
+before the populace starts preventing industry loading.
+	\item[PDU] The number of PDUs that the home planet starts with. Player
+will not be able to load PDUs below this level.
+	\item[Spcmin] Number of spacemines that each home planet has in storage.
+	\item[Deployed] Number of spacemines that each home planet has deployed
+at the start of the game.
+	\end{description}
+E.g. \verb$Ind=60 PDU=100 Spcmin=0 Deployed=0$.
+\item[EarthOre] This is the amount of each ore type that Earth has at the
+start of the game. The initial price of the ore is determined by
+much ore there is. E.g. \verb$ EarthOre 10 10 10 10 10 10 10 10 10 10$.
+\item[EarthMine] This is the number of mines of each type that Earth has. E.g.
+\verb$EarthMine 5 5 5 5 5 5 5 5 5 5$.
+\item[HomeOre] This is the amount of ore that each home planet has at the
+start of the game. E.g. \verb$HomeOre 100 30 30 20 25 15 15 15 50 50$.
+\item[HomeMine] This is the number of each mine that the home planet has at
+the start of each turn. E.g. \verb$HomeMine 5 3 3 1 2 1 1 0 0 0$.
+\item[Earth] Various controlling characteristics of Earth are defined on this
+line.
+\begin{description}
+\item[Ind] The amount of industry that Earth has at the start of the game.
+\item[PDU] The number of PDUs that Earth has at the start of the game.
+\item[Spcmine] The number of spacemines that Earth has at the start of the
+game. As Earth never deploys spacemines, this is not a really useful
+number.
+\item[Deployed] Number of spacemines that Earth has deployed at the start of
+the game. Note that Earth destroys 10\% spacemines that are above it every
+turn, so this might not be that useful.
+\item[Flag] Behaviour of Earth. At the moment there is only one flag. Selling
+ore to Earth is either limited or unlimited. See the main documentation for an
+explanation. If the behaviour is limited, \verb$Flag=Limited$, otherwise
+\verb$Flag=Unlimited$.
+\end{description}
+E.g. \verb$Earth Ind=60 PDU=200 Spcmine=0 Deployed=0 Flag=Limited$.
+\item[EarthBid] The minimum bids that are possible for the various types of
+units. E.g. \verb$EarthBid C=1 S=2 T=2 F=3$.
+\item[Gal] Various parameters that determine the distribution of mines, ores,
+PDUs and industry on neutral planets at the start of the game. If you play
+around with these figures have a look at the resulting galaxy before sending
+the first turn sheets out, to make sure that nothing is too extreme.
+\begin{description}
+\item[Nomine] This is the percentage of neutral planets that start out with
+no mines on them.
+\item[Extramine] This is the percentage of neutral planets that start out with
+more mines that average.
+\item[Extraore] This is the percentage of neutral planets that start out with
+more ore that average.
+\item[Hasind] This is the percentage of neutral planets that start out with
+industry.
+\item[Haspdu] This is the percentage of neutral planets that start out with
+PDUs.
+\end{description}
+E.g.  \verb$Gal Nomine=1 Extramine=1 Extraore=20 Hasind=30 Haspdu=10$.
+\item[Ship] This describes the number and type of ships that each player gets
+at the start of the game.
+\begin{description}
+\item[Num] This is the number of ships that each player receives.
+\item[Fight] The number of fighter units that each ship gets at the start.
+\item[Cargo] The number of cargo units that each ship gets at the start.
+\item[Shield] The number of shield units that each ship gets at the start.
+\item[Tractor] The number of tractor units that each ship gets at the start.
+\item[Eff] The efficiency of all the ships at the start of the game.
+\end{description}
+E.g. \verb$Ship Num=5 Fight=1 Cargo=10 Shield=5 Tractor=0 Eff=0$
+Eventually this will be changed to allow two sets of ships, so each player can
+say start with four cargo type ships and  one battle ship.
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Code modules\label{s-code}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Below is a list of all the C files that make up Celestial Empire along with a
+general description of what goes in them.
+\begin{description}
+\item[atk.c] All the commands that involve attacking are here, including
+engaging ships with tractor beams, and Earth retaliation. Shot calculation is
+done in {\tt librfs.c} not here.
+\item[bld.c] All the building is done here, both planet and ship based. Earth
+contracting is not done here but in {\tt earth.c}.
+\item[earth.c] Everything concerned with Earth is in this file: selling and
+buying ore, Earth contracting. As well Earths automatic rebuilding of damage
+is calculated and performed here.
+\item[edit.c] This is all the code for the structure editor as detailed in
+Section~\ref{s-edit}.
+\item[file.c] This contains all the code for reading and writing the {\tt
+galfile}s as well as opening and closing the execution history files. The code
+that compresses the galaxy datafile is also here.
+\item[fix.c] A small program that is radically changed every time it is used.
+It's main use is to fix up bugs in the data structure that apply to all
+elements. It is also used to translate old datafile into new data files, if the
+data structures or the formats change.
+\item[galcreat.c] This is the code that creates the galaxy, as detailed in
+Section~\ref{s-galcreate}.
+\item[jump.c] Code that details ship movement is included in this file,
+including fuel and path checking.
+\item[libproto.c] This is the code that gets converted into a library. This
+code interprets the protofiles and fills in the game details data structure
+appropriately.
+\item[librfs.c] This is another generally useful library used in all programs
+that make up Celestial Empire. A large number of miscellaneous functions
+reside here, including shot calculation, shield and PDU scaling functions,
+ship type determination, and a variety of others.
+\item[load.c] All the loading functions are here.
+\item[main.c] This is the main module of the {\tt celemp} program. It reads in
+the commands, processes them, and writes the datafile out.
+\item[misc.c] Miscellaneous functions are here, such as planet and ship naming
+and gifting, spacemine deploying, and ore transmutation. Anything that doesn't
+really fit anywhere else is placed here.
+\item[product.c] This is all the code that is done at the end of each turn:
+mine production, score upgrading, damage resolution, ownership changes, and
+winning detection.
+\item[sane.c] This code is rarely used, but when it is, it is to check the
+sanity of the data structure. Change and add to it any checks that you are
+interested in.
+\item[tend.c] All the code detailing the tending between ships is in this
+module.
+\item[trans.c] This is the code that implements the {\tt trans} program as
+detailed in Section~\ref{s-trans}.
+\item[turn.c] This is the code that implements the {\tt turn} program as
+detailed in Section~\ref{s-turn}.
+\item[unbld.c] All the code detailing the un-building of ship based units is
+here.
+\item[unload.c] All the unloading functions are here.
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Header modules\label{s-header}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A large number of header files are used in Celestial Empire. Here is a list of
+them and a general description of what each is used for.
+\begin{description}
+\item[allname.h] This contains the alliance names.
+\item[cmnd.h] This contains a list of all the possible commands, and their
+priorities. {\tt trans} sorts the orders according to these priorities.
+\item[def.h] Main include file. Defines the planet and ship data structures,
+as well as a host of important defines. It also defines the address to send
+the commands, which should be changed appropriately.
+\item[edit.h] Prototype definitions for the {\tt edit} program.
+\item[galc.h] The structure of the galaxy, which planets have links to which
+other planets is defined here.
+\item[galcreat.h] Prototype definitions for the {\tt galcreat} program.
+\item[proto.h] Prototype definitions for almost all of the code.
+\item[trans.h] Prototype definitions for the {\tt trans} program along with a
+few defines.
+\item[turn.h] Prototype definitions for the {\tt turn} program.
+\item[typname.h] Definition for all the different ship type names.
+\item[version.h] This defines the version and the patch level of the code.
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Documentation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+The documentation, or rules, are kept in a single file, called {\tt celemp.zd}
+which needs to be preprocessed to become a \LaTeX\ file. The source to the
+preprocessor is included in a file called {\tt proc.c}. Do not change the {\tt
+celemp.tex} file, as it will get written over. All changes should be made to
+the {\tt celemp.zd} file. This preprocessor executes commands with data that
+is in the file, and puts the outputs of these commands in the place of the
+data in the file. This is used to generate the graphs in the code using {\tt
+gnuplot}.
+
+Please try and keep the rules documentation upto date.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{How to add a command}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+If all the above seems very confusing here is an example of how to add an
+extra command. 
+\begin{itemize}
+\item First think of a useful command that fits into the game.
+\item Decide on the syntax of the command, what arguments it takes and so
+forth.
+\item Decide where the command should be executed in the turn sequence. Edit
+{\tt cmnd.h} and put the new command in according to its priority. The higher
+the number the later in the turn it will get executed.
+\item Edit {\tt trans.c} and create a new function that parses your command.
+Also include a hook in existing routines to call your function where
+appropriate. If it is a ship based command in {\tt ShpPar()}, if it is a
+planet based command, put it in {\tt PlnPar()}. Otherwise put it in the {\tt
+Parse()} routine.
+\item Edit {\tt trans.h} and add the prototypes for the new functions that you
+wrote.
+\item Compile and test {\tt trans} to see that it parses OK.
+\item Edit {\tt main.c} and place the hook to your command in {\tt Execute()}
+so that it will be executed when {\tt celemp} finds it.
+\item Find which existing module it best fits into, or {\tt misc.c} if it
+doesn't fit into any. If you are going to create a large number of associated
+commands, it might be worth making a new module.
+\item Add the command execution code to the module.
+\item Change {\tt proto.h} to include the new function.
+\item Compile and test.
+\item Change {\tt turn.c} if necessary. For most new commands it probably
+won't be.
+\item Change {\tt celemp.zd} to reflect the new command.
+\item Mail me the changes.
+\end{itemize}
+\end{document}

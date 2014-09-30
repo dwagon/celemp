@@ -1,0 +1,39 @@
+# Protofile for Celestial Empire
+# (c) 1992 Dougal Scott
+# $Header: /nelstaff/edp/dwagon/rfs/RCS/protofile,v 1.46 1993/07/15 04:31:13 dwagon Exp dwagon $
+# $Log: protofile,v $
+# Revision 1.46  1993/07/15  04:31:13  dwagon
+# Added second ship field
+#
+# Revision 1.45  1993/06/16  08:56:04  dwagon
+# *** empty log message ***
+#
+# Revision 1.44  1992/09/16  14:07:17  dwagon
+# Initial RCS'd version
+#
+#
+# Winning
+Winning: Credits=2500 Turn
+# Earthmult
+Earthmult=3
+# Amnesty
+Amnesty=10
+# Home
+Home: Ind=60 PDU=100 Spcmin=0 Deployed=0
+# Earth Ore
+EarthOre: 10 10 10 10 10 10 10 10 10 10
+# Earth Mine
+EarthMine: 1 1 1 1 1 1 1 1 1 1
+# Home Ore
+HomeOre: 100 30 30 20 25 15 15 15 50 50
+# Home Mine
+HomeMine: 5 3 3 1 2 1 1 0 0 0
+# Earth
+Earth: Ind=60 PDU=200 Spcmine=0 Deployed=0 Flag=Limited
+# Earth Bids
+EarthBid: C=1 S=2 T=2 F=3
+# Galaxy setup details
+Gal: Nomine=1 Extramine=1 Extraore=20 Hasind=30 Haspdu=10
+# Initial Ship details
+Ship1: Num=4 Fight=0 Cargo=10 Shield=5 Tractor=0 Eff=0
+Ship2: Num=1 Fight=20 Cargo=5 Shield=0 Tractor=0 Eff=1
