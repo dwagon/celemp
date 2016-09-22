@@ -24,11 +24,13 @@
 #include <stdio.h>
 #include <strings.h>
 
-int process(char *);
-
-extern int errno;
 FILE *tmpfh;
 
+int process(char *);
+int runprogram(char *, char *);
+FILE *open_temp(char *tmpname);
+
+/**********************************************************************/
 int main(int argc, char **argv)
 {
     char buff[BUFSIZ];
@@ -44,15 +46,15 @@ int main(int argc, char **argv)
     return(0);
 }
 
+/**********************************************************************/
 int runprogram(char *progname, char *tmpname)
 {
-    FILE	*p;
+    FILE *p;
     char cmdline[BUFSIZ];
     char outbuff[BUFSIZ];
 
     progname[strcspn(progname, "\n")] = 0;
     sprintf(cmdline, "%s %s", progname, tmpname);
-    fprintf(stderr, "%s %s\n", progname, tmpname);
     if((p=popen(cmdline, "r"))==NULL) {
         fprintf(stderr, "Could not open pipe to %s\n", cmdline);
         exit(-1);
@@ -65,6 +67,7 @@ int runprogram(char *progname, char *tmpname)
     return(0);
 }
 
+/**********************************************************************/
 FILE *open_temp(char *tmpname) {
     if((tmpfh=fopen(tmpname, "w"))==NULL) {
         fprintf(stderr, "Could not open %s for writing\n", tmpname);
@@ -74,6 +77,7 @@ FILE *open_temp(char *tmpname) {
     return tmpfh;
 }
 
+/**********************************************************************/
 int process(char *buff)
 {
     char tmpbuf[BUFSIZ];
