@@ -1,51 +1,5 @@
 /* Definitions for Celestial Empire  */
-/* (c) 1992 Dougal Scott */
-/* $Header: /nelstaff/edp/dwagon/rfs/RCS/def.h,v 1.53 1993/11/02 02:01:11 dwagon Exp $ */
-/* $Log: def.h,v $
- * Revision 1.53  1993/11/02  02:01:11  dwagon
- * Moved ship type defines to typnam.h
- *
- * Revision 1.52  1993/10/20  03:54:07  dwagon
- * Added game.turn field and WTURN and WFIXTURN defines to extened the winning
- * condition to include the game length.
- *
- * Revision 1.51  1993/10/11  10:12:18  dwagon
- * Added earth behaviour modification flags
- *
- * Revision 1.50  1993/09/17  07:25:31  dwagon
- * Added WCREDIT, new winning condition, based on Earth credits
- *
- * Revision 1.49  1993/07/29  03:36:48  dwagon
- * Chenged sola.fcit to sola.rdt to reflect network change. Should have no
- * effect
- *
- * Revision 1.48  1993/07/15  06:43:59  dwagon
- * Added second ship type ability to game structure
- *
- * Revision 1.47  1993/07/08  03:24:18  dwagon
- * Made NEUTRAL player 0.
- * Removed lots of associated special checks for writing to trans[0] which
- * is now open.
- *
- * Revision 1.46  1993/07/06  06:59:15  dwagon
- * Added definition for NEUTPLR for the neutral player
- *
- * Revision 1.45  1993/05/24  04:20:27  dwagon
- * Added income as a winning condition. Made the WINCOME flag, and put income
- * as a member of the game details data structure.
- *
- * Revision 1.44  1992/09/16  13:53:03  dwagon
- * Initial RCS'd version
- * */
-
-/* 18/5/92	Added game structure
- *			Put in typedefs for ship and planet structures
- * 21/5/92	Changed variables and constants to get rid of underscores
- * 31/5/92	Moved the command definitions to cmnd.h
- * 2/6/92	Extended game structure to include spare space and also to have
- *			Ship and Gal structures.
- * 23/6/92	Added ChekFuel returns and efficiency granulization parameter
- */
+/* (c) 2016 Dougal Scott */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -54,9 +8,6 @@
 #include <unistd.h>
 #include <sys/param.h>
 #include "version.h"
-#ifdef __cplusplus
-#include <std.h>
-#endif
 
 #ifndef TRUE
 #define TRUE 1
@@ -68,8 +19,8 @@
 
 /* Address to reply to */
 #define NAME	"Zer Dwagon"
-#define ADDRESS "celemp"
-#define HOST	"@sola.rdt.monash.edu.au"
+#define ADDRESS "dwagon"
+#define HOST	"@pobox.com"
 
 /* Constant definitions */
 #define NUMPLAYERS		9

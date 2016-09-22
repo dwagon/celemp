@@ -1,50 +1,6 @@
 /* Definitions file for Celestial Empire
- * (C) 1992 Dougal Scott
+ * (C) 2016 Dougal Scott
  */
-
-/* $Header: /nelstaff/edp/dwagon/rfs/RCS/proto.h,v 1.51 1993/11/02 02:33:50 dwagon Exp $ */
-/* $Log: proto.h,v $
- * Revision 1.51  1993/11/02  02:33:50  dwagon
- * Added CalcEndTurn() and DeathStarType() functions
- *
- * Revision 1.50  1993/07/15  06:44:37  dwagon
- * Added ProtoShip2() to the proto library prototypes
- *
- * Revision 1.49  1993/06/16  08:40:44  dwagon
- * Put in EarthRetaliate() call to get neutral planets to attack hostile ships
- *
- * Revision 1.48  1993/05/24  03:11:49  dwagon
- * Moved CalcPlrInc() to librfs from turn.c
- *
- * Revision 1.47  1993/05/19  00:07:46  dwagon
- * Added IsEmpty(), Shields(), and Pdus() to librfs
- *
- * Revision 1.46  1992/11/09  03:51:34  dwagon
- * Added prototype for ship ore attack function ShpOre()
- *
- * Revision 1.45  1992/10/21  05:38:18  dwagon
- * Removed PerformPduShots as no longer necessary, as damage resolution
- * types have been merged.
- *
- * Revision 1.44  1992/09/16  14:00:25  dwagon
- * Initial RCS'd version
- * */
-
-/* 21/5/92	Converted to get rid off all underscores, and change proc names
- *			Moved shots to librfs.
- * 30/5/92	Added proto library definitions
- * 2/5/92	Added ProtoGal and ProtoShip declarations
- * 19/6/92	Added Unbuild module entries
- * 20/6/92 	Added Compress to file.c
- * 23/6/92	Added EffEff to librfs.c
- * 25/8/92	Added prototyping
- */
-
-#ifndef __cplusplus
-int strcasecmp(char *,const char *);
-char *mktemp(char *);
-void qsort(void *,size_t,size_t,int(*__compar)(const void *, const void *));
-#endif
 
 /* ATK.C */
 void EngageTractor(Ship shp, Ship targ);

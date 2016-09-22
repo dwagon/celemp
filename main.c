@@ -1,43 +1,9 @@
-/* MAIN.C of Celestial Empire by Zer Dwagon (c) 1992 */
-
-/* $Header: /nelstaff/edp/dwagon/rfs/RCS/main.c,v 1.52 1993/10/20 03:57:35 dwagon Exp $ */
-/* $Log: main.c,v $
- * Revision 1.52  1993/10/20  03:57:35  dwagon
- * Added turn winning condition. Implemented GAMELEN command
- *
- * Revision 1.51  1993/07/08  03:24:18  dwagon
- * Made NEUTRAL player 0.
- * Removed lots of associated special checks for writing to trans[0] which
- * is now open.
- *
- * Revision 1.50  1993/07/06  06:58:14  dwagon
- * Added definition for NEUTPLR instead of 9 for future changes
- *
- * Revision 1.49  1993/06/16  08:40:44  dwagon
- * Put in EarthRetaliate() call to get neutral planets to attack hostile ships
- *
- * Revision 1.48  1993/05/24  05:01:05  dwagon
- * Fixed the null dbgstr error
- *
- * Revision 1.47  1993/03/04  07:02:50  dwagon
- * Changed debugging messages to a run-time option with dbgstr
- *
- * Revision 1.46  1992/11/09  03:50:59  dwagon
- * Added call to function ShpOre() to implement new attack ore command
- *
- * Revision 1.45  1992/09/28  05:11:46  dwagon
- * Fixed bug where you could change alliance with NEUTRAL
- *
- * Revision 1.44  1992/09/16  13:58:14  dwagon
- * Initial RCS'd version
- * */
+/* MAIN.C of Celestial Empire by Dougal Scott (c) 2016 */
 
 /* If you want to make changes to any of Celestial Empire, mail me
- * Dougal.Scott@fcit.monash.edu.au to discuss the new code, and if I like
+ * dwagon@pobox.com to discuss the new code, and if I like
  * it, I will put it in the official code. Also patches to get this code
  * working on other systems are always appreciated
- * There is a mailing list to discuss the game. If you wish to be on it mail
- * celemp-list-request@yoyo.cc.monash.edu.au
  */
 
 /* The CELEMPGAME environment variable should be set when running any of the
@@ -52,17 +18,6 @@
  * be appended to this variable to get the full path. Eg if the game was 1
  * and CELEMPPATH was set to /usr/games/celemp/data then the program will
  * try and put its data files in a directory called /usr/games/celemp/data1
- */
-
-/****************** VERSION 1.43 ****************/
-/* 2/5/92	Added SELLALL call
- *          Added ALLY status
- * 7/5/92	Added Ship Tending
- * 18/5/92	Added the game specifics structure
- * 21/5/92	Removed underscores
- * 12/6/92	Added changed variable to restrict alliance changing
- * 5/9/92	Added priority list to global load
- ****** Version 1.44 ******
  */
 
 #include "def.h"

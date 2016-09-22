@@ -1,78 +1,8 @@
 /****************************************************************/
 /* Celestial Empire by Zer Dwagon    TURN.C 					*/
 /* Takes data structure as input and outputs all the players    */
-/* turn sheets  - Copyright (c) 1992 Dougal Scott               */ 
+/* turn sheets  - Copyright (c) 2016 Dougal Scott               */ 
 /****************************************************************/
-
-/* $Header: /nelstaff/edp/dwagon/rfs/RCS/turn.c,v 1.59 1993/10/20 03:57:09 dwagon Exp $ */
-/* $Log: turn.c,v $
- * Revision 1.59  1993/10/20  03:57:09  dwagon
- * Added turn winning condition, prints out where appropriate
- *
- * Revision 1.58  1993/10/11  10:12:48  dwagon
- * Prints out relevant earth modification flags near ore prices
- *
- * Revision 1.57  1993/09/24  03:35:07  dwagon
- * Clarified next turn research turn message. People thought it meant this turn
- *
- * Revision 1.56  1993/09/16  04:53:59  dwagon
- * Added new winning condition: Earth credits
- *
- * Revision 1.55  1993/09/13  02:35:12  dwagon
- * Spaced next tuyrn research turn message to line up with other messages
- *
- * Revision 1.54  1993/08/30  01:47:15  dwagon
- * Prints out message saying that research turn is next turn when appropriate
- * Hopefully should reduce confusion regarding when research turns are
- *
- * Revision 1.53  1993/07/08  03:24:18  dwagon
- * Made NEUTRAL player 0.
- * Removed lots of associated special checks for writing to trans[0] which
- * is now open.
- *
- * Revision 1.52  1993/07/06  06:58:14  dwagon
- * Added definition for NEUTPLR instead of 9 for future changes
- *
- * Revision 1.51  1993/05/25  22:43:57  dwagon
- * Fixed up the printing of the income winning condition
- *
- * Revision 1.50  1993/05/24  04:58:09  dwagon
- * Added income as a winning condition to print at the head of the turn sheet
- * Fixed up the null debug string error
- *
- * Revision 1.49  1993/05/24  03:10:41  dwagon
- * Moved CalcPlrInc() to librfs
- *
- * Revision 1.48  1993/05/19  04:09:38  dwagon
- * Adjusted spacing to cater for increased data for ships and planets due
- * to shield and pdu scaling
- *
- * Revision 1.47  1993/05/19  00:16:52  dwagon
- * Print the effective shield and pdu amounts
- *
- * Revision 1.46  1993/03/04  07:02:50  dwagon
- * Changed debugging messages to a run-time option with dbgstr
- *
- * Revision 1.45  1992/11/10  04:16:32  dwagon
- * Extended filename buffers
- *
- * Revision 1.44  1992/09/16  14:01:52  dwagon
- * Initial RCS'd version
- * */
-
-/* 28/4/92	Added bit telling player how many scans they should have
- * 2/5/92	Added ALLY status
- * 3/5/92	Allies can see details of your ships.
- * 18/5/92	Added game details structure
- * 21/5/92	Removed underscores
- * 27/5/92	Added WinningDetails and CostDetails procedures
- * 30/5/92	Winning conditions printed at top of turn sheet
- * 31/5/92	Changed CalcIncome to CalcPlrInc
- ****** Version 1.44 ******
- * 20/6/92	Added LaTeX mode to global output
- * 17/8/92	Displays cargo left for ships
- * 14/9/92	Displays amount of ore on ships for planet summary totals
- */
 
 #include "def.h"
 #include "turn.h"
@@ -231,9 +161,10 @@ Headings(outfile,plr);
 /*************** RESEARCH TURN WARNING *****************************/
 if((turn-10)%4==0 && turn>9)
 	ResOutput(plr,outfile);
-if((turn-10)%4==3 && turn>=9 || turn==9) {
+if(((turn-10)%4==3 && turn>=9) || turn==9) {
 	Prnt("        Next turn is a research turn (Not this one)!\n",outfile);	
 	}
+
 /*************** GLOBAL SHIP TYPE SUMMARY *****************************/
 if(turn%2==0)
 	TypeSummary(outfile);
@@ -300,7 +231,7 @@ for(count=0;count<NUMPLANETS;count++)
 	CatMotd(outfile);
 	CatSpec(outfile,plr);
 	CatExhist(outfile,plr);
-	if((turn-11)%4==0 && turn>10)
+	if(((turn-11)%4==0) && (turn>10))
 		ListRes(outfile);
 
 fclose(outfile);
@@ -489,16 +420,20 @@ void DoShip(Player plr,Planet plan,FILE *stream)
 /*****************************************************************************/
 /* Display the ships above a certain planet */
 {
-int count;
+    int count;
 
-TRTUR(printf("DoShip(plr:%d plan:%d)\n",plr,plan));
-for(count=0;count<shiptr;count++)
-	if(fleet[count].planet==plan)
-		if(fleet[count].owner==plr || plr==NEUTPLR || alliance[fleet[count].owner][plr]==ALLY)
-			DoFriend(count,stream);
-		else 
-			DoEnemy(count,stream);
-return;
+    TRTUR(printf("DoShip(plr:%d plan:%d)\n",plr,plan));
+    for(count=0;count<shiptr;count++) {
+        if(fleet[count].planet==plan) {
+            if(fleet[count].owner==plr || plr==NEUTPLR || alliance[fleet[count].owner][plr]==ALLY) {
+                DoFriend(count,stream);
+            }
+            else {
+                DoEnemy(count,stream);
+            }
+        }
+    }
+    return;
 }
 
 /*****************************************************************************/
