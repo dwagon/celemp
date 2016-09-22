@@ -123,10 +123,10 @@ void Init(void)
 /*****************************************************************************/
 /* Ask for various details */
 {
-TRTUR(printf("Init\n"));
+    TRTUR(printf("Init\n"));
 
-printf("Enter due date:");
-gets(duedate);
+    printf("Enter due date:");
+    fgets(duedate, sizeof(duedate), stdin);
 }
 
 /*****************************************************************************/

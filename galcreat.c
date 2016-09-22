@@ -28,6 +28,7 @@
 #define RND(a)  abs(rand()%(a))
 #define RPLAN   246
 #define NUMSPEC NUMPLANETS-RPLAN
+#define NAMESIZE    10
 
 FILE *trns[NUMPLAYERS+1];
 char *dbgstr;
@@ -40,7 +41,7 @@ Number gm,turn;
 Number ecredit[NUMPLAYERS+1];
 Flag alliance[NUMPLAYERS+1][NUMPLAYERS+1];
 Number score[NUMPLAYERS+1];	/* Score of each plr */
-char name[NUMPLAYERS+1][10];
+char name[NUMPLAYERS+1][NAMESIZE];
 Number price[10];	/* Price of ore on Earth */
 FILE *desc;		/* File that contains the text of the galaxy */
 char *path;		/* Path to find all the files */
@@ -444,7 +445,7 @@ void GetName(Player plr)
 /* get the name of plr number plr */
 {
     printf("Please Enter plr %d's name:",plr);
-    gets(name[plr]);
+    fgets(name[plr], NAMESIZE, stdin);
 }
 
 /*****************************************************************************/

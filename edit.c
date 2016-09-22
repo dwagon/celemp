@@ -1,57 +1,9 @@
 /*
  * Program to edit the CELESTIAL EMPIRE data structures
  *
- * By Zer Dwagon (c) 1991 Dougal Scott
+ * By Zer Dwagon (c) 2016 Dougal Scott
  *
  */
-/* $Header: /nelstaff/edp/dwagon/rfs/RCS/edit.c,v 1.56 1993/11/02 02:35:51 dwagon Exp $ */
-/* $Log: edit.c,v $
- * Revision 1.56  1993/11/02  02:35:51  dwagon
- * Added desired end turn editing.
- * Modified to use different earth selling behaviours
- *
- * Revision 1.55  1993/10/11  10:13:30  dwagon
- * Print game details now prints earth behaviour flags
- *
- * Revision 1.54  1993/09/16  04:53:59  dwagon
- * Added new winning condition: Earth credits
- *
- * Revision 1.53  1993/09/01  23:48:25  dwagon
- * Minimum increase in research planet orders is 5 units
- *
- * Revision 1.52  1993/08/30  02:01:51  dwagon
- * Unit research menu now changes cargoleft and ship type as appropriate
- * retaining data structure validity
- *
- * Revision 1.51  1993/07/29  04:47:38  dwagon
- * Prints the second ship in the game details
- *
- * Revision 1.50  1993/07/15  03:01:24  dwagon
- * Last fields on line are not spaced out on ship printing
- *
- * Revision 1.49  1993/07/08  03:36:08  dwagon
- * Changed all the printig stuff to use proper planet/ship numbers not
- * the computer version
- *
- * Revision 1.48  1993/07/08  03:24:18  dwagon
- * Made NEUTRAL player 0.
- * Removed lots of associated special checks for writing to trans[0] which
- * is now open.
- *
- * Revision 1.47  1993/07/02  05:24:09  dwagon
- * Added RP based unit increases.
- * Changed numbers to true planet/ship numbers in prompts.
- *
- * Revision 1.46  1993/05/24  04:58:54  dwagon
- * Added income to the game details printout
- * Fixed the null dbgstr error.
- *
- * Revision 1.45  1993/03/04  07:02:50  dwagon
- * Changed debugging messages to a run-time option with dbgstr
- *
- * Revision 1.44  1992/09/16  13:54:01  dwagon
- * Initial RCS'd version
- * */
 
 /* 2/5/92	Changed it so you can only edit ships that exist :)
  *			Added ALLY status to alliance 
@@ -166,7 +118,7 @@ printf("U..Unit Increase(RP)\n");
 printf("Q..Quit Editting\n");
 
 printf("Main Menu> ");
-gets(buff);
+fgets(buff, sizeof(buff), stdin);
 switch(buff[0]) {
 	case 'c': case 'C':
 				PriceEdit();
@@ -207,7 +159,7 @@ switch(buff[0]) {
 				fflush(stdin);
 				printf("Do you wish to save galaxy?");
 				fflush(stdin);
-				gets(buff);
+				fgets(buff, sizeof(buff), stdin);
 				if(buff[0]!='n' && buff[0]!='N') {
 					printf("Saving....\n");
 					WriteGalflt();
@@ -469,8 +421,8 @@ if((ef=fopen(filename,"r"))==NULL) {
 	fprintf(stderr,"Could not open %s for reading\n",filename);
 	return;
 	}
-fgets(buff,80,ef);		/* Absorb first line */
-fgets(buff,80,ef);		/* Get name line */
+fgets(buff, sizeof(buff), ef);		/* Absorb first line */
+fgets(buff, sizeof(buff), ef);		/* Get name line */
 for(x=0;x<80;x++)		/* Strip CR */
 	if(buff[x]=='\n') {
 		buff[x]='\0';
@@ -486,7 +438,7 @@ while(tok!=NULL) {
 	strncat(tmp.name,tok,NAMESIZ);
 	}
 
-fgets(buff,80,ef);		/* Get owner income spec line */
+fgets(buff,sizeof(buff),ef);		/* Get owner income spec line */
 tok=strtok(buff,": \t");	/* Owner */
 tmp.owner=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* Income */
@@ -494,7 +446,7 @@ tok=strtok(NULL,": \t");	/* Inc # */
 tok=strtok(NULL,": \t");	/* Spec */
 tmp.spec=atoi(strtok(NULL,": \t"));
 
-fgets(buff,80,ef);		/* Get the ind pdu space depl line */
+fgets(buff,sizeof(buff),ef);		/* Get the ind pdu space depl line */
 tok=strtok(buff,": \t");	/* Industry */
 tmp.ind=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* PDU */
@@ -504,22 +456,22 @@ tmp.spacemine=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* Deployed */
 tmp.deployed=atoi(strtok(NULL,": \t"));
 
-fgets(buff,80,ef);		/* Get the Standing Orders line */
+fgets(buff,sizeof(buff),ef);		/* Get the Standing Orders line */
 tok=strtok(buff,": \t");	/* Standing */
 strcpy(tmp.stndord,strtok(NULL,": \t"));
 if(tmp.stndord[0]=='\n')
 	tmp.stndord[0]=0;
 
-fgets(buff,80,ef);		/* Get the links line */
+fgets(buff,sizeof(buff),ef);		/* Get the links line */
 tok=strtok(buff,": \t");	/* Links */
 tmp.link[0]=atoi(strtok(NULL,": \t"))-100;
 tmp.link[1]=atoi(strtok(NULL,": \t"))-100;
 tmp.link[2]=atoi(strtok(NULL,": \t"))-100;
 tmp.link[3]=atoi(strtok(NULL,": \t"))-100;
 
-fgets(buff,80,ef);		/* Ignore the mine type line */
+fgets(buff,sizeof(buff),ef);		/* Ignore the mine type line */
 
-fgets(buff,80,ef);		/* Amount stored */
+fgets(buff,sizeof(buff),ef);		/* Amount stored */
 tok=strtok(buff,": \t");	/* Amount */
 tok=strtok(NULL,": \t");	/* Stored */
 tmp.ore[0]=atoi(strtok(NULL,": \t")); tmp.ore[1]=atoi(strtok(NULL,": \t"));
@@ -528,7 +480,7 @@ tmp.ore[4]=atoi(strtok(NULL,": \t")); tmp.ore[5]=atoi(strtok(NULL,": \t"));
 tmp.ore[6]=atoi(strtok(NULL,": \t")); tmp.ore[7]=atoi(strtok(NULL,": \t"));
 tmp.ore[8]=atoi(strtok(NULL,": \t")); tmp.ore[9]=atoi(strtok(NULL,": \t"));
 
-fgets(buff,80,ef);		/* Production */
+fgets(buff,sizeof(buff),ef);		/* Production */
 tok=strtok(buff,": \t");	/* Production */
 tmp.mine[0]=atoi(strtok(NULL,": \t")); tmp.mine[1]=atoi(strtok(NULL,": \t"));
 tmp.mine[2]=atoi(strtok(NULL,": \t")); tmp.mine[3]=atoi(strtok(NULL,": \t"));
@@ -603,7 +555,7 @@ tmp.scanned=0;
 fflush(stdin);
 buff[0]=0;
 while(buff[0]<'A')
-	fgets(buff,80,stdin);
+	fgets(buff,sizeof(buff),stdin);
 if(buff[0]=='n' || buff[0]=='N')
     printf("Planet change discarded\n");
 else
@@ -635,8 +587,8 @@ if((ef=fopen(filename,"r"))==NULL) {
 	return;
 	}
 
-fgets(buff,80,ef);		/* Absorb first line */
-fgets(buff,80,ef);		/* Get name line */
+fgets(buff,sizeof(buff),ef);		/* Absorb first line */
+fgets(buff,sizeof(buff),ef);		/* Get name line */
 for(x=0;x<80;x++)		/* Strip CR */
 	if(buff[x]=='\n') {
 		buff[x]='\0';
@@ -652,13 +604,13 @@ while(tok!=NULL) {
 	strncat(tmp.name,tok,NAMESIZ);
 	}
 
-fgets(buff,80,ef);		/* Get owner type */
+fgets(buff,sizeof(buff),ef);		/* Get owner type */
 tok=strtok(buff,": \t");	/* Owner */
 tmp.owner=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* Type */
 tok=strtok(NULL,": \t");	/* Type # */
 
-fgets(buff,80,ef);		/* Get the fighet cargo shield tractor line */
+fgets(buff,sizeof(buff),ef);		/* Get the fighet cargo shield tractor line */
 tok=strtok(buff,": \t");	/* Fighter */
 tmp.fight=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* Cargo */
@@ -668,7 +620,7 @@ tmp.shield=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* Tractor */
 tmp.tractor=atoi(strtok(NULL,": \t"));
 
-fgets(buff,80,ef);		/* Get the planet carleft effic line */
+fgets(buff,sizeof(buff),ef);		/* Get the planet carleft effic line */
 tok=strtok(buff,": \t");	/* Planet */
 tmp.planet=atoi(strtok(NULL,": \t"))-100;
 tok=strtok(NULL,": \t");	/* Cargleft */
@@ -676,15 +628,15 @@ tok=strtok(NULL,": \t");	/* Cargleft # */
 tok=strtok(NULL,": \t");	/* Efficiency */
 tmp.efficiency=atoi(strtok(NULL,": \t"));
 
-fgets(buff,80,ef);		/* Get the standing line */
+fgets(buff,sizeof(buff),ef);		/* Get the standing line */
 tok=strtok(buff,": \t");	/* Standing */
 strcpy(tmp.stndord,strtok(NULL,": \t"));
 if(tmp.stndord[0]=='\n')
 	tmp.stndord[0]=0;
 #ifdef ABSORB
-	fgets(buff,80,ef);		/* Absorb line */
+	fgets(buff,sizeof(buff),ef);		/* Absorb line */
 #endif
-fgets(buff,80,ef);		/* Get the Mines ind pdu spacemine line */
+fgets(buff,sizeof(buff),ef);		/* Get the Mines ind pdu spacemine line */
 tok=strtok(buff,": \t");	/* Mines */
 tmp.mines=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* Industries */
@@ -694,7 +646,7 @@ tmp.pdu=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* Spacemines */
 tmp.spacemines=atoi(strtok(NULL,": \t"));
 
-fgets(buff,80,ef);		/* Get the ore line */
+fgets(buff,sizeof(buff),ef);		/* Get the ore line */
 tok=strtok(buff,": \t");	/* R0 */
 tmp.ore[0]=atoi(strtok(NULL,": \t"));
 tok=strtok(NULL,": \t");	/* R1 */
@@ -766,7 +718,7 @@ printf("Confirm the changes to ship?");
 fflush(stdin);
 buff[0]=0;
 while(buff[0]<'A')
-	fgets(buff,80,stdin);
+	fgets(buff,sizeof(buff),stdin);
 if(buff[0]=='n' || buff[0]=='N')
     printf("Ship change discarded\n");
 else {
@@ -803,9 +755,9 @@ if((ef=fopen(filename,"r"))==NULL) {
 	fprintf(stderr,"Could not open %s for reading\n",filename);
 	return;
 	}
-fgets(buff,80,ef);	/* Absorb first three lines */
-fgets(buff,80,ef);
-fgets(buff,80,ef);
+fgets(buff,sizeof(buff),ef);	/* Absorb first three lines */
+fgets(buff,sizeof(buff),ef);
+fgets(buff,sizeof(buff),ef);
 printf("Alliance Details\n");
 printf("ALLY:%d\tFRIEND:%d\tNEUTRAL:%d\tENEMY:%d\n",ALLY,FRIEND,NEUTRAL,ENEMY);
 printf("     ");
@@ -813,7 +765,7 @@ for(x=0;x<NUMPLAYERS;x++)
 	printf("%-3d ",x);
 printf("\n");
 for(x=0;x<NUMPLAYERS;x++) {
-	fgets(buff,80,ef);
+	fgets(buff,sizeof(buff),ef);
 	tok=strtok(buff,": \t");
 	printf("%-3d  ",x);
 	for(y=0;y<NUMPLAYERS;y++) {
@@ -842,7 +794,7 @@ for(x=0;x<NUMPLAYERS;x++) {
 fclose(ef);
 
 printf("Confirm the changes to alliance?");
-gets(buff);
+fgets(buff, sizeof(buff), stdin);
 if(buff[0]=='n' || buff[0]=='N')
 	printf("Alliance changes discarded\n");
 else
@@ -878,11 +830,11 @@ if((ef=fopen(filename,"r"))==NULL) {
 	fprintf(stderr,"Could not open %s for reading\n",filename);
 	return;
 	}
-fgets(buff,80,ef);		/* Absorb first line */
+fgets(buff,sizeof(buff),ef);		/* Absorb first line */
 
 bzero(&tmpname,sizeof(tmpname));
 for(x=0;x<NUMPLAYERS+1;x++) {
-	fgets(buff,80,ef);
+	fgets(buff,sizeof(buff),ef);
 	tok=strtok(buff,": \t\n");
 	while(tok!=NULL) {
 		tok=strtok(NULL,": \t\n");
@@ -898,7 +850,7 @@ for(x=0;x<NUMPLAYERS+1;x++) {
 fclose(ef);
 
 printf("Confirm the changes to names?");
-gets(buff);
+fgets(buff, sizeof(buff), stdin);
 if(buff[0]=='n' || buff[0]=='N')
 	printf("Name change discarded\n");
 else
@@ -934,11 +886,11 @@ if((ef=fopen(filename,"r"))==NULL) {
 	return;
 	}
 
-fgets(buff,80,ef);		/* Absorb first line */
-fgets(buff,80,ef);		/* Absorb second line */
+fgets(buff,sizeof(buff),ef);		/* Absorb first line */
+fgets(buff,sizeof(buff),ef);		/* Absorb second line */
 
 for(x=1;x<NUMPLAYERS+1;x++) {
-	fgets(buff,80,ef);
+	fgets(buff,sizeof(buff),ef);
 	tok=strtok(buff,": \t");
 	tmpscore[x]=atoi(strtok(NULL,": \t"));
 	tmpcred[x]=atoi(strtok(NULL,": \t"));
@@ -948,7 +900,7 @@ for(x=1;x<NUMPLAYERS+1;x++) {
 fclose(ef);
 
 printf("Confirm the changes to player details?");
-gets(buff);
+fgets(buff, sizeof(buff), stdin);
 if(buff[0]=='n' || buff[0]=='N')
 	printf("Score change discarded\n");
 else
@@ -1190,7 +1142,7 @@ printf("E..Efficiency Increase\tU..Undo Changes\n");
 printf("R..Return to main menu\n");
 while(ret==0) {
 	printf("Increase Menu> ");
-	gets(buff);
+	fgets(buff, sizeof(buff), stdin);
 	switch(buff[0]) {
 		case 'c':
 			TWINC(nowc);
