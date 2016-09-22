@@ -121,10 +121,10 @@ int main(int argc, char **argv)
     TRTRN(printf("Dumping cmdarr to disk\n"));
     CmdDump();
     TRTRN(printf("Sorting array\n"));
-    sprintf(str, "sort -b +1n -o %s%d/cmdout %s", path, gm, temp);
+    sprintf(str, "sort -b -k1 -n -o %s%d/cmdout %s", path, gm, temp);
     (void)system(str);
     TRTRN(printf("Sorting bids\n"));
-    sprintf(str, "sort -b +3nr -o %s%d/bids %s", path, gm, temp2);
+    sprintf(str, "sort -b -k3 -r -o %s%d/bids %s", path, gm, temp2);
     (void)system(str);
     TRTRN(printf("Finished sorting\n"));
     TRTRN(if(0))
