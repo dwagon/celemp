@@ -622,12 +622,12 @@ void NamePlanet(Planet num)
 /*****************************************************************************/
 /* Name the planet from the list of planet names */
 {
-int i;
+    int i;
 
-TRGAL2(printf("galcreat:NamePlanet(num:%d)\n",num));
+    TRGAL2(printf("galcreat:givePlanetName(num:%d)\n",num));
 
-for(i=RND(NUMNAMES);planetlist[i][0]==0;i=RND(NUMNAMES));
-strcpy(galaxy[num].name,planetlist[i]);
-planetlist[i][0]=0;
-return;
+    for(i=RND(NUMNAMES);planetlist[i][0]==0;i=RND(NUMNAMES));
+    strcpy(galaxy[num].name,planetlist[i]);
+    planetlist[i][0]=0;
+    return;
 }
