@@ -1,25 +1,11 @@
 % Administrators guide to Celestial Empire
-% (c) 1993 Dougal Scott
-% $Id: admin.zd,v 1.4 1993/10/20 03:16:01 dwagon Exp $
-% $Header: /nelstaff/edp/dwagon/rfs/RCS/admin.zd,v 1.4 1993/10/20 03:16:01 dwagon Exp $
-% $Log: admin.zd,v $
-% Revision 1.4  1993/10/20  03:16:01  dwagon
-% Added turn winning condition to the prototype description
-%
-% Revision 1.3  1993/09/17  07:24:38  dwagon
-% Fixed up some typogrphic mistakes
-%
-% Revision 1.2  1993/09/16  04:16:17  dwagon
-% Added earth credits as a possible winning condition
-%
-% Revision 1.1  1993/07/06  04:39:04  dwagon
-% Initial revision
-%
-\documentstyle[a4,headerfooter]{article}
-\pagefooter{\verb$Id: admin.zd,v 1.4 1993/10/20 03:16:01 dwagon Exp $}{}{\thepage}
+% (c) 2016 Dougal Scott
+\documentclass{article}
+\usepackage{a4}
+%\pagefooter{\verb$Id: admin.zd,v 1.4 1993/10/20 03:16:01 dwagon Exp $}{}{\thepage}
 \begin{document}
 \title{Administrators Guide to Celestial Empire}
-\author{Dougal Scott\\Dougal.Scott@FCIT.monash.edu.au}
+\author{Dougal Scott\\Dougal.Scott@gmail.com}
 \maketitle
 \thispagestyle{empty}
 \tableofcontents
@@ -35,7 +21,7 @@ purpose of each code module is included to aid in the tracking down of bugs,
 or the addition of new features.
 
 If any bugs are found, code improvements, new features, comments or complaints
-please mail them to {\tt Dougal\-.Scott\-@FCIT\-.monash\-.edu\-.au} so that I
+please mail them to {\tt Dougal\-.Scott\-@gmail.com} so that I
 can keep the master copy upto date.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
