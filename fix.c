@@ -7,7 +7,7 @@ Number score[NUMPLAYERS+1];
 Number price[10];
 char name[NUMPLAYERS+1][10];
 game gamedet;
-ogame ogamedet;
+game ogamedet;
 char *path;
 Flag alliance[NUMPLAYERS+1][NUMPLAYERS+1];
 Number ecredit[NUMPLAYERS+1];
@@ -41,7 +41,7 @@ else {
     }
 
 printf("Reading galaxy...\n");
-OldReadGalflt();
+ReadGalflt();
 printf("Fixing game structure...\n");
 gamedet.winning=ogamedet.winning;
 gamedet.score=ogamedet.score;

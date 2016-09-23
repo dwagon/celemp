@@ -264,7 +264,7 @@ void Parse(void)
     if((p=strchr(cmnd, ';'))!=NULL)
         p=NULL;		/* Truncates from ';' onwards */
 
-    for(i=strlen(cmnd);isspace(cmnd[i]);i--)	/* Strip trailing whitespace */
+    for(i=(int)strlen(cmnd);isspace(cmnd[i]);i--)	/* Strip trailing whitespace */
         cmnd[i]=0;
 
     switch(cmnd[0]) {
@@ -492,7 +492,7 @@ void Personal(void)
         return;
         }
     fprintf(fp, "From %s:", name[plr]);
-    for(x=strlen(victname)+1;cmnd[x]!='\n';x++) 
+    for(x=(int)strlen(victname)+1;cmnd[x]!='\n';x++)
         if(!(cmnd[x]=='&' && cmnd[x+1]=='\n'))
             fprintf(fp, "%c", cmnd[x]);
     fprintf(fp, "\n");
@@ -532,7 +532,7 @@ void AllMsg(void)
         fprintf(stderr, "Could not open %s for writing\n", tmpname);
         return;
         }
-    for(x=strlen(victname)+1;cmnd[x]!='\n';x++) 
+    for(x=(int)strlen(victname)+1;cmnd[x]!='\n';x++)
         fprintf(tf, "%c", cmnd[x]);
     fprintf(tf, "\n");
     fclose(tf);
@@ -1413,7 +1413,7 @@ void ParsJump(void)
 /*****************************************************************************/
 /* Parse all movement statements        */
 {
-    int len=strlen(cmnd);
+    int len=(int)strlen(cmnd);
 
     TRTRN(printf("ParsJump\n"));
 
@@ -2008,12 +2008,12 @@ void ParseTrans(void)
         if(cmnd[cnt]=='R' || cmnd[cnt]=='r')
             break;
     sscanf(&cmnd[cnt+1], "%d", &from);
-    if(from<0 && from>9) {
+    if(from<0 || from>9) {
         fprintf(trns[plr], "%s:Invalid Ore Type:%d\n", cmnd, from);
         return;
         }
     sscanf(&cmnd[cnt+3], "%d", &to);
-    if(to<0 && to>9) {
+    if(to<0 || to>9) {
         fprintf(trns[plr], "%s:Invalid Ore Type:%d\n", cmnd, to);
         return;
         }

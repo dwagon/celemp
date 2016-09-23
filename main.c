@@ -25,7 +25,7 @@
 
 #define TRMAIN(x)	if(strstr(dbgstr,"MAIN") || strstr(dbgstr,"main")) x;
 
-#define ZX      cmdarr[idx][idx2++]
+#define ZX      (cmdarr[idx][idx2++])
 
 FILE 	*trns[NUMPLAYERS+1];		/* File to put commands executed */
 FILE    *bidfp;                 	/* Bid files */

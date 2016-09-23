@@ -368,7 +368,7 @@ for(tok=strtok(NULL,"= \t\n");tok!=NULL;tok=strtok(NULL,"= \t\n")) {
 		else if(strcasecmp(tok,"unlimited")==0) 
 			gamedet.earth.flag|=WBUYALLORE;
 		else {
-			fprintf(stderr,"Error in protofile line %d: Earth flag should be either \"Limited\" or \"Unlimited\"\n");
+			fprintf(stderr,"Error in protofile line %d: Earth flag should be either \"Limited\" or \"Unlimited\"\n", line);
 			exit(-1);
 			}
 		TRPROT(printf("earth.deployed=%d\n",gamedet.earth.deployed));
