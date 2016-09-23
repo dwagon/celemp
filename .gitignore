@@ -29,12 +29,23 @@
 *.x86_64
 *.hex
 
+# Latex files
+*.aux
+*.dvi
+*.toc
+*.lof
+*.log
+*.lot
+# These are intermediate files created from .zd files
+*.tex
+
 # Created binaries
 celemp
-celemp.tex
+*.txt
+*.pdf
 edit
 galcreat
 sanity
 trans
 turn
-
+texproc
