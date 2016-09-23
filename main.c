@@ -495,8 +495,6 @@ if(ReadInTurn()==-1) {
 TRMAIN(printf("Backing up galaxy structure\n"));
 sprintf(str,"cp %s%d/galfile %s%d/galfile.%d",path,gm,path,gm,turn);
 (void)system(str);
-sprintf(str,"compress -f %s%d/galfile.%d",path,gm,turn);
-(void)system(str);
 
 TRMAIN(printf("Reseting structures\n"));
 ResetScan();

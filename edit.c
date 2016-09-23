@@ -93,7 +93,6 @@ sprintf(systr,"compress -f %s",tmpstr);
 for(;;)
 	MainMenu();
 
-Compress();
 return(0);
 }
 

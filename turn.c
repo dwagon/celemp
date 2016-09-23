@@ -59,7 +59,6 @@ else {
 
 if(ReadGalflt()== -1) {
 	fprintf(stderr,"Program terminated\n");
-	Compress();
 	exit(-1);
 	}
 printf("Celestial Empire Version %d.%d Turn sheet creation program\n",VERSION,PATCHLEVEL);
@@ -75,7 +74,6 @@ else {
 		Process(plr);
 		}
 	}
-	Compress();
 return(0);
 }
 

@@ -1,27 +1,5 @@
 /* FILE.C to do all the i/o stuff for Celestial Empire by Zer Dwagon */
-/* (c) 1992 Dougal Scott */
-/* $Header: /nelstaff/edp/dwagon/rfs/RCS/file.c,v 1.47 1993/10/20 03:56:22 dwagon Exp $ */
-/* $Log: file.c,v $
- * Revision 1.47  1993/10/20  03:56:22  dwagon
- * Added turn winning condition. Save and loaded here.
- *
- * Revision 1.46  1993/07/08  03:24:18  dwagon
- * Made NEUTRAL player 0.
- * Removed lots of associated special checks for writing to trans[0] which
- * is now open.
- *
- * Revision 1.45  1993/03/04  07:02:50  dwagon
- * Changed debugging messages to a run-time option with dbgstr
- *
- * Revision 1.44  1992/09/16  13:54:37  dwagon
- * Initial RCS'd version
- * */
-
-/* 18/5/92	Added game details structure
- * 20/5/92	Removed underscores, and changed function names
- ****** Version 1.44 ******
- * 20/6/92	Made Compress a separate function
- */
+/* (c) 2016 Dougal Scott */
 
 #include "def.h"
 
@@ -84,36 +62,14 @@ int ReadGalflt(void)
 int gsize,gmbak;
 char *gstart;
 FILE *galfile;
-char str[124], str2[124];
+char str[124];
 
 sprintf(str,"%s%d/galfile",path,gm);
 
 TRFIL(printf("Opening file %s for reading\n",str));
-/* Try to open uncompressed data file */
 if((galfile=fopen(str,"rb"))==NULL) {
-	/* See if compressed datafile exists */
-	sprintf(str2,"%s%d/galfile.Z",path,gm);
-	if(access(str2,R_OK)==-1) {
-		fprintf(stderr,"ReadGalflt: Couldn't open %s for reading\n",str);
-		return(-1);
-		}
-	else {
-/* Try to uncompress data file */
-		TRFIL(printf("Uncompressing %s\n",str2));
-		sprintf(str2,"uncompress %s%d/galfile.Z",path,gm);
-		if(system(str2)!=0) {
-			fprintf(stderr,"ReadGalflt: Uncompression of compressed data file failed\n");
-			return(-1);
-			}
-		else {
-/* Try to open uncompressed data file */
-			if((galfile=fopen(str,"rb"))==NULL) {
-				fprintf(stderr,"ReadGalflt:Couldn't open %s for readng\n",str);
-				return(-1);
-				}
-			}
-		}
-	}
+    fprintf(stderr,"ReadGalflt:Couldn't open %s for reading\n",str);
+}
 
 gstart=(char *)name;
 gsize=sizeof(name);
@@ -231,27 +187,12 @@ FILE *galfile;
 char str[124],tmpstr[124],deststr[124];
 
 /* Move any existing datafile to /tmp */
-/* Check for compressed version */
-sprintf(str,"%s%d/galfile.Z",path,gm);
-if(access(str,R_OK)==0) {
-	TRFIL(printf("Moving existing version to /tmp/%s.Z\n",tmpstr));
-	sprintf(tmpstr,"gfileA%d.XXXXXX",gm);
-	mktemp(tmpstr);
-	TRFIL(printf("Moving existing version to /tmp/%s.Z\n",tmpstr));
-	sprintf(deststr,"mv %s%d/galfile.Z /tmp/%s.Z",path,gm,tmpstr);
-	(void)system(deststr);
-	unlink(str);
-	}
-/* Check for uncompressed version */
 sprintf(str,"%s%d/galfile",path,gm);
 if(access(str,R_OK)==0) {
 	sprintf(tmpstr,"gfileB%d.XXXXXX",gm);
 	mktemp(tmpstr);
 	TRFIL(printf("Moving existing version to /tmp/%s\n",tmpstr));
 	sprintf(deststr,"mv %s%d/galfile /tmp/%s",path,gm,tmpstr);
-	(void)system(deststr);
-	TRFIL(printf("Compressing bakup save file...\n"));
-	sprintf(deststr,"compress -f /tmp/%s",tmpstr);
 	(void)system(deststr);
 	unlink(str);
 	}
@@ -342,17 +283,4 @@ if(!fwrite(gstart,gsize,1,galfile))
 	printf("Write desturn table failed\n");
 
 fclose(galfile);
-}
-
-/*****************************************************************************/
-void Compress(void)
-/*****************************************************************************/
-/* Compress the save file */
-{
-char str[124];
-
-TRFIL(printf("Compressing save file...\n"));
-sprintf(str,"compress -f %s%d/galfile",path,gm);
-(void)system(str);
-return;
 }

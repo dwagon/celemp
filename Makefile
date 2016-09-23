@@ -34,8 +34,7 @@ all: libproto.a librfs.a $(UTIL) celemp galcreat turn trans edit celemp.pdf cele
 everything: all dox admin src 
 
 bakall:
-	tar -cf /tmp/rfsbak.tar .
-	compress /tmp/rfsbak.tar
+	tar -zcf /tmp/rfsbak.tar.gz .
 
 depend:
 	makedepend *.[ch]
@@ -63,25 +62,12 @@ texproc: proc.o
 admin: admin.zd admin.txt admin.dvi admin.tex admin.pdf
 
 dox: celemp.zd celemp.txt celemp.dvi celemp.tex celemp.pdf
-	compress celemp.zd
-	uncompress celemp.zd
-	compress celemp.txt
-	uncompress celemp.txt
-	compress celemp.dvi
-	uncompress celemp.dvi
-	compress celemp.tex
-	uncompress celemp.tex
-	compress celemp.pdf
-	uncompress celemp.pdf
 
 src: 
-	tar -cf celempsrc.tar *.[ch] Makefile protofile *.zd
-	compress celempsrc.tar
-	-rm -f celempsrc.tar.Z
+	tar -czf celempsrc.tar.gz *.[ch] Makefile protofile *.zd
 
 bakup:
-	tar -cf /tmp/rfsbak.tar RCS
-	compress /tmp/rfsbak.tar
+	tar -czf /tmp/rfsbak.tar.gz
 
 fix: fix.c def.h librfs.a
 	$(CC) $(CFLAGS) fix.c -o fix $(LDFLAGS)

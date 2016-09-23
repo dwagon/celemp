@@ -44,7 +44,6 @@ int OpenExhist(const char *mode);
 void CloseExhist(void);
 int ReadGalflt(void);
 void WriteGalflt(void);
-void Compress(void);
 
 /* JUMP.C */
 int Chekfuel(Ship shp, Number dist);
