@@ -445,7 +445,7 @@ int main(int argc,char **argv)
 /***************************************************************************/
 {
 char *gmstr;
-char str[80];
+char str[BUFSIZ];
 
 printf("Celestial Empire Version:%d.%d\n",VERSION,PATCHLEVEL);
 
