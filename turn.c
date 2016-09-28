@@ -108,6 +108,7 @@ CostDetails(gal);
 PlanetSummary(NEUTPLR,gal);
 for(count=0;count<shiptr;count++)
 	ChekShip(count,NEUTPLR,gal);
+Prnt("\\section{Planets}\n", gal);
 for(count=0;count<NUMPLANETS;count++) {
 	DoPlanet(count,NEUTPLR,gal);
 	Prnt("------------------------------------------------------------\n",gal);
@@ -148,7 +149,7 @@ int count;
 TRTUR(printf("Process(plr:%d)\n",plr));
 
 /* Open file for outputing information */
-sprintf(filename,"%s%d/turn%d.%d",path,gm,turn,plr);
+sprintf(filename,"%s%d/turn%d.%d.tex",path,gm,turn,plr);
 if((outfile=fopen(filename,"w"))==NULL) {
 	fprintf(stderr,"Could not open %s for writing\n",filename);
 	return;
@@ -168,13 +169,17 @@ if(turn%2==0)
 	TypeSummary(outfile);
 /*************** SHIP SUMMARY ****************************************/
 TRTUR(printf("Process:Ship Summary\n"));
-Prnt("\nSUMMARY OF SHIPS\n",outfile);
+Prnt("\n\\section{Summary of ships}\n",outfile);
+Prnt("\\begin{verbatim}\n",outfile);
 for(count=0;count<shiptr;count++)
 	ChekShip(count,plr,outfile);
+Prnt("\\end{verbatim}\n",outfile);
 /*************** PLANET SUMMARY ***********************************/
 PlanetSummary(plr,outfile);
 /*********** ALLIANCE STATUS **********************************/
-Prnt("\nALLY STATUS\nEmpire Name         You are     They are\n",outfile);
+Prnt("\\section{Ally Status}\n", outfile);
+Prnt("\\begin{verbatim}\n", outfile);
+Prnt("\nEmpire Name         You are     They are\n",outfile);
 for(count=1;count<NUMPLAYERS+1;count++) 
 	if(count!=plr && (alliance[plr][count]!=NEUTRAL || alliance[count][plr]!=NEUTRAL)) {
 		sprintf(str,"%-11s          : %-9s : %-9s\n",name[count],allname[alliance[plr][count]],allname[alliance[count][plr]]);
@@ -184,8 +189,11 @@ if(alliance[plr][plr]==ENEMY) {
 	sprintf(str,"%-11s          :           : %-9s\n",name[count],allname[alliance[plr][plr]]);
 	Prnt(str,outfile);
 	}
+Prnt("\\end{verbatim}\n", outfile);
 /******** EARTH DETAILS ***************************************/
 TRTUR(printf("Process:Earth Details\n"));
+Prnt("\\section{Earth}\n", outfile);
+Prnt("\\begin{verbatim}\n", outfile);
 sprintf(str,"\n %d  ******** EARTH ********\n",earth+100);
 Prnt(str,outfile);
 if(turn<gamedet.earth.amnesty)
@@ -216,6 +224,7 @@ for(count=0;count<10;count++) {
 	}
 Prnt("\n",outfile);
 DoShip(plr,earth,outfile);
+Prnt("\\end{verbatim}\n", outfile);
 Prnt("\n-----------------------------------------------------------\n",outfile);
 /******** PLANET DETAILS **************************************/
 TRTUR(printf("******** PLANET DETAILS *******\n"));
@@ -232,6 +241,7 @@ for(count=0;count<NUMPLANETS;count++)
 	if(((turn-11)%4==0) && (turn>10))
 		ListRes(outfile);
 
+Prnt("\\end{document}\n", outfile);
 fclose(outfile);
 }
 
@@ -250,10 +260,12 @@ if((exechist = fopen(filename,"r")) == NULL) {
 	fprintf(stderr,"CatExhist:Could not open exhist file:%s\n",filename);
 	return;
 	}
-Prnt("\nCOMMAND HISTORY\n",stream);
+Prnt("\\section{Command history}\n", stream);
+Prnt("\\begin{verbatim}\n", stream);
 for(;fgets(strng,256,exechist)!=NULL;) {
 	fputs(strng,stream);
 	}
+Prnt("\\end{verbatim}\n", stream);
 fclose(exechist);
 }
 
@@ -355,62 +367,66 @@ return(0);
 }
 
 /*****************************************************************************/
-void DoPlanet(Planet plan,Player plr,FILE *stream)
+void DoPlanet(Planet plan, Player plr, FILE *stream)
 /*****************************************************************************/
 /* Do the main part of the display */
 {
-char str[128];
-int count;
+    char str[BUFSIZ];
+    int count;
 
-TRTUR2(printf("DoPlanet(plan:%d, plr:%d)\n",plan,plr));
-if(galaxy[plan].scanned!=0) {
-	Prnt("              *******  PLANET SCANNED THIS TURN *******\n",stream);
-	}
-if(IsResearch(plan)) {
-	sprintf(str,"                  ******* RESEARCH PLANET *******\n");
-	Prnt(str,stream);
-	}
-TRTUR(printf("plan:%d\t owner:%d\n",plan,galaxy[plan].owner));
-sprintf(str,"%3d %-9s:%-25s\n",plan+100,name[galaxy[plan].owner],galaxy[plan].name);
-Prnt(str,stream);
-Prnt("Nearby Planets   ",stream);
-for(count=0;count<4;count++) 
-	if(galaxy[plan].link[count]>=0) {
-		sprintf(str,"%-4d ",galaxy[plan].link[count]+100);
-		Prnt(str,stream);
-	} else {
-		Prnt("     ",stream);
-		}
-sprintf(str,"Industry= %-3d  PDU= %d(%d) Income= %-5d\n",galaxy[plan].ind,galaxy[plan].pdu,Pdus(galaxy[plan].pdu),galaxy[plan].income);
-Prnt(str,stream);
-sprintf(str,"Spacemines: Stored= %-5d Deployed= %-5d\n",galaxy[plan].spacemine,galaxy[plan].deployed);
-Prnt(str,stream);
-if(galaxy[plan].stndord[0]==0)
-	sprintf(str,"Standing Order:None\n");
-else 
-	sprintf(str,"Standing Order:%d%s\n",plan+100,galaxy[plan].stndord);
-Prnt(str,stream);
-Prnt("     Mine Type              ",stream);
-for(count=0;count<10;count++)
-	if(galaxy[plan].mine[count]!=0 || galaxy[plan].ore[count]!=0) {
-		sprintf(str,"%-5d",count);
-		Prnt(str,stream);
-		}
-Prnt("\n     Amount stored          ",stream);
-for(count=0;count<10;count++)
-	if(galaxy[plan].mine[count]!=0 || galaxy[plan].ore[count]!=0) {
-		sprintf(str,"%-5d",galaxy[plan].ore[count]);
-		Prnt(str,stream);
-		}
-Prnt("\n     Production             ",stream);
-for(count=0;count<10;count++)
-	if(galaxy[plan].mine[count]!=0 || galaxy[plan].ore[count]!=0) {
-		sprintf(str,"%-5d",galaxy[plan].mine[count]);
+    TRTUR2(printf("DoPlanet(plan:%d, plr:%d)\n",plan,plr));
+
+    sprintf(str,"\\subsection*{%d %s:%s}\n", plan+100, galaxy[plan].name, name[galaxy[plan].owner]);
+    Prnt(str,stream);
+    Prnt("\\begin{verbatim}",stream);
+    if(galaxy[plan].scanned!=0) {
+        Prnt("              *******  PLANET SCANNED THIS TURN *******\n",stream);
+        }
+    if(IsResearch(plan)) {
+        sprintf(str,"                  ******* RESEARCH PLANET *******\n");
+        Prnt(str,stream);
+        }
+    TRTUR(printf("plan:%d\t owner:%d\n",plan,galaxy[plan].owner));
+    Prnt("Nearby Planets   ",stream);
+    for(count=0;count<4;count++) 
+        if(galaxy[plan].link[count]>=0) {
+            sprintf(str,"%-4d ",galaxy[plan].link[count]+100);
+            Prnt(str,stream);
+        } else {
+            Prnt("     ",stream);
+            }
+    sprintf(str,"Industry= %-3d  PDU= %d(%d) Income= %-5d\n",galaxy[plan].ind,galaxy[plan].pdu,Pdus(galaxy[plan].pdu),galaxy[plan].income);
+    Prnt(str,stream);
+    sprintf(str,"Spacemines: Stored= %-5d Deployed= %-5d\n",galaxy[plan].spacemine,galaxy[plan].deployed);
+    Prnt(str,stream);
+    if(galaxy[plan].stndord[0]==0)
+        sprintf(str,"Standing Order:None\n");
+    else 
+        sprintf(str,"Standing Order:%d%s\n",plan+100,galaxy[plan].stndord);
+    Prnt(str,stream);
+    Prnt("\\end{verbatim}", stream);
+    Prnt("\\begin{tabular}{r|cccccccccc}\n", stream);
+    Prnt("Mine Type",stream);
+    for(count=0;count<10;count++) {
+        sprintf(str,"& %d",count);
+        Prnt(str,stream);
+        }
+    Prnt("\\\\ \\hline \n",stream);
+    Prnt("Amount stored",stream);
+    for(count=0;count<10;count++) {
+        sprintf(str,"& %d",galaxy[plan].ore[count]);
 		Prnt(str,stream);
 		}
-Prnt("\n\n",stream);
-DoShip(plr,plan,stream);
-return;
+    Prnt("\\\\\n",stream);
+    Prnt("Production",stream);
+    for(count=0;count<10;count++) {
+        sprintf(str,"& %d",galaxy[plan].mine[count]);
+        Prnt(str,stream);
+        }
+    Prnt("\\\\\n", stream);
+    Prnt("\\end{tabular}\n", stream);
+    DoShip(plr, plan, stream);
+    return;
 }
 
 /*****************************************************************************/
@@ -442,10 +458,11 @@ void DoEnemy(Ship shp,FILE *stream)
 char str[128];
 
 TRTUR(printf("DoEnemy(ship:%d)\n",shp));
-Prnt("- - - - - - - - - - - - - - - - - - - -\n",stream);
+    Prnt("\\begin{verbatim}",stream);
 sprintf(str,"S%3d %-9s: %-24s: %s\n",shp+100,name[fleet[shp].owner],fleet[shp].name,stypes[fleet[shp].type]);
 Prnt(str,stream);
 TRTUR(printf("Finished DoEnemy()\n"));
+    Prnt("\\end{verbatim}",stream);
 return;
 }
 
@@ -458,7 +475,7 @@ int count;
 char str[128];
 
 TRTUR(printf("DoFriend(ship:%d)\n",shp));
-Prnt("- - - - - - - - - - - - - - - - - - - -\n",stream);
+    Prnt("\\begin{verbatim}",stream);
 sprintf(str,"S%-3d %-9s: f=%-3d c=%-3d(%-3d) t=%-3d s=%d(%d)",shp+100,name[fleet[shp].owner],fleet[shp].fight,fleet[shp].cargo,fleet[shp].cargleft,fleet[shp].tractor,fleet[shp].shield,Shields(shp));
 Prnt(str,stream);
 sprintf(str," eff=%-1d(%d) shots=%d",fleet[shp].efficiency,EffEff(shp),Shots(shp,fleet[shp].fight));
@@ -494,103 +511,98 @@ for(count=0;count<10;count++)
 		Prnt(str,stream);
 		}
 Prnt("\n",stream);
+    Prnt("\\end{verbatim}",stream);
 return;
 }
 
 /*****************************************************************************/
-int ChekPlan(Planet plan,Player plr,FILE *stream)
+int ChekPlan(Planet plan, Player plr, FILE *stream)
 /*****************************************************************************/
 /* Get details of the planet for the planet summary */
 {
-char str[128];
-int count;
+    char str[BUFSIZ];
+    int count;
 
-TRTUR2(printf("ChekPlan(plan:%d, plr:%d)\n",plan,plr));
-if(galaxy[plan].owner!=plr && plr!=NEUTPLR)
-	return(0);
-sprintf(str,"%d    ",plan+100);
-Prnt(str,stream);
-for(count=0;count<10;count++) {
-	if(galaxy[plan].mine[count]==0 && galaxy[plan].ore[count]==0) {
-		sprintf(str,"  /   ");
-		}
-	else if(galaxy[plan].mine[count]==0) {
-		sprintf(str,"  /%-3d",galaxy[plan].ore[count]);
-		}
-	else if(galaxy[plan].ore[count]==0) {
-		sprintf(str,"%2d/   ",galaxy[plan].mine[count]);
-		}
-	else {
-		sprintf(str,"%2d/%-3d",galaxy[plan].mine[count],galaxy[plan].ore[count]);
-		}
-	Prnt(str,stream);
-	}
-if(galaxy[plan].pdu==0)
-	Prnt("  -  ",stream);
-else {
-	sprintf(str," %-4d",galaxy[plan].pdu);
-	Prnt(str,stream);
-	}
-if(galaxy[plan].ind==0)
-	Prnt(" -  \n",stream);
-else {
-	sprintf(str," %-4d\n",galaxy[plan].ind);
-	Prnt(str,stream);
-	}
-return(1);
+    TRTUR2(printf("ChekPlan(plan:%d, plr:%d)\n",plan,plr));
+    if(galaxy[plan].owner!=plr && plr!=NEUTPLR)
+        return(0);
+    sprintf(str,"%d &",plan+100);
+    Prnt(str,stream);
+    for(count=0;count<10;count++) {
+        if(galaxy[plan].mine[count]==0 && galaxy[plan].ore[count]==0) {
+            sprintf(str," / &");
+            }
+        else if(galaxy[plan].mine[count]==0) {
+            sprintf(str," /%d &",galaxy[plan].ore[count]);
+            }
+        else if(galaxy[plan].ore[count]==0) {
+            sprintf(str,"%d/ &",galaxy[plan].mine[count]);
+            }
+        else {
+            sprintf(str,"%d/%d &",galaxy[plan].mine[count],galaxy[plan].ore[count]);
+            }
+        Prnt(str,stream);
+        }
+    if(galaxy[plan].pdu==0)
+        Prnt(" - &",stream);
+    else {
+        sprintf(str," %d &",galaxy[plan].pdu);
+        Prnt(str,stream);
+        }
+    if(galaxy[plan].ind==0)
+        Prnt(" - \\\\\n",stream);
+    else {
+        sprintf(str," %d\\\\\n",galaxy[plan].ind);
+        Prnt(str,stream);
+        }
+    return(1);
 }
 
 /*****************************************************************************/
-void ChekTot(Player plr,FILE *stream)
+void ChekTot(Player plr, FILE *stream)
 /*****************************************************************************/
 /* Print out total amounts of ore in players empire */
 {
-Amount tore[10],tmin[10],tind,tpdu;
-int count,count2;
-char str[128];
+    Amount tore[10],tmin[10],tind,tpdu;
+    int count,count2;
+    char str[128];
 
-TRTUR(printf("ChekTot(plr:%d)\n",plr));
-for(count=0;count<10;count++) {
-	tore[count]=0;
-	tmin[count]=0;
-	}
-tind=tpdu=0;
+    TRTUR(printf("ChekTot(plr:%d)\n",plr));
+    for(count=0;count<10;count++) {
+        tore[count]=0;
+        tmin[count]=0;
+        }
+    tind=tpdu=0;
 
-for(count=0;count<NUMPLANETS;count++)
-	if(galaxy[count].owner==plr || plr==NEUTPLR) {
-		for(count2=0;count2<10;count2++) {
-			tore[count2]+=galaxy[count].ore[count2];
-			tmin[count2]+=galaxy[count].mine[count2];
-			}
-		tpdu+=galaxy[count].pdu;
-		tind+=galaxy[count].ind;
-	}
+    for(count=0;count<NUMPLANETS;count++)
+        if(galaxy[count].owner==plr || plr==NEUTPLR) {
+            for(count2=0; count2<10; count2++) {
+                tore[count2] += galaxy[count].ore[count2];
+                tmin[count2] += galaxy[count].mine[count2];
+                }
+            tpdu += galaxy[count].pdu;
+            tind += galaxy[count].ind;
+        }
 
-for(count=0;count<shiptr;count++)
-	if(fleet[count].owner==plr || plr==NEUTPLR) {
-		for(count2=0;count2<10;count2++) {
-			tore[count2]+=fleet[count].ore[count2];
-			}
-		tpdu+=fleet[count].pdu;
-		tind+=fleet[count].ind;
-	}
+    for(count=0; count<shiptr; count++)
+        if(fleet[count].owner==plr || plr==NEUTPLR) {
+            for(count2=0; count2<10; count2++) {
+                tore[count2] += fleet[count].ore[count2];
+                }
+            tpdu += fleet[count].pdu;
+            tind += fleet[count].ind;
+        }
 
-sprintf(str,"Total:");
-Prnt(str,stream);
-for(count=0;count<10;count++) {
-	sprintf(str,"%5d/",tmin[count]);
-	Prnt(str,stream);
-	}
-sprintf(str,"  %-4d",tpdu);
-Prnt(str,stream);
-sprintf(str,"  %-4d\n",tind);
-Prnt(str,stream);
-sprintf(str,"      ");
-Prnt(str,stream);
-for(count=0;count<10;count++) {
-	sprintf(str,"%5d ",tore[count]);
-	Prnt(str,stream);
-	}
+    sprintf(str,"Total: &");
+    Prnt(str,stream);
+    for(count=0;count<10;count++) {
+        sprintf(str,"%d/%d &", tmin[count], tore[count]);
+        Prnt(str,stream);
+        }
+    sprintf(str,"%d &",tpdu);
+    Prnt(str,stream);
+    sprintf(str,"%d\\\\ \\hline \n",tind);
+    Prnt(str,stream);
 }
 
 /*****************************************************************************/
@@ -707,12 +719,13 @@ char str[128];
 int income=CalcPlrInc(plr);
 
 TRTUR(printf("Headings\n"));
-Prnt("\n",outfile);
-sprintf(str,"                         CELESTIAL EMPIRE %d.%d\n",VERSION,PATCHLEVEL);
+Prnt("\\documentclass{article}\n",outfile);
+Prnt("\\begin{document}\n",outfile);
+sprintf(str,"\\title{Celestial Empire %d.%d}\n",VERSION,PATCHLEVEL);
 Prnt(str,outfile);
-Prnt("                                  by\n",outfile);
-Prnt("                             Zer Dwagon\n",outfile);
+Prnt("\\author{Zer Dwagon}\n",outfile);
 Prnt("\n",outfile);
+Prnt("\\begin{verbatim}\n",outfile);
 /* Print out name of player and number */
 sprintf(str,"        *********   %s   player number=%d     *********\n",name[plr],plr);
 Prnt(str,outfile);
@@ -761,39 +774,41 @@ sprintf(str,"        Minimum bids: Cargo=%d Fighter=%d Shield=%d Tractor=%d\n",g
 Prnt(str,outfile);
 sprintf(str,"        You have %d scans this turn\n",NumRes(plr)+1);
 Prnt(str,outfile);
+Prnt("\\end{verbatim}\n",outfile);
+Prnt("\\tableofcontents\n",outfile);
+Prnt("\\newpage\n",outfile);
 }
 
 /*****************************************************************************/
-void PlanetSummary(Player plr,FILE *outfile)
+void PlanetSummary(Player plr, FILE *outfile)
 /*****************************************************************************/
 {
-char str[128];
-int count,total=0;
+    char str[BUFSIZ];
+    int count, total=0;
 
-TRTUR(printf("Process:Planet Summary\n"));
-Prnt("\n\nSUMMARY OF PLANETS.\n",outfile);
-Prnt("planet",outfile);
-for(count=0;count<10;count++) {
-	sprintf(str,"   %d  ",count);
-	Prnt(str,outfile);
-	}
-Prnt("   PDU",outfile);
-Prnt("  IND\n",outfile);
-Prnt("------",outfile);
-for(count=0;count<10;count++)
-	Prnt("  --- ",outfile);
-Prnt("   ---  ---\n",outfile);
-for(count=0;count<NUMPLANETS;count++) {
-	total+=ChekPlan(count,plr,outfile);
-	}
-ChekShipTot(plr,outfile);
-Prnt("------",outfile);
-for(count=0;count<10;count++)
-	Prnt("  --- ",outfile);
-Prnt("   ---  ---\n",outfile);
-ChekTot(plr,outfile);
-sprintf(str,"\n\ntotal number of planets owned = %d\n\n",total);
-Prnt(str,outfile);
+    TRTUR(printf("Process:Planet Summary\n"));
+    Prnt("\\section{Summary of planets}\n", outfile);
+    Prnt("\\begin{table}\n", outfile);
+    Prnt("\\begin{tabular}{rcccccccccccc}\n", outfile);
+    Prnt("planet &", outfile);
+    for(count=0; count<10; count++) {
+        sprintf(str, "%d &", count);
+        Prnt(str, outfile);
+        }
+    Prnt("PDU &",outfile);
+    Prnt("IND \\\\ \\hline\n", outfile);
+    for(count=0; count<NUMPLANETS; count++) {
+        total += ChekPlan(count, plr, outfile);
+        }
+    Prnt("\\hline\n", outfile);
+    ChekShipTot(plr, outfile);
+    ChekTot(plr, outfile);
+    Prnt("\\end{tabular}\n", outfile);
+
+    sprintf(str, "Total number of planets owned = %d\n", total);
+    Prnt(str, outfile);
+
+    Prnt("\\end{table}\n", outfile);
 }
 
 /*****************************************************************************/
@@ -996,21 +1011,21 @@ for(count=0;count<shiptr;count++) {
 	}
 
 /* Print out results */
-sprintf(str,"Ships: ");
+sprintf(str,"Ships: &");
 Prnt(str,stream);
 for(tmp=0;tmp<10;tmp++) {
 	if(oretot[tmp]>0) {
-		sprintf(str,"  /%-3d",oretot[tmp]);
+		sprintf(str," /%d &",oretot[tmp]);
 		Prnt(str,stream);
 		}
 	else {
-		sprintf(str,"  /   ");
+		sprintf(str," / &");
 		Prnt(str,stream);
 		}
 	}
-	sprintf(str,"  %-4d",oretot[11]);
+	sprintf(str," %d&",oretot[11]);
 	Prnt(str,stream);
-	sprintf(str," %-4d\n",oretot[10]);
+	sprintf(str," %d\\\\\n",oretot[10]);
 	Prnt(str,stream);
 return;
 }
