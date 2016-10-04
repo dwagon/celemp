@@ -85,7 +85,6 @@ int PrintGalaxy(char *fname)
     FILE *output;
     int count;
     char filename[BUFSIZ];
-    char str[BUFSIZ];
 
     TRTUR(printf("PrintGalaxy\n"));
     sprintf(filename, "%s", fname);
@@ -95,9 +94,10 @@ int PrintGalaxy(char *fname)
         }
 
     fprintf(output, "\\documentclass{article}\n");
-    fprintf(output, "\\begin{document}\n");
+    fprintf(output, "\\usepackage{longtable, a4wide}\n");
     fprintf(output, "\\title{Celestial empire %d.%d}\n", VERSION, PATCHLEVEL);
     fprintf(output, "\\author{Dougal Scott <dougal.scott@gmail.com>}\n");
+    fprintf(output, "\\begin{document}\n");
     fprintf(output, "\nGame:%d\tTurn:%d\n", gm, turn);
     TypeSummary(output);
     OwnerSummary(output);
@@ -105,12 +105,7 @@ int PrintGalaxy(char *fname)
     WinningDetails(output);
     CostDetails(output);
     PlanetSummary(NEUTPLR, output);
-    fprintf(output, "\\begin{tabular}{rllllll}\n");
-    for(count=0;count<shiptr;count++) {
-        ChekShip(count, NEUTPLR, output);
-    }
-    fprintf(output, "\\end{tabular}\n");
-    fprintf(output, "\\newpage\n");
+    ShipSummary(NEUTPLR, output);
     fprintf(output, "\\section*{Planets}\n");
     for(count=0; count<NUMPLANETS; count++) {
         DoPlanet(count, NEUTPLR, output);
@@ -136,7 +131,6 @@ void Process(Player plr)
 /*****************************************************************************/
 /* Process each players turn */
 {
-    char str[BUFSIZ];
     FILE *output;
     char filename[BUFSIZ];
     int count;
@@ -153,8 +147,9 @@ void Process(Player plr)
     /*******  HEADINGS ***************************************************/
     Headings(output, plr);
     /*************** RESEARCH TURN WARNING *****************************/
-    if((turn-10)%4==0 && turn>9)
+    if((turn-10)%4==0 && turn>9) {
         ResOutput(plr, output);
+    }
     if(((turn-10)%4==3 && turn>=9) || turn==9) {
         fprintf(output, " Next turn is a research turn (Not this one)!\n");	
 	}
@@ -164,65 +159,10 @@ void Process(Player plr)
         TypeSummary(output);
     }
 
-    /*************** SHIP SUMMARY ****************************************/
-    TRTUR(printf("Process:Ship Summary\n"));
-    fprintf(output, "\n\\section*{Summary of ships}\n");
-    fprintf(output, "\\begin{tabular}{rllllll}\n");
-    for(count=0;count<shiptr;count++) {
-        ChekShip(count, plr, output);
-    }
-    fprintf(output, "\\end{tabular}\n");
-
-    /*************** PLANET SUMMARY ***********************************/
+    ShipSummary(plr, output);
     PlanetSummary(plr, output);
-
-    /*********** ALLIANCE STATUS **********************************/
-    fprintf(output, "\\section*{Ally Status}\n");
-    fprintf(output, "\\begin{tabular}{lll}\n");
-    fprintf(output, "Empire Name & You are & They are\\\\ \\hline\n");
-    for(count=1;count<NUMPLAYERS+1;count++) {
-        if(count != plr && (alliance[plr][count] != NEUTRAL || alliance[count][plr] != NEUTRAL)) {
-            fprintf(output, "%s & %s & %s \\\\\n", name[count], allname[alliance[plr][count]], allname[alliance[count][plr]]);
-            }
-    }
-    if(alliance[plr][plr]==ENEMY) {
-        fprintf(output, "%s & & %s \\\\\n", name[count], allname[alliance[plr][plr]]);
-        }
-    fprintf(output, "\\end{tabular}\n");
-    fprintf(output, "\n");
-
-    /******** EARTH DETAILS ***************************************/
-    TRTUR(printf("Process:Earth Details\n"));
-    fprintf(output, "\\newpage\n");
-    fprintf(output, "\\section*{Earth}\n");
-    fprintf(output, "\\begin{itemize}\n");
-    if(turn<gamedet.earth.amnesty)
-        fprintf(output, "\\item Earth amnesty in effect. No shots allowed.\n");
-    if(gamedet.earth.flag & WBUYALLORE)
-        fprintf(output, "\\item Unlimited Selling\n");
-    if(gamedet.earth.flag & WBUY100ORE)
-        fprintf(output, "\\item Limited Selling\n");
-    fprintf(output, "\\item Nearby planets: %d %d %d\n", galaxy[earth].link[0]+100, galaxy[earth].link[1]+100, galaxy[earth].link[2]+100);
-    fprintf(output, "\\end{itemize}\n");
-    fprintf(output, "\\subsection*{Earth Trading Prices}\n");
-    fprintf(output, "\\begin{tabular}{rllllllllll}\n");
-    fprintf(output, "type");
-    for(count=0;count<10;count++) {
-        fprintf(output, " & %d", count);
-        }
-    fprintf(output, "\\\\\n");
-    fprintf(output, "price");
-    for(count=0;count<10;count++) {
-        fprintf(output, "& %d", price[count]);
-        }
-    fprintf(output, "\\\\\n");
-    fprintf(output, "amount");
-    for(count=0;count<10;count++) {
-        fprintf(output, " & %d", galaxy[earth].ore[count]);
-        }
-    fprintf(output, "\\\\\n");
-    fprintf(output, "\\end{tabular}\n");
-    DoShip(plr, earth, output);
+    AllianceStatus(plr, output);
+    EarthDetails(plr, output);
 
     /******** PLANET DETAILS **************************************/
     TRTUR(printf("******** PLANET DETAILS *******\n"));
@@ -246,13 +186,85 @@ void Process(Player plr)
 }
 
 /*****************************************************************************/
+void ShipSummary(Player plr, FILE *output)
+/*****************************************************************************/
+{
+    TRTUR(printf("Process:Ship Summary\n"));
+    fprintf(output, "\n\\section*{Summary of ships}\n");
+    fprintf(output, "\\begin{longtable}{rllllll}\n");
+    for(int count=0;count<shiptr;count++) {
+        ChekShip(count, plr, output);
+    }
+    fprintf(output, "\\end{longtable}\n");
+}
+
+/*****************************************************************************/
+void AllianceStatus(Player plr, FILE *output)
+/*****************************************************************************/
+{
+    fprintf(output, "\\section*{Ally Status}\n");
+    fprintf(output, "\\begin{tabular}{lll}\n");
+    fprintf(output, "Empire Name & You are & They are\\\\ \\hline\n");
+    for(int count=1;count<NUMPLAYERS+1;count++) {
+        if(count != plr && (alliance[plr][count] != NEUTRAL || alliance[count][plr] != NEUTRAL)) {
+            fprintf(output, "%s & %s & %s \\\\\n", name[count], allname[alliance[plr][count]], allname[alliance[count][plr]]);
+            }
+        if(alliance[plr][plr]==ENEMY) {
+            fprintf(output, "%s & & %s \\\\\n", name[count], allname[alliance[plr][plr]]);
+        }
+    }
+    fprintf(output, "\\end{tabular}\n");
+    fprintf(output, "\n");
+
+}
+
+/*****************************************************************************/
+void EarthDetails(Player plr, FILE *output)
+/*****************************************************************************/
+{
+    TRTUR(printf("Process:Earth Details\n"));
+    fprintf(output, "\\newpage\n");
+    fprintf(output, "\\section*{Earth}\n");
+    fprintf(output, "\\begin{itemize}\n");
+    if(turn<gamedet.earth.amnesty)
+        fprintf(output, "\\item Earth amnesty in effect. No shots allowed.\n");
+    if(gamedet.earth.flag & WBUYALLORE)
+        fprintf(output, "\\item Unlimited Selling\n");
+    if(gamedet.earth.flag & WBUY100ORE)
+        fprintf(output, "\\item Limited Selling\n");
+    fprintf(output, "\\item Nearby planets: %d %d %d\n", galaxy[earth].link[0]+100, galaxy[earth].link[1]+100, galaxy[earth].link[2]+100);
+    fprintf(output, "\\end{itemize}\n");
+    fprintf(output, "\\subsection*{Earth Trading Prices}\n");
+    fprintf(output, "\\begin{tabular}{rllllllllll}\n");
+    fprintf(output, "type");
+    for(int count=0;count<10;count++) {
+        fprintf(output, " & %d", count);
+        }
+    fprintf(output, "\\\\\n");
+    fprintf(output, "price");
+    for(int count=0;count<10;count++) {
+        fprintf(output, "& %d", price[count]);
+        }
+    fprintf(output, "\\\\\n");
+    fprintf(output, "amount");
+    for(int count=0;count<10;count++) {
+        fprintf(output, " & %d", galaxy[earth].ore[count]);
+        }
+    fprintf(output, "\\\\\n");
+    fprintf(output, "\\end{tabular}\n");
+    DoShip(plr, earth, output);
+}
+
+
+/*****************************************************************************/
 void CatExhist(FILE *output, Player plyr)
 /*****************************************************************************/
 /* Cat the execution history into the turn sheet */
 {
     FILE *exechist;
     char filename[BUFSIZ];
-    char command[BUFSIZ], buff[BUFSIZ];
+    char command[BUFSIZ];
+    int commands = 0;
 
     TRTUR(printf("CatExhist(plyr:%d)\n", plyr));
     sprintf(filename, "%s%d/exhist.%d", path, gm, plyr);
@@ -262,10 +274,13 @@ void CatExhist(FILE *output, Player plyr)
         }
     fprintf(output, "\\section*{Command history}\n");
     fprintf(output, "\\begin{itemize}\n");
-    fprintf(output, "\\item\n");
     for(;fgets(command, sizeof(command), exechist)!=NULL;) {
         fprintf(output, "\\item %s", command);
+        commands++;
         }
+    if (commands == 0) {
+        fprintf(output, "\\item No commands entered\n");
+    }
     fprintf(output, "\\end{itemize}\n");
     fclose(exechist);
 }
@@ -276,7 +291,6 @@ void ListRes(FILE *output)
 /* Give details of the research planets at the end of every research turn */
 {
 int count, count2;
-char strng[BUFSIZ];
 
 TRTUR(printf("ListRes(output)\n"));
 fprintf(output, "\n\nSUMMARY OF RESEARCH PLANETS.\n");
@@ -310,11 +324,12 @@ void CatMotd(FILE *output)
         TRTUR(fprintf(stderr, "CatMotd:Could not open motd file:%s\n", filename));
         return;
         }
-    fprintf(output, "\nGENERAL MESSAGES\n");
+    fprintf(output, "\\section*{Messages}\n");
+    fprintf(output, "\\begin{verbatim}\n");
     for(;fgets(strng, 80, motd)!=NULL;) {
         fputs(strng, output);
         }
-    fputs("\n", output);
+    fprintf(output, "\\end{verbatim}\n");
     fclose(motd);
     return;
 }
@@ -378,13 +393,13 @@ void DoPlanet(Planet plan, Player plr, FILE *output)
         fprintf(output, " --- Research Planet");
         }
     fprintf(output, "}\n");
-    if(galaxy[plan].scanned!=0) {
-        fprintf(output, "\\frame{Planet scanned this turn}\\ \n\n");
-        }
     fprintf(output, "\n");
     TRTUR(printf("plan:%d\t owner:%d\n", plan, galaxy[plan].owner));
     fprintf(output, "\\begin{tabular}{r|llll}\n");
     fprintf(output, "Owner & \\multicolumn{4}{l}{%s}\\\\\n", name[galaxy[plan].owner]);
+    if(galaxy[plan].scanned!=0) {
+        fprintf(output, "Scanned & \\multicolumn{4}{l}{Planet scanned this turn}\\\\\n");
+    };
     fprintf(output, "Nearby Planets");
     for(count=0;count<4;count++) 
         if(galaxy[plan].link[count]>=0) {
@@ -509,24 +524,24 @@ int ChekPlan(Planet plan, Player plr, FILE *output)
 /*****************************************************************************/
 /* Get details of the planet for the planet summary */
 {
-    int count;
-
     TRTUR2(printf("ChekPlan(plan:%d, plr:%d)\n", plan, plr));
+
     if(galaxy[plan].owner!=plr && plr!=NEUTPLR)
         return(0);
+
     fprintf(output, "%d &", plan+100);
-    for(count=0;count<10;count++) {
-        if(galaxy[plan].mine[count]==0 && galaxy[plan].ore[count]==0) {
+    for(int rtype=0;rtype<10;rtype++) {
+        if(galaxy[plan].mine[rtype]==0 && galaxy[plan].ore[rtype]==0) {
             fprintf(output, " / &");
             }
-        else if(galaxy[plan].mine[count]==0) {
-            fprintf(output, " /%d &", galaxy[plan].ore[count]);
+        else if(galaxy[plan].mine[rtype]==0) {
+            fprintf(output, " /%d &", galaxy[plan].ore[rtype]);
             }
-        else if(galaxy[plan].ore[count]==0) {
-            fprintf(output, "%d/ &", galaxy[plan].mine[count]);
+        else if(galaxy[plan].ore[rtype]==0) {
+            fprintf(output, "%d/ &", galaxy[plan].mine[rtype]);
             }
         else {
-            fprintf(output, "%d/%d &", galaxy[plan].mine[count], galaxy[plan].ore[count]);
+            fprintf(output, "%d/%d &", galaxy[plan].mine[rtype], galaxy[plan].ore[rtype]);
             }
         }
     if(galaxy[plan].pdu==0)
@@ -578,10 +593,17 @@ void ChekTot(Player plr, FILE *output)
 
     fprintf(output, "Total: &");
     for(count=0;count<10;count++) {
-        fprintf(output, "%d/%d &", tmin[count], tore[count]);
+        fprintf(output, "%d/ &", tmin[count]);
         }
     fprintf(output, "%d &", tpdu);
-    fprintf(output, "%d\\\\ \\hline \n", tind);
+    fprintf(output, "\\\\ \\hline \n");
+
+    fprintf(output, "&");
+    for(count=0;count<10;count++) {
+        fprintf(output, "/%d &", tore[count]);
+        }
+    fprintf(output, " & %d", tind);
+    fprintf(output, "\\\\ \\hline \n");
 }
 
 /*****************************************************************************/
@@ -671,7 +693,7 @@ void TypeSummary(FILE *output)
         fprintf(output, "%s & %d & %s & %d\\\\\n", stypes[x], types[x], stypes[x+1], types[x+1]);
         }
     if(NUMTYPES%2!=0) {
-        fprintf(output, "%s %d\n", stypes[NUMTYPES-1], types[NUMTYPES-1]);
+        fprintf(output, "%s & %d& &\n", stypes[NUMTYPES-1], types[NUMTYPES-1]);
         }
     fprintf(output, "\\end{tabular}\n\n");
 }
@@ -684,9 +706,10 @@ void Headings(FILE *output, Player plr)
 
     TRTUR(printf("Headings\n"));
     fprintf(output, "\\documentclass{article}\n");
-    fprintf(output, "\\begin{document}\n");
+    fprintf(output, "\\usepackage{longtable}\n");
     fprintf(output, "\\title{Celestial Empire %d.%d Game %d}\n", VERSION, PATCHLEVEL, gm);
     fprintf(output, "\\author{Dougal Scott <dougal.scott@gmail.com>}\n\n");
+    fprintf(output, "\\begin{document}\n");
     /* Print out name of player and number */
     fprintf(output, "\\section*{%s}\n", name[plr]);
     /* Print out score and gm and turn numbers */
@@ -699,42 +722,47 @@ void Headings(FILE *output, Player plr)
     fprintf(output, "\\item Earth credits=%4d \n", ecredit[plr]);
     fprintf(output, "\\item Credits:Score=%3d \n", gamedet.earth.earthmult);
     fprintf(output, "\\item You have %d scans this turn\n", NumRes(plr)+1);
-    fprintf(output, "\\end{itemize}\n");
-
-    fprintf(output, "\\begin{tabular}{c|c|c}\n");
-    fprintf(output, "\\multicolumn{3}{c}{Player Scores}\\\\ \n");
+    fprintf(output, "\\item \\begin{tabular}{c|c|c}\n");
+    fprintf(output, "\\multicolumn{3}{c}{Player Scores}\\\\ \\hline \n");
     fprintf(output, "%6d & %6d & %6d\\\\ \n" , score[1], score[2], score[3]);
     fprintf(output, "%6d & %6d & %6d\\\\ \n", score[4], score[5], score[6]);
     fprintf(output, "%6d & %6d & %6d\\\\ \n", score[7], score[8], score[9]);
     fprintf(output, "\\end{tabular}\n\n");
+    fprintf(output, "\\end{itemize}\n\n");
 
     /* Print winning conditions */
     fprintf(output, "\\subsection*{Winning Conditions}\n");
     fprintf(output, "\\begin{itemize}\n");
-    if(gamedet.winning&WEARTH) {
+    if(gamedet.winning & WEARTH) {
         fprintf(output, "\\item Earth\n");
         }
-    if(gamedet.winning&WCREDIT) {
+    if(gamedet.winning & WCREDIT) {
         fprintf(output, "\\item Credits=%d\n", gamedet.credits);
         }
-    if(gamedet.winning&WINCOME) {
+    if(gamedet.winning & WINCOME) {
         fprintf(output, "\\item Income=%d\n", gamedet.income);
         }
-    if(gamedet.winning&WSCORE) {
+    if(gamedet.winning & WSCORE) {
         fprintf(output, "\\item Score=%d\n", gamedet.score);
         }
-    if(gamedet.winning&WPLANETS) {
+    if(gamedet.winning & WPLANETS) {
         fprintf(output, "\\item Planets=%d\n", gamedet.planets);
         }
-    if(gamedet.winning&WTURN) {
+    if(gamedet.winning & WTURN) {
         fprintf(output, "\\item Turn=%d\n", gamedet.turn);
-        if(!(gamedet.winning&WFIXTURN)) {
+        if(!(gamedet.winning & WFIXTURN)) {
             fprintf(output, "\\item Desired end turn=%d\n", desturn[plr]);
             }
         }
     fprintf(output, "\\end{itemize}\n");
 
-    fprintf(output, "Minimum bids: Cargo=%d Fighter=%d Shield=%d Tractor=%d\n", gamedet.earth.cbid, gamedet.earth.fbid, gamedet.earth.sbid, gamedet.earth.tbid);
+    fprintf(output, "Minimum bids:\n");
+    fprintf(output, "\\begin{itemize}\n");
+    fprintf(output, "\\item Cargo=%d\n", gamedet.earth.cbid);
+    fprintf(output, "\\item Fighter=%d\n", gamedet.earth.fbid);
+    fprintf(output, "\\item Shield=%d\n", gamedet.earth.sbid);
+    fprintf(output, "\\item Tractor=%d\n", gamedet.earth.tbid);
+    fprintf(output, "\\end{itemize}\n");
     fprintf(output, "\\newpage\n");
 }
 
@@ -742,24 +770,25 @@ void Headings(FILE *output, Player plr)
 void PlanetSummary(Player plr, FILE *output)
 /*****************************************************************************/
 {
-    int count, total=0;
+    int total=0;
+    int rtype;
 
     TRTUR(printf("Process:Planet Summary\n"));
     fprintf(output, "\\section*{Summary of planets}\n");
-    fprintf(output, "\\begin{tabular}{rcccccccccccc}\n");
+    fprintf(output, "\\begin{longtable}{rcccccccccccc}\n");
     fprintf(output, "planet &");
-    for(count=0; count<10; count++) {
-        fprintf(output, "%d &", count);
+    for(rtype=0; rtype<10; rtype++) {
+        fprintf(output, "%d &", rtype);
         }
-    fprintf(output, "PDU &");
-    fprintf(output, "IND \\\\ \\hline\n");
-    for(count=0; count<NUMPLANETS; count++) {
+    fprintf(output, "PDU & IND \\\\ \\hline\n");
+    fprintf(output, "\\endhead\n");
+    for(int count=0; count<NUMPLANETS; count++) {
         total += ChekPlan(count, plr, output);
-        }
+    }
     fprintf(output, "\\hline\n");
     ChekShipTot(plr, output);
     ChekTot(plr, output);
-    fprintf(output, "\\end{tabular}\n");
+    fprintf(output, "\\end{longtable}\n");
 
     fprintf(output, "Total number of planets owned = %d\n", total);
 }
@@ -875,16 +904,16 @@ void WinningDetails(FILE *output)
 
     /* Print winning conditions */
     fprintf(output, "\\subsection*{Winning Conditions}\n");
-    if(gamedet.winning&WEARTH) {
+    if(gamedet.winning & WEARTH) {
         fprintf(output, "Earth  ");
         }
-    if(gamedet.winning&WSCORE) {
+    if(gamedet.winning & WSCORE) {
         fprintf(output, "Score=%d  ", gamedet.score);
         }
-    if(gamedet.winning&WINCOME) {
+    if(gamedet.winning & WINCOME) {
         fprintf(output, "Income=%d  ", gamedet.income);
         }
-    if(gamedet.winning&WPLANETS) {
+    if(gamedet.winning & WPLANETS) {
         fprintf(output, "Planets=%d", gamedet.planets);
         }
     fprintf(output, "\n");
@@ -986,7 +1015,9 @@ void ChekShipTot(Player plr, FILE *output)
             fprintf(output, " / &");
             }
         }
-    fprintf(output, " %d&", oretot[11]);
+    fprintf(output, " %d &", oretot[11]);
     fprintf(output, " %d\\\\\n", oretot[10]);
     return;
 }
+
+/* EOF */

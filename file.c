@@ -26,18 +26,18 @@ int OpenExhist(const char *mode)
 /*****************************************************************************/
 /* Open the execution history files */
 {
-char str[124];
-int x;
+    char str[124];
+    int x;
 
-for(x=0;x<NUMPLAYERS+1;x++) {
-	sprintf(str,"%s%d/exhist.%d",path,gm,x);
-	TRFIL(printf("Opening exechist file %s\n",str));
-	if((trns[x]=fopen(str,mode))==NULL) {
-		fprintf(stderr,"file:OpenExhist: Couldn't open %s for writing\n",str);
-		return(-1);
-		}
-	}
-return(0);
+    for(x=0;x<NUMPLAYERS+1;x++) {
+        sprintf(str,"%s%d/exhist.%d",path,gm,x);
+        TRFIL(printf("Opening exechist file %s\n",str));
+        if((trns[x]=fopen(str,mode))==NULL) {
+            fprintf(stderr,"file:OpenExhist: Couldn't open %s for writing\n",str);
+            return(-1);
+            }
+        }
+    return(0);
 }
 
 /*****************************************************************************/
@@ -45,13 +45,13 @@ void CloseExhist(void)
 /*****************************************************************************/
 /* Close the execution history files */
 {
-int x;
+    int x;
 
-for(x=0;x<NUMPLAYERS+1;x++) {
-	TRFIL(printf("Closing exechist file #%d\n",x));
-	fclose(trns[x]);
-	}
-return;
+    for(x=0;x<NUMPLAYERS+1;x++) {
+        TRFIL(printf("Closing exechist file #%d\n",x));
+        fclose(trns[x]);
+        }
+    return;
 }
 
 /*****************************************************************************/
