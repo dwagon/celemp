@@ -82,7 +82,7 @@ int PrintGalaxy(char *fname)
 /*****************************************************************************/
 /* Print the details of the entire galaxy */
 {
-    FILE *output;
+    FILE *output, *dotfile;
     int count;
     char filename[BUFSIZ];
 
@@ -92,6 +92,13 @@ int PrintGalaxy(char *fname)
         printf("Could not open %s for writing\n", filename);
         return(-1);
         }
+
+    sprintf(filename, "%s.dot", fname);
+    if((dotfile=fopen(filename, "w"))==NULL) {
+        printf("Could not open %s for writing\n", filename);
+        return(-1);
+        }
+    fprintf(dotfile, "strict graph G {\n");
 
     fprintf(output, "\\documentclass{article}\n");
     fprintf(output, "\\usepackage{longtable, a4wide}\n");
@@ -108,11 +115,67 @@ int PrintGalaxy(char *fname)
     ShipSummary(NEUTPLR, output);
     fprintf(output, "\\section*{Planets}\n");
     for(count=0; count<NUMPLANETS; count++) {
+        GraphPlanet(count, NEUTPLR, dotfile);
         DoPlanet(count, NEUTPLR, output);
         }
     fprintf(output, "\\end{document}\n");
+    fprintf(dotfile, "}\n");
     fclose(output);
+    fclose(dotfile);
     return(0);
+}
+
+/*****************************************************************************/
+void GraphPlanet(Planet plan, Player plr, FILE *dotfile)
+/*****************************************************************************/
+{
+    fprintf(dotfile, "%d [ label=\"%d %s", plan+100, plan+100, galaxy[plan].name);
+    if(IsResearch(plan)) {
+        fprintf(dotfile, "(RP)");
+    }
+    fprintf(dotfile, "\";");
+    if(galaxy[plan].owner != NEUTPLR) {
+        fprintf(dotfile, "shape=\"rectangle\";");
+    }
+    if(galaxy[plan].spec<0) {
+        fprintf(dotfile, "shape=\"square\"; color=\"dodgerblue3\"; style=\"filled\"");
+    }
+    if(plan==earth) {
+        fprintf(dotfile, "shape=\"hexagon\"; color=\"green\"; style=\"filled\"");
+    }
+
+    // Colour up "A" ring planets as well
+    for(int count=0; count<4; count++) {
+        if(galaxy[galaxy[plan].link[count]].spec<0) {
+            fprintf(dotfile, "color=\"cyan\"; style=\"filled\"");
+        }
+    }
+
+    // Colour up Earth "A" ring planets as well
+    for(int count=0; count<4; count++) {
+        if(galaxy[plan].link[count] == earth) {
+            fprintf(dotfile, "color=\"greenyellow\"; style=\"filled\"");
+        }
+    }
+    fprintf(dotfile, "];\n");
+
+    // Planet links
+    for(int count=0; count<4; count++) {
+        if(galaxy[plan].link[count]>=0) {
+            fprintf(dotfile, "%d -- %d;\n", plan+100, galaxy[plan].link[count]+100);
+        }
+    }
+
+    // Ships
+    for(int ship=0; ship < shiptr; ship++) {
+        if (fleet[ship].planet == plan) {
+            if (fleet[ship].owner == plr || plr == NEUTPLR) {
+                fprintf(dotfile, "S%d [label=\"S%d\"; shape=\"hexagon\"; style=\"filled\";];\n", ship+100, ship+100);
+                fprintf(dotfile, "S%d -- %d;\n", ship+100, plan+100);
+            }
+        }
+    }
+
 }
 
 /*****************************************************************************/
@@ -131,7 +194,7 @@ void Process(Player plr)
 /*****************************************************************************/
 /* Process each players turn */
 {
-    FILE *output;
+    FILE *output, *dotfile;
     char filename[BUFSIZ];
     int count;
 
@@ -144,8 +207,15 @@ void Process(Player plr)
         return;
 	}
 
+    /* Open file for outputing dot information */
+    sprintf(filename, "%s%d/turn%d.%d.dot", path, gm, turn, plr);
+    if((dotfile=fopen(filename, "w"))==NULL) {
+        fprintf(stderr, "Could not open %s for writing\n", filename);
+        return;
+	}
+
     /*******  HEADINGS ***************************************************/
-    Headings(output, plr);
+    Headings(output, dotfile, plr);
     /*************** RESEARCH TURN WARNING *****************************/
     if((turn-10)%4==0 && turn>9) {
         ResOutput(plr, output);
@@ -168,8 +238,9 @@ void Process(Player plr)
     TRTUR(printf("******** PLANET DETAILS *******\n"));
     fprintf(output, "\\newpage\n");
     fprintf(output, "\\section*{Planets}\n");
-    for(count=0;count<NUMPLANETS;count++)
+    for(count=0; count<NUMPLANETS; count++)
         if(Interest(plr, count)==1) {
+            GraphPlanet(count, plr, dotfile);
             DoPlanet(count, plr, output);
             }
 
@@ -182,6 +253,8 @@ void Process(Player plr)
         ListRes(output);
 
     fprintf(output, "\\end{document}\n");
+    fprintf(dotfile, "}\n");
+    fclose(dotfile);
     fclose(output);
 }
 
@@ -699,7 +772,7 @@ void TypeSummary(FILE *output)
 }
 
 /*****************************************************************************/
-void Headings(FILE *output, Player plr)
+void Headings(FILE *output, FILE *dotfile, Player plr)
 /*****************************************************************************/
 {
     int income=CalcPlrInc(plr);
@@ -764,6 +837,8 @@ void Headings(FILE *output, Player plr)
     fprintf(output, "\\item Tractor=%d\n", gamedet.earth.tbid);
     fprintf(output, "\\end{itemize}\n");
     fprintf(output, "\\newpage\n");
+    
+    fprintf(dotfile, "strict graph G {\n");
 }
 
 /*****************************************************************************/
