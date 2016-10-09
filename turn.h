@@ -20,6 +20,7 @@ void	CatSpec(FILE *stream, Player plr);
 int		Interest(Player plr, Planet plan);
 void	DoPlanet(Planet plan, Player plr, FILE *stream);
 void	GraphPlanet(Planet plan, Player plr, FILE *stream);
+void	PlanetMap(Player plr, FILE *stream);
 void	DoShip(Player plr, Planet plan, FILE *stream);
 void	DoEnemy(Ship shp, FILE *stream);
 void	DoFriend(Ship shp, FILE *stream);

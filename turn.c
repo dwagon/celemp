@@ -230,13 +230,13 @@ void Process(Player plr)
     }
 
     ShipSummary(plr, output);
+    PlanetMap(plr, output);
     PlanetSummary(plr, output);
     AllianceStatus(plr, output);
     EarthDetails(plr, output);
 
     /******** PLANET DETAILS **************************************/
     TRTUR(printf("******** PLANET DETAILS *******\n"));
-    fprintf(output, "\\newpage\n");
     fprintf(output, "\\section*{Planets}\n");
     for(count=0; count<NUMPLANETS; count++)
         if(Interest(plr, count)==1) {
@@ -245,7 +245,6 @@ void Process(Player plr)
             }
 
     /******* TAIL NOTES ******************************************/
-    fprintf(output, "\\newpage\n");
     CatMotd(output);
     CatSpec(output, plr);
     CatExhist(output, plr);
@@ -296,9 +295,9 @@ void EarthDetails(Player plr, FILE *output)
 /*****************************************************************************/
 {
     TRTUR(printf("Process:Earth Details\n"));
-    fprintf(output, "\\newpage\n");
     fprintf(output, "\\section*{Earth}\n");
     fprintf(output, "\\begin{itemize}\n");
+    fprintf(output, "\\item Planet: %d\n", earth+100);
     if(turn<gamedet.earth.amnesty)
         fprintf(output, "\\item Earth amnesty in effect. No shots allowed.\n");
     if(gamedet.earth.flag & WBUYALLORE)
@@ -538,8 +537,12 @@ void DoEnemy(Ship shp, FILE *output)
 /* Print out details of enemy ships */
 {
     TRTUR(printf("DoEnemy(ship:%d)\n", shp));
-    fprintf(output, "S%3d %-9s: %-24s: %s\n", shp+100, name[fleet[shp].owner], fleet[shp].name, stypes[fleet[shp].type]);
-    TRTUR(printf("Finished DoEnemy()\n"));
+    fprintf(output, "\n");
+    fprintf(output, "\\frame{\n");
+    fprintf(output, "\\begin{tabular}{rlll}\n");
+    fprintf(output, "S%3d & %s & %s: & %s \\\\ \n", shp+100, name[fleet[shp].owner], fleet[shp].name, stypes[fleet[shp].type]);
+    fprintf(output, "\\end{tabular}\n");
+    fprintf(output, "}\n");
     return;
 }
 
@@ -549,6 +552,7 @@ void DoFriend(Ship shp, FILE *output)
 /* Print details of friendly ships */
 {
     int count;
+    int has_cargo = 0;
 
     TRTUR(printf("DoFriend(ship:%d)\n", shp));
     fprintf(output, "\n");
@@ -571,21 +575,29 @@ void DoFriend(Ship shp, FILE *output)
     /* Print out cargo details */
     fprintf(output, "Cargo & \\multicolumn{3}{l}{");
     if(fleet[shp].ind!=0) {
-        fprintf(output, "Ind %d", fleet[shp].ind);
+        fprintf(output, "Ind %d;", fleet[shp].ind);
+        has_cargo = 1;
         }
     if(fleet[shp].mines!=0) {
-        fprintf(output, "Mine %d", fleet[shp].mines);
+        fprintf(output, "Mine %d;", fleet[shp].mines);
+        has_cargo = 1;
         }
     if(fleet[shp].pdu!=0) {
-        fprintf(output, "PDU %d", fleet[shp].pdu);
+        fprintf(output, "PDU %d;", fleet[shp].pdu);
+        has_cargo = 1;
         }
     if(fleet[shp].spacemines!=0) {
-        fprintf(output, "SpcMines %d", fleet[shp].spacemines);
+        fprintf(output, "SpcMines %d;", fleet[shp].spacemines);
+        has_cargo = 1;
         }
     for(count=0;count<10;count++)
         if(fleet[shp].ore[count]!=0) {
-            fprintf(output, "R%d %d", count, fleet[shp].ore[count]);
+            fprintf(output, "R%d %d;", count, fleet[shp].ore[count]);
+            has_cargo = 1;
             }
+    if (has_cargo == 0) {
+        fprintf(output, "None");
+    };
     fprintf(output, "}\\\\\n");
     fprintf(output, "\\end{tabular}\n");
     fprintf(output, "}\n");
@@ -779,7 +791,7 @@ void Headings(FILE *output, FILE *dotfile, Player plr)
 
     TRTUR(printf("Headings\n"));
     fprintf(output, "\\documentclass{article}\n");
-    fprintf(output, "\\usepackage{longtable}\n");
+    fprintf(output, "\\usepackage{longtable, epstopdf, graphicx, changepage}\n");
     fprintf(output, "\\title{Celestial Empire %d.%d Game %d}\n", VERSION, PATCHLEVEL, gm);
     fprintf(output, "\\author{Dougal Scott <dougal.scott@gmail.com>}\n\n");
     fprintf(output, "\\begin{document}\n");
@@ -836,9 +848,17 @@ void Headings(FILE *output, FILE *dotfile, Player plr)
     fprintf(output, "\\item Shield=%d\n", gamedet.earth.sbid);
     fprintf(output, "\\item Tractor=%d\n", gamedet.earth.tbid);
     fprintf(output, "\\end{itemize}\n");
-    fprintf(output, "\\newpage\n");
     
     fprintf(dotfile, "strict graph G {\n");
+}
+
+/*****************************************************************************/
+void PlanetMap(Player plr, FILE *output)
+/*****************************************************************************/
+{
+    fprintf(output, "\\begin{adjustwidth}{-3cm}{3cm}\n");
+    fprintf(output, "\\centerline{\\includegraphics[width=15cm]{turn%d.%d.eps}}\n", turn, plr);
+    fprintf(output, "\\end{adjustwidth}\n");
 }
 
 /*****************************************************************************/
@@ -849,6 +869,7 @@ void PlanetSummary(Player plr, FILE *output)
     int rtype;
 
     TRTUR(printf("Process:Planet Summary\n"));
+
     fprintf(output, "\\section*{Summary of planets}\n");
     fprintf(output, "\\begin{longtable}{rcccccccccccc}\n");
     fprintf(output, "planet &");
