@@ -36,6 +36,7 @@ void	OwnerSummary(FILE *stream);
 void	UnitSummary(FILE *stream);
 void	WinningDetails(FILE *stream);
 void	CostDetails(FILE *stream);
+void	TitlePage(FILE *stream);
 char	*TexName(char *str);
 char	*ShipName(Ship shp);
 void	ChekShipTot(Player plr,FILE *stream);

@@ -99,19 +99,17 @@ int PrintGalaxy(char *fname)
         return(-1);
         }
     fprintf(dotfile, "strict graph G {\n");
+    TitlePage(output);
 
-    fprintf(output, "\\documentclass{article}\n");
-    fprintf(output, "\\usepackage{longtable, a4wide}\n");
-    fprintf(output, "\\title{Celestial empire %d.%d}\n", VERSION, PATCHLEVEL);
-    fprintf(output, "\\author{Dougal Scott <dougal.scott@gmail.com>}\n");
-    fprintf(output, "\\begin{document}\n");
     fprintf(output, "\nGame:%d\tTurn:%d\n", gm, turn);
     TypeSummary(output);
     OwnerSummary(output);
     UnitSummary(output);
     WinningDetails(output);
     CostDetails(output);
+    fprintf(output, "\\begin{adjustwidth}{-3cm}{3cm}\n");
     PlanetSummary(NEUTPLR, output);
+    fprintf(output, "\\end{adjustwidth}\n");
     ShipSummary(NEUTPLR, output);
     fprintf(output, "\\section*{Planets}\n");
     for(count=0; count<NUMPLANETS; count++) {
@@ -123,6 +121,18 @@ int PrintGalaxy(char *fname)
     fclose(output);
     fclose(dotfile);
     return(0);
+}
+
+/*****************************************************************************/
+void TitlePage(FILE *output)
+/*****************************************************************************/
+{
+    fprintf(output, "\\documentclass{article}\n");
+    fprintf(output, "\\usepackage{longtable, graphicx, epstopdf, changepage, a4wide}\n");
+    fprintf(output, "\\title{Celestial Empire %d.%d Game %d}\n", VERSION, PATCHLEVEL, gm);
+    fprintf(output, "\\author{Dougal Scott $<$dougal.scott@gmail.com$>$}\n");
+    fprintf(output, "\\begin{document}\n");
+    fprintf(output, "\\maketitle\n");
 }
 
 /*****************************************************************************/
@@ -617,16 +627,16 @@ int ChekPlan(Planet plan, Player plr, FILE *output)
     fprintf(output, "%d &", plan+100);
     for(int rtype=0;rtype<10;rtype++) {
         if(galaxy[plan].mine[rtype]==0 && galaxy[plan].ore[rtype]==0) {
-            fprintf(output, " / &");
+            fprintf(output, " & &");
             }
         else if(galaxy[plan].mine[rtype]==0) {
-            fprintf(output, " /%d &", galaxy[plan].ore[rtype]);
+            fprintf(output, " &%d &", galaxy[plan].ore[rtype]);
             }
         else if(galaxy[plan].ore[rtype]==0) {
-            fprintf(output, "%d/ &", galaxy[plan].mine[rtype]);
+            fprintf(output, "%d& &", galaxy[plan].mine[rtype]);
             }
         else {
-            fprintf(output, "%d/%d &", galaxy[plan].mine[rtype], galaxy[plan].ore[rtype]);
+            fprintf(output, "%d&%d &", galaxy[plan].mine[rtype], galaxy[plan].ore[rtype]);
             }
         }
     if(galaxy[plan].pdu==0)
@@ -678,16 +688,9 @@ void ChekTot(Player plr, FILE *output)
 
     fprintf(output, "Total: &");
     for(count=0;count<10;count++) {
-        fprintf(output, "%d/ &", tmin[count]);
+        fprintf(output, "%d & %d &", tmin[count], tore[count]);
         }
-    fprintf(output, "%d &", tpdu);
-    fprintf(output, "\\\\ \\hline \n");
-
-    fprintf(output, "&");
-    for(count=0;count<10;count++) {
-        fprintf(output, "/%d &", tore[count]);
-        }
-    fprintf(output, " & %d", tind);
+    fprintf(output, "%d & %d", tpdu, tind);
     fprintf(output, "\\\\ \\hline \n");
 }
 
@@ -774,7 +777,7 @@ void TypeSummary(FILE *output)
         
     fprintf(output, "\\section*{Summary of ship types}\n");
     fprintf(output, "\\begin{tabular}{lr|lr}\n");
-    for(x=0;x<NUMTYPES-(NUMTYPES%2);x+=2) {
+    for(x=0;x<NUMTYPES-(NUMTYPES%2);x += 2) {
         fprintf(output, "%s & %d & %s & %d\\\\\n", stypes[x], types[x], stypes[x+1], types[x+1]);
         }
     if(NUMTYPES%2!=0) {
@@ -790,11 +793,7 @@ void Headings(FILE *output, FILE *dotfile, Player plr)
     int income=CalcPlrInc(plr);
 
     TRTUR(printf("Headings\n"));
-    fprintf(output, "\\documentclass{article}\n");
-    fprintf(output, "\\usepackage{longtable, epstopdf, graphicx, changepage}\n");
-    fprintf(output, "\\title{Celestial Empire %d.%d Game %d}\n", VERSION, PATCHLEVEL, gm);
-    fprintf(output, "\\author{Dougal Scott <dougal.scott@gmail.com>}\n\n");
-    fprintf(output, "\\begin{document}\n");
+    TitlePage(output);
     /* Print out name of player and number */
     fprintf(output, "\\section*{%s}\n", name[plr]);
     /* Print out score and gm and turn numbers */
@@ -871,10 +870,10 @@ void PlanetSummary(Player plr, FILE *output)
     TRTUR(printf("Process:Planet Summary\n"));
 
     fprintf(output, "\\section*{Summary of planets}\n");
-    fprintf(output, "\\begin{longtable}{rcccccccccccc}\n");
+    fprintf(output, "\\begin{longtable}{rc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}ccc}\n");
     fprintf(output, "planet &");
     for(rtype=0; rtype<10; rtype++) {
-        fprintf(output, "%d &", rtype);
+        fprintf(output, " \\multicolumn{2}{c}{%d} &", rtype);
         }
     fprintf(output, "PDU & IND \\\\ \\hline\n");
     fprintf(output, "\\endhead\n");
@@ -915,15 +914,15 @@ for(count=0;count<NUMPLAYERS+1;count++) {
 			if(IsResearch(count2)) 
 				resplan[count]++;
 			planown[count]++;
-			indown[count]+=galaxy[count2].ind;
-			pduown[count]+=galaxy[count2].pdu;
+			indown[count] += galaxy[count2].ind;
+			pduown[count] += galaxy[count2].pdu;
 			}
-	planown[10]+=planown[count];
-	indown[10]+=indown[count];
-	pduown[10]+=pduown[count];
-	resplan[10]+=resplan[count];
-	totinc+=CalcPlrInc(count);
-	totscore+=score[count];
+	planown[10] += planown[count];
+	indown[10] += indown[count];
+	pduown[10] += pduown[count];
+	resplan[10] += resplan[count];
+	totinc += CalcPlrInc(count);
+	totscore += score[count];
 	}
 
 /* Print planet numbers */
@@ -960,17 +959,17 @@ void UnitSummary(FILE *output)
         for(count2=0;count2<shiptr;count2++) {
             if(fleet[count2].owner==count) {
                 shpown[count]++;
-                fgtown[count]+=fleet[count2].fight;
-                crgown[count]+=fleet[count2].cargo;
-                shdown[count]+=fleet[count2].shield;
-                tracown[count]+=fleet[count2].tractor;
+                fgtown[count] += fleet[count2].fight;
+                crgown[count] += fleet[count2].cargo;
+                shdown[count] += fleet[count2].shield;
+                tracown[count] += fleet[count2].tractor;
                 }
             }
-        shpown[10]+=shpown[count];
-        fgtown[10]+=fgtown[count];
-        crgown[10]+=crgown[count];
-        shdown[10]+=shdown[count];
-        tracown[10]+=tracown[count];
+        shpown[10] += shpown[count];
+        fgtown[10] += fgtown[count];
+        crgown[10] += crgown[count];
+        shdown[10] += shdown[count];
+        tracown[10] += tracown[count];
         }
 
     /* Print unit numbers */
@@ -1095,20 +1094,20 @@ void ChekShipTot(Player plr, FILE *output)
             continue;
         for(tmp=0;tmp<10;tmp++) {
             if(fleet[count].ore[tmp]>0)
-                oretot[tmp]+=fleet[count].ore[tmp];
+                oretot[tmp] += fleet[count].ore[tmp];
             }
-        oretot[10]+=fleet[count].ind;
-        oretot[11]+=fleet[count].pdu;
+        oretot[10] += fleet[count].ind;
+        oretot[11] += fleet[count].pdu;
         }
 
     /* Print out results */
     fprintf(output, "Ships: &");
     for(tmp=0;tmp<10;tmp++) {
         if(oretot[tmp]>0) {
-            fprintf(output, " /%d &", oretot[tmp]);
+            fprintf(output, " & %d &", oretot[tmp]);
             }
         else {
-            fprintf(output, " / &");
+            fprintf(output, " & &");
             }
         }
     fprintf(output, " %d &", oretot[11]);
