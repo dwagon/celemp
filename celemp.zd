@@ -6,7 +6,7 @@
 \usepackage{multicol}
 \newlength{\sepspace}
 \setlength{\sepspace}{2em}
-\addtolength{\textheight}{5cm}
+% \addtolength{\textheight}{5cm}
 \addtolength{\textwidth}{3.6cm}
 \addtolength{\oddsidemargin}{-2cm}
 \addtolength{\topmargin}{-2cm}
@@ -19,7 +19,7 @@
 
 \begin{document}
 \title{CELESTIAL EMPIRE}
-\author{Dougal Scott\\Email: Dougal.Scott@gmail.com}
+\author{Dougal Scott\\Email: $<$dougal.scott@gmail.com$>$}
 \date{\today}
 \maketitle
 \thispagestyle{empty}
@@ -34,6 +34,7 @@
 \newpage
 \setcounter{page}{1}
 \pagenumbering{arabic}
+\pagestyle{plain}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{General Overview\label{genover}}
@@ -105,15 +106,7 @@ have made a massive blunder, mail a correct list of commands in (not
 just the different ones) to the mail address and ask that they be run
 instead. If you get your commands in in time, they will be fixed.
 
-If you are interested in the workings of Celestial Empire, the source is
-available by ftp from {\tt yoyo.\-cc.\-monash.\-edu.\-au} in the
-{\tt /pub/celemp} directory. The latest version of the documentation is also
-in this directory.
-
-As well there is a low volume mailing list that discusses various
-new aspects of the game. To get on the mailing list, mail {\tt
-listserv@yoyo.\-cc.\-monash.\-edu.\-au} and put the line
-``{\tt SUB celemp-list}'' in the body of the message.
+\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{multicols}{2}[\section{Turn Sequence\label{turnseq}}]
