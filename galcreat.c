@@ -446,6 +446,7 @@ void GetName(Player plr)
 {
     printf("Please Enter plr %d's name:",plr);
     fgets(name[plr], NAMESIZE, stdin);
+    name[plr][strcspn(name[plr], "\n")] = 0;
 }
 
 /*****************************************************************************/
