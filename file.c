@@ -5,8 +5,6 @@
 #include <json.h>
 #include <json_util.h>
 
-#define TRFIL(x)	if(strstr(dbgstr, "FILE") || strstr(dbgstr, "file")) x
-
 extern int errno;
 extern FILE *trns[NUMPLAYERS+1];
 extern Number score[NUMPLAYERS+1];
@@ -32,7 +30,6 @@ int OpenExhist(const char *mode)
 
     for(x=0;x<NUMPLAYERS+1;x++) {
         sprintf(str, "%s%d/exhist.%d", path, gm, x);
-        TRFIL(printf("Opening exechist file %s\n", str));
         if((trns[x]=fopen(str, mode))==NULL) {
             fprintf(stderr, "file:OpenExhist: Couldn't open %s for writing\n", str);
             return(-1);
@@ -49,7 +46,6 @@ void CloseExhist(void)
     int x;
 
     for(x=0;x<NUMPLAYERS+1;x++) {
-        TRFIL(printf("Closing exechist file #%d\n", x));
         fclose(trns[x]);
         }
     return;
@@ -136,8 +132,80 @@ void LoadGalaxy(json_object *jso)
 void LoadAlliance(json_object *jso)
 /*****************************************************************************/
 {
-    printf("Load alliance\n");
+    json_object *jval1, *jval2;
+    int arraylen1, arraylen2;
+
+    arraylen1 = json_object_array_length(jso);
+    for (int plra = 0; plra < arraylen1; plra++) {
+        jval1 = json_object_array_get_idx(jso, plra);
+        arraylen2 = json_object_array_length(jval1);
+        for (int plrb = 0; plrb < arraylen2; plrb++) {
+            jval2 = json_object_array_get_idx(jval1, plrb);
+            alliance[plra][plrb] = json_object_get_int(jval2);
+        }
+    }
 }
+
+/*****************************************************************************/
+void LoadGamedetEarth(json_object *jso)
+/*****************************************************************************/
+{
+    json_object *jvalue;
+
+    json_object_object_foreach(jso, key, val) {
+        if(strcmp(key, "amnesty") == 0) {
+            gamedet.earth.amnesty = json_object_get_int(val);
+        }
+        else if(strcmp(key, "earthmult") == 0) {
+            gamedet.earth.earthmult = json_object_get_int(val);
+        }
+        else if(strcmp(key, "fbid") == 0) {
+            gamedet.earth.fbid = json_object_get_int(val);
+        }
+        else if(strcmp(key, "cbid") == 0) {
+            gamedet.earth.cbid = json_object_get_int(val);
+        }
+        else if(strcmp(key, "sbid") == 0) {
+            gamedet.earth.sbid = json_object_get_int(val);
+        }
+        else if(strcmp(key, "tbid") == 0) {
+            gamedet.earth.tbid = json_object_get_int(val);
+        }
+        else if(strcmp(key, "ind") == 0) {
+            gamedet.earth.ind = json_object_get_int(val);
+        }
+        else if(strcmp(key, "ore") == 0) {
+            int arraylen = json_object_array_length(val);
+            for (int rtype = 0; rtype < arraylen; rtype++) {
+                jvalue = json_object_array_get_idx(val, rtype);
+                gamedet.earth.ore[rtype] = json_object_get_int(jvalue);
+            }
+        }
+        else if(strcmp(key, "mine") == 0) {
+            int arraylen = json_object_array_length(val);
+            for (int rtype = 0; rtype < arraylen; rtype++) {
+                jvalue = json_object_array_get_idx(val, rtype);
+                gamedet.earth.mine[rtype] = json_object_get_int(jvalue);
+            }
+        }
+        else if(strcmp(key, "pdu") == 0) {
+            gamedet.earth.pdu = json_object_get_int(val);
+        }
+        else if(strcmp(key, "spacemine") == 0) {
+            gamedet.earth.spacemine = json_object_get_int(val);
+        }
+        else if(strcmp(key, "deployed") == 0) {
+            gamedet.earth.deployed = json_object_get_int(val);
+        }
+        else if(strcmp(key, "flag") == 0) {
+            gamedet.earth.flag = json_object_get_int(val);
+        }
+        else {
+            fprintf(stderr, "Unhandled gamedet earth key %s\n", key);
+        }
+    }
+}
+
 
 /*****************************************************************************/
 void LoadGamedetHome(json_object *jso)
@@ -146,7 +214,6 @@ void LoadGamedetHome(json_object *jso)
     json_object *jvalue;
 
     json_object_object_foreach(jso, key, val) {
-        printf("gamedet home key=%s\n", key);
         if(strcmp(key, "ind") == 0) {
             gamedet.home.ind = json_object_get_int(val);
         }
@@ -180,11 +247,94 @@ void LoadGamedetHome(json_object *jso)
 }
 
 /*****************************************************************************/
+void LoadGamedetGal(json_object *jso)
+/*****************************************************************************/
+{
+    json_object_object_foreach(jso, key, val) {
+        if(strcmp(key, "nomine") == 0) {
+            gamedet.gal.nomine = json_object_get_int(val);
+        }
+        else if(strcmp(key, "extramine") == 0) {
+            gamedet.gal.extramine = json_object_get_int(val);
+        }
+        else if(strcmp(key, "extraore") == 0) {
+            gamedet.gal.extraore = json_object_get_int(val);
+        }
+        else if(strcmp(key, "hasind") == 0) {
+            gamedet.gal.hasind = json_object_get_int(val);
+        }
+        else if(strcmp(key, "haspdu") == 0) {
+            gamedet.gal.haspdu = json_object_get_int(val);
+        }
+        else {
+            fprintf(stderr, "Unhandled gamedet gal key %s\n", key);
+        }
+    }
+}
+
+/*****************************************************************************/
+void LoadGamedetShip(json_object *jso)
+/*****************************************************************************/
+{
+    json_object_object_foreach(jso, key, val) {
+        if(strcmp(key, "num") == 0) {
+            gamedet.ship.num = json_object_get_int(val);
+        }
+        else if(strcmp(key, "fight") == 0) {
+            gamedet.ship.fight = json_object_get_int(val);
+        }
+        else if(strcmp(key, "cargo") == 0) {
+            gamedet.ship.cargo = json_object_get_int(val);
+        }
+        else if(strcmp(key, "shield") == 0) {
+            gamedet.ship.shield = json_object_get_int(val);
+        }
+        else if(strcmp(key, "tractor") == 0) {
+            gamedet.ship.tractor = json_object_get_int(val);
+        }
+        else if(strcmp(key, "eff") == 0) {
+            gamedet.ship.eff = json_object_get_int(val);
+        }
+        else {
+            fprintf(stderr, "Unhandled gamedet ship key %s\n", key);
+        }
+    }
+}
+
+/*****************************************************************************/
+void LoadGamedetShip2(json_object *jso)
+/*****************************************************************************/
+{
+    json_object_object_foreach(jso, key, val) {
+        if(strcmp(key, "num") == 0) {
+            gamedet.ship2.num = json_object_get_int(val);
+        }
+        else if(strcmp(key, "fight") == 0) {
+            gamedet.ship2.fight = json_object_get_int(val);
+        }
+        else if(strcmp(key, "cargo") == 0) {
+            gamedet.ship2.cargo = json_object_get_int(val);
+        }
+        else if(strcmp(key, "shield") == 0) {
+            gamedet.ship2.shield = json_object_get_int(val);
+        }
+        else if(strcmp(key, "tractor") == 0) {
+            gamedet.ship2.tractor = json_object_get_int(val);
+        }
+        else if(strcmp(key, "eff") == 0) {
+            gamedet.ship2.eff = json_object_get_int(val);
+        }
+        else {
+            fprintf(stderr, "Unhandled gamedet ship2 key %s\n", key);
+        }
+    }
+}
+
+/*****************************************************************************/
 void LoadGamedet(json_object *jso)
 /*****************************************************************************/
 {
     json_object_object_foreach(jso, key, val) {
-        printf("gamedet key=%s\n", key);
         if(strcmp(key, "winning") == 0) {
             gamedet.winning = json_object_get_int(val);
         }
@@ -198,16 +348,16 @@ void LoadGamedet(json_object *jso)
             LoadGamedetHome(val);
         }
         else if(strcmp(key, "earth") == 0) {
-            // TODO
+            LoadGamedetEarth(val);
         }
         else if(strcmp(key, "gal") == 0) {
-            // TODO
+            LoadGamedetGal(val);
         }
         else if(strcmp(key, "ship") == 0) {
-            // TODO
+            LoadGamedetShip(val);
         }
         else if(strcmp(key, "ship2") == 0) {
-            // TODO
+            LoadGamedetShip2(val);
         }
         else if(strcmp(key, "income") == 0) {
             gamedet.income = json_object_get_int(val);
@@ -320,7 +470,6 @@ int ReadGalflt(void)
     jso = json_object_from_file(fname);
 
     json_object_object_foreach(jso, key, val) {
-        printf("key=%s\n", key);
         if(strcmp(key, "name") == 0) {
             int arraylen = json_object_array_length(val);
             for (int i = 0; i < arraylen; i++) {
@@ -397,14 +546,12 @@ char str[124];
 
 sprintf(str,"%s%d/galfile",path,gm);
 
-TRFIL(printf("Opening file %s for reading\n",str));
 if((galfile=fopen(str,"rb"))==NULL) {
     fprintf(stderr,"ReadGalflt:Couldn't open %s for reading\n",str);
 }
 
 gstart=(char *)name;
 gsize=sizeof(name);
-TRFIL(printf("Reading in name table (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read name file failed\n");
 	return(-1);
@@ -412,7 +559,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *)galaxy;
 gsize=sizeof(galaxy);
-TRFIL(printf("Reading galaxy structure (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	fprintf(stderr,"Read galaxy failed\n");
 	return(-1);
@@ -420,7 +566,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gsize=sizeof(fleet);
 gstart=(char *)fleet;
-TRFIL(printf("Reading fleet structure (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read fleet failed\n");
 	return(-1);
@@ -428,7 +573,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *) &shiptr;
 gsize=sizeof(shiptr);
-TRFIL(printf("Reading shiptr (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read shiptr failed\n");
 	return(-1);
@@ -436,7 +580,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *) &gmbak;
 gsize=sizeof(gmbak);
-TRFIL(printf("Reading gm (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read gm failed\n");
 	return(-1);
@@ -450,7 +593,6 @@ if(gm!=gmbak) {
 
 gstart=(char *) &turn;
 gsize=sizeof(turn);
-TRFIL(printf("Reading turn (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read turn failed\n");
 	return(-1);
@@ -458,7 +600,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *)score;
 gsize=sizeof(score);
-TRFIL(printf("Reading in score (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read score failed\n");
 	return(-1);
@@ -466,7 +607,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *)price;
 gsize=sizeof(price);
-TRFIL(printf("Reading in price (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read price failed\n");
 	return(-1);
@@ -474,7 +614,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *)alliance;
 gsize=sizeof(alliance);
-TRFIL(printf("Reading in alliance table (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read alliance table failed\n");
 	return(-1);
@@ -482,7 +621,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *)ecredit;
 gsize=sizeof(ecredit);
-TRFIL(printf("Reading in ecredit table (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read ecredit table failed\n");
 	return(-1);
@@ -490,7 +628,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *) &gamedet;
 gsize=sizeof(gamedet);
-TRFIL(printf("Reading in gamedet table (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read gamedet table failed\n");
 	/* return(-1); */
@@ -498,7 +635,6 @@ if(!fread(gstart,gsize,1,galfile)) {
 
 gstart=(char *) &desturn;
 gsize=sizeof(desturn);
-TRFIL(printf("Reading in desturn table (%d bytes).\n",gsize));
 if(!fread(gstart,gsize,1,galfile)) {
 	printf("Read desturn table failed\n");
 	/* return(-1); */
