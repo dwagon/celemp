@@ -12,6 +12,9 @@ PROC=texproc
 TEX=latex
 CAT=/bin/cat
 
+CFLAGS += $(shell pkg-config --cflags json-c)
+LDFLAGS += $(shell pkg-config --libs json-c)
+
 .SUFFIXES:.zd .tex .dvi .pdf .txt
 
 .zd.tex:
