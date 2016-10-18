@@ -44,7 +44,7 @@ Number score[NUMPLAYERS+1];	/* Score of each plr */
 char name[NUMPLAYERS+1][NAMESIZE];
 Number price[10];	/* Price of ore on Earth */
 FILE *desc;		/* File that contains the text of the galaxy */
-char *path;		/* Path to find all the files */
+char *game_path;		/* Path to find all the files */
 int desturn[NUMPLAYERS+1];
 
 /*****************************************************************************/
@@ -281,7 +281,7 @@ int main(int argc,char **argv)
     if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
         dbgstr=(char *)"null";
 
-    if((path = getenv("CELEMPPATH")) == NULL) {
+    if((game_path = getenv("CELEMPPATH")) == NULL) {
         fprintf(stderr,"set CELEMPPATH to the appropriate directory\n");
         exit(-1);
         }
@@ -409,7 +409,7 @@ void WriteGalaxyInfo(void)
     int count;
 
     printf("galcreat:WriteGalaxyInfo\n");
-    sprintf(str,"%s%d/galinfo",path,gm);
+    sprintf(str,"%s%d/galinfo",game_path,gm);
     desc=fopen(str,"w");
     if(desc==NULL) {
         printf("Warning: could not open %s for writing\n",str);
@@ -429,7 +429,7 @@ void WriteShipInfo(void)
 	char str[80];
 
 	printf("galcreat:WriteShipInfo\n");
-	sprintf(str,"%s%d/fleetinfo",path,gm);
+	sprintf(str,"%s%d/fleetinfo",game_path,gm);
 	if((desc=fopen(str,"w")) == NULL) {
 		printf("Warning: could not open %s for writing\n",str);
 		return;
