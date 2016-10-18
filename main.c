@@ -45,7 +45,7 @@ int		gm;							/* What game it is */
 int		score[NUMPLAYERS+1];		/* Players scores */
 char 	name[NUMPLAYERS+1][10];		/* Name of players empire */
 int		desturn[NUMPLAYERS+1];		/* Desired game length */
-char	*path;						/* Path to find data files */
+char	*game_path;						/* Path to find data files */
 int 	PlrFlag[]={					/* Used for ORing a scan */
 	PLR0,
 	PLR1,	PLR2,	PLR3,
@@ -453,7 +453,7 @@ if((dbgstr = getenv("CELEMPDEBUG")) == NULL ) {
 	dbgstr=(char *)"null";
 	}
 
-if((path = getenv("CELEMPPATH")) == NULL) {
+if((game_path = getenv("CELEMPPATH")) == NULL) {
 	fprintf(stderr,"set CELEMPPATH to the appropriate path\n");
 	exit(-1);
 	}
@@ -480,7 +480,7 @@ if(OpenExhist("a")==-1) {
 	exit(-1);
 	}
 
-sprintf(str,"%s%d/bids",path,gm);
+sprintf(str,"%s%d/bids",game_path,gm);
 if((bidfp=fopen(str,"r"))==NULL) {
 	fprintf(stderr,"Could not open file %s for reading\n",str);
 	exit(-1);
@@ -493,7 +493,7 @@ if(ReadInTurn()==-1) {
 	}
 
 TRMAIN(printf("Backing up galaxy structure\n"));
-sprintf(str,"cp %s%d/galfile %s%d/galfile.%d",path,gm,path,gm,turn);
+sprintf(str,"cp %s%d/galfile %s%d/galfile.%d",game_path,gm,game_path,gm,turn);
 (void)system(str);
 
 TRMAIN(printf("Reseting structures\n"));
@@ -572,7 +572,7 @@ int tmp,c1,c2;
 
 TRMAIN(printf("ReadInTurn(%d)\n",gm));
 TRMAIN(printf("Reading in turn\n"));
-sprintf(str,"%s%d/cmdout",path,gm);
+sprintf(str,"%s%d/cmdout",game_path,gm);
 if((infile=fopen(str,"r"))==NULL) {
 	fprintf(stderr,"ReadInTurn: Unable to open %s for reading\n",str);
 	return(-1);
