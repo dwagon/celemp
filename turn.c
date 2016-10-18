@@ -29,7 +29,7 @@ int plrflag[NUMPLAYERS+1]={
 	PLR1, 	PLR2, 	PLR3,
 	PLR4, 	PLR5, 	PLR6,
 	PLR7, 	PLR8, 	PLR9	};
-char *path;
+char *game_path;
 
 /*****************************************************************************/
 int main(int argc, char **argv)
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
         dbgstr=(char *)"null";
 
-    if((path = getenv("CELEMPPATH")) == NULL) {
+    if((game_path = getenv("CELEMPPATH")) == NULL) {
         fprintf(stderr, "set CELEMPPATH to the appropriate directory\n");
         exit(-1);
         }
@@ -111,6 +111,8 @@ int PrintGalaxy(char *fname)
     PlanetSummary(NEUTPLR, output);
     fprintf(output, "\\end{adjustwidth}\n");
     ShipSummary(NEUTPLR, output);
+
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Planets}\n");
     for(count=0; count<NUMPLANETS; count++) {
         GraphPlanet(count, NEUTPLR, dotfile);
@@ -211,14 +213,14 @@ void Process(Player plr)
     TRTUR(printf("Process(plr:%d)\n", plr));
 
     /* Open file for outputing information */
-    sprintf(filename, "%s%d/turn%d.%d.tex", path, gm, turn, plr);
+    sprintf(filename, "%s%d/turn%d.%d.tex", game_path, gm, turn, plr);
     if((output=fopen(filename, "w"))==NULL) {
         fprintf(stderr, "Could not open %s for writing\n", filename);
         return;
 	}
 
     /* Open file for outputing dot information */
-    sprintf(filename, "%s%d/turn%d.%d.dot", path, gm, turn, plr);
+    sprintf(filename, "%s%d/turn%d.%d.dot", game_path, gm, turn, plr);
     if((dotfile=fopen(filename, "w"))==NULL) {
         fprintf(stderr, "Could not open %s for writing\n", filename);
         return;
@@ -246,7 +248,7 @@ void Process(Player plr)
     EarthDetails(plr, output);
 
     /******** PLANET DETAILS **************************************/
-    TRTUR(printf("******** PLANET DETAILS *******\n"));
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Planets}\n");
     for(count=0; count<NUMPLANETS; count++)
         if(Interest(plr, count)==1) {
@@ -271,7 +273,7 @@ void Process(Player plr)
 void ShipSummary(Player plr, FILE *output)
 /*****************************************************************************/
 {
-    TRTUR(printf("Process:Ship Summary\n"));
+    fprintf(output, "\n");
     fprintf(output, "\n\\section*{Summary of ships}\n");
     fprintf(output, "\\begin{longtable}{rllllll}\n");
     for(int count=0;count<shiptr;count++) {
@@ -284,6 +286,7 @@ void ShipSummary(Player plr, FILE *output)
 void AllianceStatus(Player plr, FILE *output)
 /*****************************************************************************/
 {
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Ally Status}\n");
     fprintf(output, "\\begin{tabular}{lll}\n");
     fprintf(output, "Empire Name & You are & They are\\\\ \\hline\n");
@@ -304,7 +307,7 @@ void AllianceStatus(Player plr, FILE *output)
 void EarthDetails(Player plr, FILE *output)
 /*****************************************************************************/
 {
-    TRTUR(printf("Process:Earth Details\n"));
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Earth}\n");
     fprintf(output, "\\begin{itemize}\n");
     fprintf(output, "\\item Planet: %d\n", earth+100);
@@ -349,11 +352,12 @@ void CatExhist(FILE *output, Player plyr)
     int commands = 0;
 
     TRTUR(printf("CatExhist(plyr:%d)\n", plyr));
-    sprintf(filename, "%s%d/exhist.%d", path, gm, plyr);
+    sprintf(filename, "%s%d/exhist.%d", game_path, gm, plyr);
     if((exechist = fopen(filename, "r")) == NULL) {
         fprintf(stderr, "CatExhist:Could not open exhist file: %s\n", filename);
         return;
         }
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Command history}\n");
     fprintf(output, "\\begin{itemize}\n");
     for(;fgets(command, sizeof(command), exechist)!=NULL;) {
@@ -401,11 +405,12 @@ void CatMotd(FILE *output)
     char strng[BUFSIZ];
 
     TRTUR(printf("CatMotd(output)\n"));
-    sprintf(filename, "%s%d/motd", path, gm);
+    sprintf(filename, "%s%d/motd", game_path, gm);
     if((motd = fopen(filename, "r")) == NULL) {
         TRTUR(fprintf(stderr, "CatMotd:Could not open motd file:%s\n", filename));
         return;
         }
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Messages}\n");
     fprintf(output, "\\begin{verbatim}\n");
     for(;fgets(strng, 80, motd)!=NULL;) {
@@ -426,7 +431,7 @@ void CatSpec(FILE *output, Player plr)
     char filename[BUFSIZ];
 
     TRTUR(printf("CatSpec(output, plr:%d)\n", plr));
-    sprintf(filename, "%s%d/spec.%d", path, gm, plr);
+    sprintf(filename, "%s%d/spec.%d", game_path, gm, plr);
     if((spec=fopen(filename, "r"))==NULL) {
         TRTUR(fprintf(stderr, "CatSpec:Could not open spec file:%s\n", filename));
         return;
@@ -775,6 +780,7 @@ void TypeSummary(FILE *output)
     for(x=0;x<shiptr;x++)
         types[fleet[x].type]++;	/* Work out how many of each type */
         
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Summary of ship types}\n");
     fprintf(output, "\\begin{tabular}{lr|lr}\n");
     for(x=0;x<NUMTYPES-(NUMTYPES%2);x += 2) {
@@ -795,6 +801,7 @@ void Headings(FILE *output, FILE *dotfile, Player plr)
     TRTUR(printf("Headings\n"));
     TitlePage(output);
     /* Print out name of player and number */
+    fprintf(output, "\n");
     fprintf(output, "\\section*{%s}\n", name[plr]);
     /* Print out score and gm and turn numbers */
     fprintf(output, "\\subsection*{Turn %d}\n", turn);
@@ -867,8 +874,7 @@ void PlanetSummary(Player plr, FILE *output)
     int total=0;
     int rtype;
 
-    TRTUR(printf("Process:Planet Summary\n"));
-
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Summary of planets}\n");
     fprintf(output, "\\begin{longtable}{rc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}ccc}\n");
     fprintf(output, "planet &");
@@ -926,6 +932,7 @@ for(count=0;count<NUMPLAYERS+1;count++) {
 	}
 
 /* Print planet numbers */
+fprintf(output, "\n");
 fprintf(output, "\\section*{Ownership statistix}\n");
 fprintf(output, "\\begin{tabular}{rllllll}\n");
 fprintf(output, "Empire & Plnets & ResPlan & Indust & Income & Score & PDUs\\\\ \\hline \n");
@@ -973,6 +980,7 @@ void UnitSummary(FILE *output)
         }
 
     /* Print unit numbers */
+    fprintf(output, "\n");
     fprintf(output, "\\section*{Ship statistix}\n");
     fprintf(output, "\\begin{tabular}{rlllll}\\\n");
     fprintf(output, "Empire & Ships & Fghtrs & Cargo & Shield & Tractor\\\\ \\hline\n");
