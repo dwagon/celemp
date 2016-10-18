@@ -41,7 +41,7 @@ int		turn,
 		gm,
 		score[NUMPLAYERS+1];
 char	name[NUMPLAYERS+1][10];
-char	*path;
+char	*game_path;
 char	prompt[20];
 char 	*editor;
 FILE	*trns[NUMPLAYERS+1];
@@ -58,7 +58,7 @@ char systr[80],tmpstr[80];
 if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
 	dbgstr=(char *)"null";
 
-if((path=getenv("CELEMPPATH"))==NULL) {
+if((game_path=getenv("CELEMPPATH"))==NULL) {
     fprintf(stderr,"set CELEMPPATH to the appropriate path\n");
     exit(-1);
     }
@@ -85,9 +85,7 @@ if(ReadGalflt()==-1) {
 
 sprintf(tmpstr,"/tmp/gfile%d.orgXXXXXX",gm);
 mktemp(tmpstr);
-sprintf(systr,"cp %s%d/galfile %s",path,gm,tmpstr);
-(void)system(systr);
-sprintf(systr,"compress -f %s",tmpstr);
+sprintf(systr,"cp %s%d/galfile.json %s",game_path,gm,tmpstr);
 (void)system(systr);
 
 for(;;)
