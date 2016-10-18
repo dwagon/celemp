@@ -14,7 +14,7 @@ extern int turn, gm;
 extern Ship shiptr;
 extern Number price[10];
 extern char name[NUMPLAYERS+1][10];
-extern char *path;
+extern char *game_path;
 extern Flag alliance[NUMPLAYERS+1][NUMPLAYERS+1];
 extern char *dbgstr;
 extern Number ecredit[NUMPLAYERS+1];
@@ -29,7 +29,7 @@ int OpenExhist(const char *mode)
     int x;
 
     for(x=0;x<NUMPLAYERS+1;x++) {
-        sprintf(str, "%s%d/exhist.%d", path, gm, x);
+        sprintf(str, "%s%d/exhist.%d", game_path, gm, x);
         if((trns[x]=fopen(str, mode))==NULL) {
             fprintf(stderr, "file:OpenExhist: Couldn't open %s for writing\n", str);
             return(-1);
@@ -52,79 +52,93 @@ void CloseExhist(void)
 }
 
 /*****************************************************************************/
+void LoadPlanet(int pln, json_object *jso)
+/*****************************************************************************/
+{
+    int arraylen;
+
+    json_object_object_foreach(jso, key, val) {
+        if(strcmp(key, "numlinks") == 0) {
+            galaxy[pln].numlinks = json_object_get_int(val);
+        }
+        else if(strcmp(key, "name") == 0) {
+            strncpy(galaxy[pln].name, json_object_get_string(val), NAMESIZ);
+        }
+        else if(strcmp(key, "stndord") == 0) {
+            strncpy(galaxy[pln].stndord, json_object_get_string(val), 10);
+        }
+        else if(strcmp(key, "deployed") == 0) {
+            galaxy[pln].deployed = json_object_get_int(val);
+        }
+        else if(strcmp(key, "pduleft") == 0) {
+            galaxy[pln].pduleft = json_object_get_int(val);
+        }
+        else if(strcmp(key, "spacemine") == 0) {
+            galaxy[pln].spacemine = json_object_get_int(val);
+        }
+        else if(strcmp(key, "scanned") == 0) {
+            galaxy[pln].scanned = json_object_get_int(val);
+        }
+        else if(strcmp(key, "spec") == 0) {
+            galaxy[pln].spec = json_object_get_int(val);
+        }
+        else if(strcmp(key, "income") == 0) {
+            galaxy[pln].income = json_object_get_int(val);
+        }
+        else if(strcmp(key, "pdu") == 0) {
+            galaxy[pln].pdu = json_object_get_int(val);
+        }
+        else if(strcmp(key, "owner") == 0) {
+            galaxy[pln].owner = json_object_get_int(val);
+        }
+        else if(strcmp(key, "ind") == 0) {
+            galaxy[pln].ind = json_object_get_int(val);
+        }
+        else if(strcmp(key, "indleft") == 0) {
+            galaxy[pln].indleft = json_object_get_int(val);
+        }
+        else if(strcmp(key, "ore") == 0) {
+            arraylen = json_object_array_length(val);
+            json_object *tmp;
+            for (int rtype = 0; rtype < arraylen; rtype++) {
+                tmp = json_object_array_get_idx(val, rtype);
+                galaxy[pln].ore[rtype] = json_object_get_int(tmp);
+            }
+        }
+        else if(strcmp(key, "mine") == 0) {
+            arraylen = json_object_array_length(val);
+            json_object *tmp;
+            for (int rtype = 0; rtype < arraylen; rtype++) {
+                tmp = json_object_array_get_idx(val, rtype);
+                galaxy[pln].mine[rtype] = json_object_get_int(tmp);
+            }
+        }
+        else if(strcmp(key, "link") == 0) {
+            arraylen = json_object_array_length(val);
+            json_object *tmp;
+            for (int lnum = 0; lnum < arraylen; lnum++) {
+                tmp = json_object_array_get_idx(val, lnum);
+                galaxy[pln].link[lnum] = json_object_get_int(tmp);
+            }
+        }
+        else {
+            fprintf(stderr, "Unknown planet key %s", key);
+        }
+    }
+}
+
+/*****************************************************************************/
 void LoadGalaxy(json_object *jso)
 /*****************************************************************************/
 {
     json_object *jvalue;
+    enum json_type type;
     int arraylen = json_object_array_length(jso);
 
     for (int pln = 0; pln < arraylen; pln++) {
         jvalue = json_object_array_get_idx(jso, pln);
-        json_object_object_foreach(jvalue, key, val) {
-            if(strcmp(key, "name") == 0) {
-                strncpy(galaxy[pln].name, json_object_get_string(jvalue), 10);
-            }
-            else if(strcmp(key, "owner") == 0) {
-                galaxy[pln].owner = json_object_get_int(val);
-            }
-            else if(strcmp(key, "ore") == 0) {
-                int arraylen = json_object_array_length(val);
-                for (int rtype = 0; rtype < arraylen; rtype++) {
-                    jvalue = json_object_array_get_idx(val, rtype);
-                    galaxy[pln].ore[rtype] = json_object_get_int(jvalue);
-                }
-            }
-            else if(strcmp(key, "mine") == 0) {
-                int arraylen = json_object_array_length(val);
-                for (int rtype = 0; rtype < arraylen; rtype++) {
-                    jvalue = json_object_array_get_idx(val, rtype);
-                    galaxy[pln].mine[rtype] = json_object_get_int(jvalue);
-                }
-            }
-            else if(strcmp(key, "ind") == 0) {
-                galaxy[pln].ind = json_object_get_int(val);
-            }
-            else if(strcmp(key, "indleft") == 0) {
-                galaxy[pln].indleft = json_object_get_int(val);
-            }
-            else if(strcmp(key, "pdu") == 0) {
-                galaxy[pln].pdu = json_object_get_int(val);
-            }
-            else if(strcmp(key, "link") == 0) {
-                int arraylen = json_object_array_length(val);
-                for (int lnum = 0; lnum < arraylen; lnum++) {
-                    jvalue = json_object_array_get_idx(val, lnum);
-                    galaxy[pln].link[lnum] = json_object_get_int(jvalue);
-                }
-            }
-            else if(strcmp(key, "numlinks") == 0) {
-                galaxy[pln].numlinks = json_object_get_int(val);
-            }
-            else if(strcmp(key, "income") == 0) {
-                galaxy[pln].income = json_object_get_int(val);
-            }
-            else if(strcmp(key, "spec") == 0) {
-                galaxy[pln].spec = json_object_get_int(val);
-            }
-            else if(strcmp(key, "scanned") == 0) {
-                galaxy[pln].scanned = json_object_get_int(val);
-            }
-            else if(strcmp(key, "spacemine") == 0) {
-                galaxy[pln].spacemine = json_object_get_int(val);
-            }
-            else if(strcmp(key, "deployed") == 0) {
-                galaxy[pln].deployed = json_object_get_int(val);
-            }
-            else if(strcmp(key, "pduleft") == 0) {
-                galaxy[pln].pduleft = json_object_get_int(val);
-            }
-            else if(strcmp(key, "stndord") == 0) {
-                strncpy(galaxy[pln].stndord, json_object_get_string(jvalue), 10);
-            }
-            else {
-                fprintf(stderr, "Unhandled galaxy key %s\n", key);
-            }
-        }
+        type = json_object_get_type(jvalue);
+        LoadPlanet(pln, jvalue);
     }
 }
 
@@ -385,7 +399,7 @@ void LoadFleet(json_object *jso)
         jvalue = json_object_array_get_idx(jso, shp);
         json_object_object_foreach(jvalue, key, val) {
             if(strcmp(key, "name") == 0) {
-                strncpy(fleet[shp].name, json_object_get_string(jvalue), 10);
+                strncpy(fleet[shp].name, json_object_get_string(val), NAMESIZ);
             }
             else if(strcmp(key, "owner") == 0) {
                 fleet[shp].owner = json_object_get_int(val);
@@ -408,8 +422,8 @@ void LoadFleet(json_object *jso)
             else if(strcmp(key, "ore") == 0) {
                 int arraylen = json_object_array_length(val);
                 for (int rtype = 0; rtype < arraylen; rtype++) {
-                    jvalue = json_object_array_get_idx(val, rtype);
-                    fleet[shp].ore[rtype] = json_object_get_int(jvalue);
+                    json_object *tmp = json_object_array_get_idx(val, rtype);
+                    fleet[shp].ore[rtype] = json_object_get_int(tmp);
                 }
             }
             else if(strcmp(key, "ind") == 0) {
@@ -446,7 +460,7 @@ void LoadFleet(json_object *jso)
                 fleet[shp].figleft = json_object_get_int(val);
             }
             else if(strcmp(key, "stndord") == 0) {
-                strncpy(fleet[shp].stndord, json_object_get_string(jvalue), 10);
+                strncpy(fleet[shp].stndord, json_object_get_string(val), 10);
             }
             else if(strcmp(key, "pduhits") == 0) {
                 fleet[shp].pduhits = json_object_get_int(val);
@@ -466,7 +480,7 @@ int ReadGalflt(void)
     json_object *jso = json_object_new_object();
     json_object *jvalue;
 
-    sprintf(fname, "%s%d/galfile.json", path, gm);
+    sprintf(fname, "%s%d/galfile.json", game_path, gm);
     jso = json_object_from_file(fname);
 
     json_object_object_foreach(jso, key, val) {
@@ -474,7 +488,7 @@ int ReadGalflt(void)
             int arraylen = json_object_array_length(val);
             for (int i = 0; i < arraylen; i++) {
                 jvalue = json_object_array_get_idx(val, i);
-                strncpy(name[i], json_object_get_string(jvalue), 10);
+                strncpy(name[i], json_object_get_string(jvalue), NAMESIZ);
             }
         }
         else if(strcmp(key, "galaxy") == 0) {
@@ -532,115 +546,6 @@ int ReadGalflt(void)
         }
     }
     return(0);
-}
-
-/*****************************************************************************/
-int xReadGalflt(void)
-/*****************************************************************************/
-/* Read in the whole data structure     */
-{
-int gsize,gmbak;
-char *gstart;
-FILE *galfile;
-char str[124];
-
-sprintf(str,"%s%d/galfile",path,gm);
-
-if((galfile=fopen(str,"rb"))==NULL) {
-    fprintf(stderr,"ReadGalflt:Couldn't open %s for reading\n",str);
-}
-
-gstart=(char *)name;
-gsize=sizeof(name);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read name file failed\n");
-	return(-1);
-	}
-
-gstart=(char *)galaxy;
-gsize=sizeof(galaxy);
-if(!fread(gstart,gsize,1,galfile)) {
-	fprintf(stderr,"Read galaxy failed\n");
-	return(-1);
-	}
-
-gsize=sizeof(fleet);
-gstart=(char *)fleet;
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read fleet failed\n");
-	return(-1);
-	}
-
-gstart=(char *) &shiptr;
-gsize=sizeof(shiptr);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read shiptr failed\n");
-	return(-1);
-	}
-
-gstart=(char *) &gmbak;
-gsize=sizeof(gmbak);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read gm failed\n");
-	return(-1);
-	}
-
-if(gm!=gmbak) {
-	printf("Savefile has been modified\n");
-	printf("Gm:%d Read-in-Gm:%d\n",gm,gmbak);
-	/* return(-1); */
-	}
-
-gstart=(char *) &turn;
-gsize=sizeof(turn);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read turn failed\n");
-	return(-1);
-	}
-
-gstart=(char *)score;
-gsize=sizeof(score);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read score failed\n");
-	return(-1);
-	}
-
-gstart=(char *)price;
-gsize=sizeof(price);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read price failed\n");
-	return(-1);
-	}
-
-gstart=(char *)alliance;
-gsize=sizeof(alliance);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read alliance table failed\n");
-	return(-1);
-	}
-
-gstart=(char *)ecredit;
-gsize=sizeof(ecredit);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read ecredit table failed\n");
-	return(-1);
-	}
-
-gstart=(char *) &gamedet;
-gsize=sizeof(gamedet);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read gamedet table failed\n");
-	/* return(-1); */
-	}
-
-gstart=(char *) &desturn;
-gsize=sizeof(desturn);
-if(!fread(gstart,gsize,1,galfile)) {
-	printf("Read desturn table failed\n");
-	/* return(-1); */
-	}
-fclose(galfile);
-return(0);
 }
 
 /*****************************************************************************/
@@ -1132,7 +1037,7 @@ void WriteGalflt(void)
     }
     json_object_object_add(jso, "desturn", jdesturn_array);
 
-    sprintf(fname, "%s%d/galfile.json", path, gm);
+    sprintf(fname, "%s%d/galfile.json", game_path, gm);
     int rc = json_object_to_file(fname, jso);
     if (rc < 0) {
         fprintf(stderr, "Error: %d\n", rc);
