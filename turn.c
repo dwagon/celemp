@@ -107,9 +107,7 @@ int PrintGalaxy(char *fname)
     UnitSummary(output);
     WinningDetails(output);
     CostDetails(output);
-    fprintf(output, "\\begin{adjustwidth}{-3cm}{3cm}\n");
     PlanetSummary(NEUTPLR, output);
-    fprintf(output, "\\end{adjustwidth}\n");
     ShipSummary(NEUTPLR, output);
 
     fprintf(output, "\n");
@@ -553,7 +551,7 @@ void DoEnemy(Ship shp, FILE *output)
 {
     TRTUR(printf("DoEnemy(ship:%d)\n", shp));
     fprintf(output, "\n");
-    fprintf(output, "\\frame{\n");
+    fprintf(output, "\\frame{\\\n");
     fprintf(output, "\\begin{tabular}{rlll}\n");
     fprintf(output, "S%3d & %s & %s: & %s \\\\ \n", shp+100, name[fleet[shp].owner], fleet[shp].name, stypes[fleet[shp].type]);
     fprintf(output, "\\end{tabular}\n");
@@ -571,7 +569,7 @@ void DoFriend(Ship shp, FILE *output)
 
     TRTUR(printf("DoFriend(ship:%d)\n", shp));
     fprintf(output, "\n");
-    fprintf(output, "\\frame{\n");
+    fprintf(output, "\\frame{\\\n");
     fprintf(output, "\\begin{tabular}{rlll}\n");
     fprintf(output, "S%d & \\multicolumn{2}{l}{%s} & %s\\\\\n", shp+100, fleet[shp].name, stypes[fleet[shp].type]);
     fprintf(output, "%s & f=%d & t=%d & s=%d(%d)\\\\\n", name[fleet[shp].owner], fleet[shp].fight, fleet[shp].tractor, fleet[shp].shield, Shields(shp));
@@ -874,7 +872,6 @@ void PlanetSummary(Player plr, FILE *output)
     int total=0;
     int rtype;
 
-    fprintf(output, "\n");
     fprintf(output, "\\section*{Summary of planets}\n");
     fprintf(output, "\\begin{longtable}{rc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}cc@{/}ccc}\n");
     fprintf(output, "planet &");
