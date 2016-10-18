@@ -28,7 +28,7 @@ extern FILE *trns[NUMPLAYERS+1];
 extern ship fleet[NUMSHIPS];
 extern planet galaxy[NUMPLANETS];
 extern Player plr;
-extern char *path;
+extern char *game_path;
 extern int gm;
 extern char *dbgstr;
 
@@ -261,7 +261,7 @@ FILE *motd;
 char str[80];
 
 TRMSC(printf("broadcast\n"));
-sprintf(str,"%s%d/motd",path,gm);
+sprintf(str,"%s%d/motd",game_path,gm);
 if((motd=fopen(str,"a"))==NULL) {
 	fprintf(stderr,"broadcast:Could not open file %s for appending\n",str);
 	return;
