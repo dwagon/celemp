@@ -59,7 +59,7 @@ FILE    *df, *nf;		/* File desc for debug type */
 FILE    *bidfp;			/* File containing all the bids */
 char 	name[NUMPLAYERS+1][10];	/* Name array */
 char 	temp[80], temp2[80];
-char 	*path;
+char 	*game_path;
 int		desturn[NUMPLAYERS+1];
 
 /*****************************************************************************/
@@ -74,7 +74,7 @@ int main(int argc, char **argv)
     if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
         dbgstr=(char *)"null";
 
-    if((path = getenv("CELEMPPATH")) == NULL) {
+    if((game_path = getenv("CELEMPPATH")) == NULL) {
         fprintf(stderr, "set CELEMPPATH to the appropriate directory\n");
         return(-1);
         }
@@ -121,10 +121,10 @@ int main(int argc, char **argv)
     TRTRN(printf("Dumping cmdarr to disk\n"));
     CmdDump();
     TRTRN(printf("Sorting array\n"));
-    sprintf(str, "sort -b -k1 -n -o %s%d/cmdout %s", path, gm, temp);
+    sprintf(str, "sort -b -k1 -n -o %s%d/cmdout %s", game_path, gm, temp);
     (void)system(str);
     TRTRN(printf("Sorting bids\n"));
-    sprintf(str, "sort -b -k3 -r -o %s%d/bids %s", path, gm, temp2);
+    sprintf(str, "sort -b -k3 -r -o %s%d/bids %s", game_path, gm, temp2);
     (void)system(str);
     TRTRN(printf("Finished sorting\n"));
     TRTRN(if(0))
@@ -157,7 +157,7 @@ void OpenDebug(void)
     char str[80];
 
     TRTRN(printf("OpenDebug\n"));
-    sprintf(str, "%s%d/transout", path, gm);
+    sprintf(str, "%s%d/transout", game_path, gm);
     if((df=fopen(str, "w"))==NULL) {
         fprintf(stderr, "Couldn't open the debug file %s\n", str);
         exit(0);
@@ -196,7 +196,7 @@ void ReadIn(void)
         OUTTR(fprintf(df, "** PLR %d **\n", plr));
         fprintf(stdout, "Processing player %d\n", plr);
         idx=0;
-        sprintf(infname, "%s%d/plr%d", path, gm, plr);
+        sprintf(infname, "%s%d/plr%d", game_path, gm, plr);
         if ((infile = fopen(infname, "r")) == NULL) {
             fprintf(stderr, "ERROR! Cannot open %s for reading.\n", infname);
             }
@@ -214,7 +214,7 @@ void ReadIn(void)
             fclose(infile);
             }
         OUTTR(fprintf(df, "* STAND PLR %d *\n", plr));
-        sprintf(infname, "%s%d/sord.%d", path, gm, plr);
+        sprintf(infname, "%s%d/sord.%d", game_path, gm, plr);
         if((infile=fopen(infname, "r"))==NULL) {
             fprintf(stderr, "ERROR! Cannot open %s for reading.\n", infname);
             continue;
@@ -452,7 +452,7 @@ void Broadcast()
     int x;
 
     TRTRN(printf("Broadcast()\n"));
-    sprintf(str, "%s%d/motd", path, gm);
+    sprintf(str, "%s%d/motd", game_path, gm);
     if((fp=fopen(str, "a"))==NULL) {
         fprintf(stderr, "Broadcast:Could not open file %s for appending\n", str);
         return;
@@ -486,7 +486,7 @@ void Personal(void)
             rec=x;
     if(rec<0)
         rec=UserSelect(victname);
-    sprintf(str, "%s%d/spec.%d", path, gm, rec);
+    sprintf(str, "%s%d/spec.%d", game_path, gm, rec);
     if((fp=fopen(str, "a"))==NULL) {
         fprintf(stderr, "Personal:Could not open file %s for apending\n", str);
         return;
@@ -540,7 +540,7 @@ void AllMsg(void)
     /* For every player whom you have at that level send message */
     for(x=0;x<NUMPLAYERS+1;x++)
         if(alliance[x][plr]==rec) {
-            sprintf(str, "%s%d/spec.%d", path, gm, rec);
+            sprintf(str, "%s%d/spec.%d", game_path, gm, rec);
             if((fp=fopen(str, "a"))==NULL) {
                 fprintf(stderr, "AllMsg:Could not open file %s for apending\n", str);
                 return;
@@ -1835,7 +1835,7 @@ void OpenSord(const char *mode)
 
     TRTRN(printf("OpenSord(mode:%s)\n", mode));
     for(x=1;x<NUMPLAYERS+1;x++) {
-        sprintf(str, "%s%d/sord.%d", path, gm, x);
+        sprintf(str, "%s%d/sord.%d", game_path, gm, x);
         if((sord[x]=fopen(str, mode))==NULL) {
             fprintf(stderr, "Could not open file %s with mode %s\n", str, mode);
             exit(-1);
