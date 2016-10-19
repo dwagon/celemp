@@ -991,7 +991,7 @@ void WriteGalflt(void)
 
     // score
     json_object *jscore_array = json_object_new_array();
-    for (int plr = 0; plr < NUMPLAYERS; plr++) {
+    for (int plr = 0; plr <= NUMPLAYERS; plr++) {
         json_object *jscore = json_object_new_int(score[plr]);
         json_object_array_add(jscore_array, jscore);
     }
@@ -1007,9 +1007,9 @@ void WriteGalflt(void)
 
     // alliance
     json_object *jalliance_array = json_object_new_array();
-    for (int splr = 0; splr < NUMPLAYERS; splr++) {
+    for (int splr = 0; splr <= NUMPLAYERS; splr++) {
         json_object *tmp_array = json_object_new_array();
-        for (int dplr = 0; dplr < NUMPLAYERS; dplr++) {
+        for (int dplr = 0; dplr <= NUMPLAYERS; dplr++) {
             json_object *jall = json_object_new_int(alliance[splr][dplr]);
             json_object_array_add(tmp_array, jall);
         }
@@ -1019,7 +1019,7 @@ void WriteGalflt(void)
 
     // ecredit
     json_object *jecredit_array = json_object_new_array();
-    for (int plr = 0; plr < NUMPLAYERS; plr++) {
+    for (int plr = 0; plr <= NUMPLAYERS; plr++) {
         json_object *jecredit = json_object_new_int(ecredit[plr]);
         json_object_array_add(jecredit_array, jecredit);
     }
@@ -1031,7 +1031,7 @@ void WriteGalflt(void)
 
     // desturn
     json_object *jdesturn_array = json_object_new_array();
-    for (int plr = 0; plr < NUMPLAYERS; plr++) {
+    for (int plr = 0; plr <= NUMPLAYERS; plr++) {
         json_object *jdesturn = json_object_new_int(desturn[plr]);
         json_object_array_add(jdesturn_array, jdesturn);
     }
