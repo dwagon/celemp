@@ -702,7 +702,7 @@ not have all 50 available for players to use.
 \begin{zdchunk}
 \begin{tabbing}
 Syntax:\\
-\hspace{\sepspace} \= S{\em xxx}B{\em yy}C{\em oz} \hspace{\sepspace} \= Bid {\em zz} credits/industry used in the building of {\em yy} cargo units onto ship {\em xxx}.\\
+\hspace{\sepspace} \= S{\em xxx}B{\em yy}C{\em zz} \hspace{\sepspace} \= Bid {\em zz} credits/industry used in the building of {\em yy} cargo units onto ship {\em xxx}.\\
 \> S{\em xxx}B{\em yy}F{\em zz} \> Same as above except for fighter units not cargo units.\\
 \> S{\em xxx}B{\em yy}T{\em zz} \> Same as above except for tractor units not cargo units.\\
 \> S{\em xxx}B{\em yy}S{\em zz} \> Same as above except for shield units not cargo units.\\
