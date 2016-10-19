@@ -206,7 +206,6 @@ void Process(Player plr)
 {
     FILE *output, *dotfile;
     char filename[BUFSIZ];
-    int count;
 
     TRTUR(printf("Process(plr:%d)\n", plr));
 
@@ -248,11 +247,14 @@ void Process(Player plr)
     /******** PLANET DETAILS **************************************/
     fprintf(output, "\n");
     fprintf(output, "\\section*{Planets}\n");
-    for(count=0; count<NUMPLANETS; count++)
-        if(Interest(plr, count)==1) {
-            GraphPlanet(count, plr, dotfile);
-            DoPlanet(count, plr, output);
-            }
+    for(int pln=0; pln<NUMPLANETS; pln++) {
+        if(galaxy[pln].knows[plr]==1) {
+            GraphPlanet(pln, plr, dotfile);
+        }
+        if(Interest(plr, pln)==1) {
+            DoPlanet(pln, plr, output);
+        }
+    }
 
     /******* TAIL NOTES ******************************************/
     CatMotd(output);

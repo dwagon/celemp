@@ -66,6 +66,9 @@ void Init(Planet num)
     galaxy[num].pdu=0;
     for(count=0;count<4;count++)
         galaxy[num].link[count]=NP;
+    for(int plr=0; plr<NUMPLAYERS; plr++) {
+        galaxy[num].knows[plr] = 0;
+    }
     galaxy[num].numlinks=0;
     galaxy[num].spec=0;
 }
@@ -96,43 +99,27 @@ void PrtDesc(Planet pln)
 }
 
 /*****************************************************************************/
-void SetHome(Player plyr,Planet plnt)
+void SetHome(Player plyr, Planet plnt)
 /*****************************************************************************/
 /* Set up all the home planets */
 {
     int x;
-    TRGAL2(printf("galcreat:SetHome(plyr: %d,plnt: %d)\n",plyr,plnt));
 
-    galaxy[plnt].owner=plyr;
-    galaxy[plnt].ore[0]=gamedet.home.ore[0];
-    galaxy[plnt].ore[1]=gamedet.home.ore[1];
-    galaxy[plnt].ore[2]=gamedet.home.ore[2];
-    galaxy[plnt].ore[3]=gamedet.home.ore[3];
-    galaxy[plnt].ore[4]=gamedet.home.ore[4];
-    galaxy[plnt].ore[5]=gamedet.home.ore[5];
-    galaxy[plnt].ore[6]=gamedet.home.ore[6];
-    galaxy[plnt].ore[7]=gamedet.home.ore[7];
-    galaxy[plnt].ore[8]=gamedet.home.ore[8];
-    galaxy[plnt].ore[9]=gamedet.home.ore[9];
-    galaxy[plnt].mine[0]=gamedet.home.mine[0];
-    galaxy[plnt].mine[1]=gamedet.home.mine[1];
-    galaxy[plnt].mine[2]=gamedet.home.mine[2];
-    galaxy[plnt].mine[3]=gamedet.home.mine[3];
-    galaxy[plnt].mine[4]=gamedet.home.mine[4];
-    galaxy[plnt].mine[5]=gamedet.home.mine[5];
-    galaxy[plnt].mine[6]=gamedet.home.mine[6];
-    galaxy[plnt].mine[7]=gamedet.home.mine[7];
-    galaxy[plnt].mine[8]=gamedet.home.mine[8];
-    galaxy[plnt].mine[9]=gamedet.home.mine[9];
-    galaxy[plnt].ind=galaxy[plnt].indleft=gamedet.home.ind;
-    galaxy[plnt].numlinks=4;
-    galaxy[plnt].pdu=gamedet.home.pdu;
-    galaxy[plnt].spec= -plyr;
+    galaxy[plnt].owner = plyr;
+    for(int rtype=0; rtype<10; rtype++) {
+        galaxy[plnt].ore[rtype] = gamedet.home.ore[rtype];
+        galaxy[plnt].mine[rtype] = gamedet.home.mine[rtype];
+    }
+    galaxy[plnt].ind = galaxy[plnt].indleft = gamedet.home.ind;
+    galaxy[plnt].numlinks = 4;
+    galaxy[plnt].pdu = gamedet.home.pdu;
+    galaxy[plnt].spec =  -plyr;
+    galaxy[plnt].knows[plyr] = 1;
     /* Make sure that none of the `A' ring planets is defended, or has industry to
      * make life a bit fairer */
-    for(x=0;x<4;x++) {
-        galaxy[galaxy[plnt].link[x]].pdu=0;
-        galaxy[galaxy[plnt].link[x]].ind=0;
+    for(x=0; x<4; x++) {
+        galaxy[galaxy[plnt].link[x]].pdu = 0;
+        galaxy[galaxy[plnt].link[x]].ind = 0;
 	}
 }
 
@@ -154,14 +141,17 @@ void SetEarth(Planet plnt)
     int count;
 
     strcpy(galaxy[plnt].name,"**** EARTH ****");
-    galaxy[plnt].ind=galaxy[plnt].indleft=gamedet.earth.ind;
-    galaxy[plnt].pdu=gamedet.earth.pdu;
-    galaxy[plnt].spec=EARTH;
+    galaxy[plnt].ind = galaxy[plnt].indleft = gamedet.earth.ind;
+    galaxy[plnt].pdu = gamedet.earth.pdu;
+    galaxy[plnt].spec = EARTH;
     for(count=0;count<10;count++) {
-        galaxy[plnt].ore[count]=abs(rand()%gamedet.earth.ore[count]);
-        price[count]=33-(galaxy[plnt].ore[count]*3)/10;
-        galaxy[plnt].mine[count]=gamedet.earth.mine[count];
+        galaxy[plnt].ore[count] = abs(rand()%gamedet.earth.ore[count]);
+        price[count] = 33-(galaxy[plnt].ore[count]*3)/10;
+        galaxy[plnt].mine[count] = gamedet.earth.mine[count];
 	}
+    for(int plr=0; plr<NUMPLAYERS+1; plr++) {
+        galaxy[plnt].knows[plr] = 1;
+    }
 }
 
 /*****************************************************************************/

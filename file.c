@@ -113,6 +113,14 @@ void LoadPlanet(int pln, json_object *jso)
                 galaxy[pln].mine[rtype] = json_object_get_int(tmp);
             }
         }
+        else if(strcmp(key, "knows") == 0) {
+            arraylen = json_object_array_length(val);
+            json_object *tmp;
+            for (int plr = 0; plr <= NUMPLAYERS; plr++) {
+                tmp = json_object_array_get_idx(val, plr);
+                galaxy[pln].knows[plr] = json_object_get_int(tmp);
+            }
+        }
         else if(strcmp(key, "link") == 0) {
             arraylen = json_object_array_length(val);
             json_object *tmp;
@@ -941,6 +949,15 @@ json_object * JsonPlanet(int plan)
     // stndord
     json_object *jstndord = json_object_new_string(galaxy[plan].stndord);
     json_object_object_add(jso, "stndord", jstndord);
+
+    // knows[10]
+    json_object *jknows_array = json_object_new_array();
+    for (int plr = 0; plr <= NUMPLAYERS; plr++) {
+        json_object *jknows = json_object_new_int(galaxy[plan].knows[plr]);
+        json_object_array_add(jknows_array, jknows);
+    }
+    json_object_object_add(jso, "knows", jknows_array);
+
 
     return(jso);
 }

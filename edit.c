@@ -5,15 +5,6 @@
  *
  */
 
-/* 2/5/92	Changed it so you can only edit ships that exist :)
- *			Added ALLY status to alliance 
- * 18/5/92	Added game details structure
- * 21/5/92	Added capacity to edit game details and price structure.
- * 30/5/92	Implemented the ability to edit game details
- * 2/6/92	Added new gamedetail structures ship and gal
- * 13/8/92	Changed alliance editting to work on names rather than numbers
- */
-
 #include "def.h"
 #include "edit.h"
 #include "typname.h"
@@ -176,31 +167,31 @@ switch(buff[0]) {
 void PlanetEdit(void)
 /*****************************************************************************/
 {
-Planet num;				/* Planet Number */
-char tmpstr[80];		/* Temporary file name */
-char systr[80];			/* System tmp string */
-FILE *ef;				/* Edit file */
+    Planet num;				/* Planet Number */
+    char tmpstr[80];		/* Temporary file name */
+    char systr[80];			/* System tmp string */
+    FILE *ef;				/* Edit file */
 
-printf("Enter planet to edit (100-%d): ",NUMPLANETS+100);
-scanf("%hd",&num);
-if(num<100 || num>NUMPLANETS+100)
-	return;
-num-=100;
+    printf("Enter planet to edit (100-%d): ", NUMPLANETS+100);
+    scanf("%hd", &num);
+    if(num<100 || num>NUMPLANETS+100)
+        return;
+    num-=100;
 
-strcpy(tmpstr,"/tmp/ZDpeXXXXXX");
-mktemp(tmpstr);
-if((ef=fopen(tmpstr,"w"))==NULL) {
-	fprintf(stderr,"Could not open %s for writing\n",tmpstr);
-	return;
-	}
-PrintPlanet(num,ef);
-fclose(ef);
+    strcpy(tmpstr, "/tmp/ZDpeXXXXXX");
+    mktemp(tmpstr);
+    if((ef=fopen(tmpstr, "w"))==NULL) {
+        fprintf(stderr, "Could not open %s for writing\n", tmpstr);
+        return;
+        }
+    PrintPlanet(num, ef);
+    fclose(ef);
 
-sprintf(systr,"%s %s",editor,tmpstr);
-(void)system(systr);
+    sprintf(systr, "%s %s", editor, tmpstr);
+    (void)system(systr);
 
-AnalyzePlanet(tmpstr,num);
-remove(tmpstr);
+    AnalyzePlanet(tmpstr, num);
+    remove(tmpstr);
 }
 
 /*****************************************************************************/
@@ -311,24 +302,24 @@ remove(tmpstr);
 void PrintPlanet(Planet num,FILE *ef)
 /*****************************************************************************/
 {
-int x;
+    int x;
 
-fprintf(ef,"Planet %d details:\n",num+100);
-fprintf(ef,"Name:%-s\n",galaxy[num].name);
-fprintf(ef,"Owner:%-2d Income:%-5d Spec:%-5d\n",galaxy[num].owner,galaxy[num].income,galaxy[num].spec);
-fprintf(ef,"Industry:%-5d PDU:%-5d Spacemines:%-5d Deployed:%-5d\n",galaxy[num].ind,galaxy[num].pdu,galaxy[num].spacemine,galaxy[num].deployed);
-fprintf(ef,"Standing:%-10s\n",galaxy[num].stndord);
-fprintf(ef,"Links: %-4d %-4d %-4d %-4d\n",galaxy[num].link[0]+100,galaxy[num].link[1]+100,galaxy[num].link[2]+100,galaxy[num].link[3]+100);
-fprintf(ef,"Mine Type     ");
-for(x=0;x<10;x++) 
-	fprintf(ef,"%-5d",x);
-fprintf(ef,"\nAmount Stored ");
-for(x=0;x<10;x++) 
-	fprintf(ef,"%-5d",galaxy[num].ore[x]);
-fprintf(ef,"\nProduction    ");
-for(x=0;x<10;x++) 
-	fprintf(ef,"%-5d",galaxy[num].mine[x]);
-fprintf(ef,"\n");
+    fprintf(ef,"Planet %d details:\n",num+100);
+    fprintf(ef,"Name:%-s\n",galaxy[num].name);
+    fprintf(ef,"Owner:%-2d Income:%-5d Spec:%-5d\n",galaxy[num].owner,galaxy[num].income,galaxy[num].spec);
+    fprintf(ef,"Industry:%-5d PDU:%-5d Spacemines:%-5d Deployed:%-5d\n",galaxy[num].ind,galaxy[num].pdu,galaxy[num].spacemine,galaxy[num].deployed);
+    fprintf(ef,"Standing:%-10s\n",galaxy[num].stndord);
+    fprintf(ef,"Links: %-4d %-4d %-4d %-4d\n",galaxy[num].link[0]+100,galaxy[num].link[1]+100,galaxy[num].link[2]+100,galaxy[num].link[3]+100);
+    fprintf(ef,"Mine Type     ");
+    for(x=0;x<10;x++) 
+        fprintf(ef,"%-5d",x);
+    fprintf(ef,"\nAmount Stored ");
+    for(x=0;x<10;x++) 
+        fprintf(ef,"%-5d",galaxy[num].ore[x]);
+    fprintf(ef,"\nProduction    ");
+    for(x=0;x<10;x++) 
+        fprintf(ef,"%-5d",galaxy[num].mine[x]);
+    fprintf(ef,"\n");
 }
 
 /*****************************************************************************/

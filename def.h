@@ -88,7 +88,7 @@ Amount 	spacemine;		/* Space mines */
 Amount 	deployed;		/* Mines that are deployed around planet */
 Units	pduleft;		/* Number of PDUs used this turn */
 char	stndord[10];	/* Standing order */
-char    spare[20];		/* Room for expansion */
+Player  knows[NUMPLAYERS];  /* Who knows about this planet */
 };
 
 struct _ship {

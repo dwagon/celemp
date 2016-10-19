@@ -1,29 +1,6 @@
-/* JUMP.C for Celestial Empire by Zer Dwagon */
+/* JUMP.C for Celestial Empire by Dougal Scott */
 /* This deals with all the ship movement stuff */
-/* (c) 1992 Dougal Scott */
-/* $Header: /nelstaff/edp/dwagon/rfs/RCS/jump.c,v 1.47 1993/07/08 03:24:18 dwagon Exp $ */
-/* $Log: jump.c,v $
- * Revision 1.47  1993/07/08  03:24:18  dwagon
- * Made NEUTRAL player 0.
- * Removed lots of associated special checks for writing to trans[0] which
- * is now open.
- *
- * Revision 1.46  1993/05/19  00:07:15  dwagon
- * Empty ships that are being towed no longer get fired upon by PDUs.
- *
- * Revision 1.45  1993/03/04  07:02:50  dwagon
- * Changed debugging messages to a run-time option with dbgstr
- * Fixed brackets on jump table to remove warning
- *
- * Revision 1.44  1992/09/16  13:57:03  dwagon
- * Initial RCS'd version
- * */
-
-/* 2/5/92	Added CHECK for friendliness or alliance between players to see
- *			if PDUs will attack ships jumping through systems
- * 21/5/92	Removed all underscores
- * 23/6/92	Added efficiency decrease by mass
- */
+/* (c) 2016 Dougal Scott */
 
 #include "def.h"
 
@@ -77,35 +54,43 @@ return(0);
 }
 
 /*****************************************************************************/
-void MoveTo(Ship shp,Planet pln,Flag dist,int segm)
+void MoveTo(Ship shp, Planet pln, Flag dist, int segm)
 /*****************************************************************************/
 /* Move ship to planet and process all attacks on the ship and any ship that
  * it might be towing.
  */
 {
-Ship towee; /* What ship is being towed if any */
+    Ship towee;     /* What ship is being towed if any */
 
-fleet[shp].planet=pln;		/* Move ship to new planet */
-if(galaxy[pln].deployed!=0) /* If any spacemines on planet, attack ship */
-	SpcminShp(shp);
-if(dist>1 && segm<dist)	 /* If we jump thru this planet check for pdu attacks */
-	if(galaxy[pln].owner!=fleet[shp].owner && alliance[galaxy[pln].owner][fleet[shp].owner]<=NEUTRAL)
-		PduShp(pln,shp,galaxy[pln].pdu);
+    fleet[shp].planet = pln;		/* Move ship to new planet */
+    galaxy[pln].knows[fleet[shp].owner] = 1;
+    if(galaxy[pln].deployed != 0) { /* If any spacemines on planet, attack ship */
+        SpcminShp(shp);
+    }
+    if(dist > 1 && segm < dist)	{ /* If we jump thru this planet check for pdu attacks */
+        if(galaxy[pln].owner != fleet[shp].owner && alliance[galaxy[pln].owner][fleet[shp].owner] <= NEUTRAL) {
+            PduShp(pln, shp, galaxy[pln].pdu);
+        }
+    }
 
-fleet[shp].moved=1;
-if(fleet[shp].engage<0) {
-	towee= -fleet[shp].engage-1;	/* What ship is being towed */
-	fleet[towee].planet=pln;		/* Move towed ship */
-	if(galaxy[pln].deployed!=0)		/* Attack towed ship with spacemines */
-		SpcminShp(towee);
-	if(dist>1 && segm<dist)			/* Attack towed ship with PDUs */
-		if(galaxy[pln].owner!=fleet[towee].owner && alliance[galaxy[pln].owner][fleet[towee].owner]<=NEUTRAL)
-/* Don't attack empty ships, this could give the owner of the hulk information
- * about where the ship was towed to, that they should not have. Thanks to
- * jasoncc@deakin.edu.au for pointing this out */
-			if(!IsEmpty(towee))	
-				PduShp(pln,towee,galaxy[pln].pdu);
-	}
+    fleet[shp].moved = 1;
+    if(fleet[shp].engage < 0) {
+        towee = -fleet[shp].engage-1;	/* What ship is being towed */
+        fleet[towee].planet = pln;		/* Move towed ship */
+        if(galaxy[pln].deployed != 0) {		/* Attack towed ship with spacemines */
+            SpcminShp(towee);
+        }
+        if(dist > 1 && segm < dist)	{		/* Attack towed ship with PDUs */
+            if(galaxy[pln].owner != fleet[towee].owner && alliance[galaxy[pln].owner][fleet[towee].owner] <= NEUTRAL) {
+    /* Don't attack empty ships, this could give the owner of the hulk information
+     * about where the ship was towed to, that they should not have. Thanks to
+     * jasoncc@deakin.edu.au for pointing this out */
+                if(!IsEmpty(towee))	{
+                    PduShp(pln, towee, galaxy[pln].pdu);
+                }
+            }
+        }
+    }
 }
 
 /*****************************************************************************/
