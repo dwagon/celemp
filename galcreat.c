@@ -1,4 +1,4 @@
-/* Galaxy creation module for Celestial Empire by Zer Dwagon (c) 1989 
+/* Galaxy creation module for Celestial Empire by Dougal Scott (c) 1989 
  * Usage: galcreat [gamenum] [protofilename]
  * The order of the parameters is irrelevent
  * If `gamenumber' is not defined on the command line then it will be taken from
@@ -44,7 +44,6 @@ Number score[NUMPLAYERS+1];	/* Score of each plr */
 char name[NUMPLAYERS+1][NAMESIZE];
 Number price[10];	/* Price of ore on Earth */
 FILE *desc;		/* File that contains the text of the galaxy */
-char *game_path;		/* Path to find all the files */
 int desturn[NUMPLAYERS+1];
 
 /*****************************************************************************/
@@ -271,11 +270,6 @@ int main(int argc,char **argv)
     if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
         dbgstr=(char *)"null";
 
-    if((game_path = getenv("CELEMPPATH")) == NULL) {
-        fprintf(stderr,"set CELEMPPATH to the appropriate directory\n");
-        exit(-1);
-        }
-
     gm=-1;
     protofile=(char *)"./protofile";
     /* strcpy(protofile,"./protofile"); */
@@ -395,14 +389,13 @@ void Ships(Player plr,Planet plnt)
 void WriteGalaxyInfo(void)
 /*****************************************************************************/
 {
-    char str[80];
+    char fname[BUFSIZ];
     int count;
 
-    printf("galcreat:WriteGalaxyInfo\n");
-    sprintf(str,"%s%d/galinfo",game_path,gm);
-    desc=fopen(str,"w");
+    FilePath("galinfo", fname);
+    desc=fopen(fname, "w");
     if(desc==NULL) {
-        printf("Warning: could not open %s for writing\n",str);
+        printf("Warning: could not open %s for writing\n", fname);
         return;
         }
     printf("Writing to the first file\n");
@@ -416,12 +409,11 @@ void WriteShipInfo(void)
 /*****************************************************************************/
 {
 	int count;
-	char str[80];
+	char fname[BUFSIZ];
 
-	printf("galcreat:WriteShipInfo\n");
-	sprintf(str,"%s%d/fleetinfo",game_path,gm);
-	if((desc=fopen(str,"w")) == NULL) {
-		printf("Warning: could not open %s for writing\n",str);
+    FilePath("fleetinfo", fname);
+	if((desc=fopen(fname, "w")) == NULL) {
+		printf("Warning: could not open %s for writing\n", fname);
 		return;
 	}
 	for(count=0;count<shiptr;count++)

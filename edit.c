@@ -32,7 +32,6 @@ int		turn,
 		gm,
 		score[NUMPLAYERS+1];
 char	name[NUMPLAYERS+1][10];
-char	*game_path;
 char	prompt[20];
 char 	*editor;
 FILE	*trns[NUMPLAYERS+1];
@@ -43,46 +42,42 @@ int 	desturn[NUMPLAYERS+1];
 int main(int argc,char **argv)
 /******************************************************************************/
 {
-char *gmstr;
-char systr[80],tmpstr[80];
+    char *gmstr;
+    char systr[BUFSIZ], tmpstr[BUFSIZ], srcfname[BUFSIZ];
 
-if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
-	dbgstr=(char *)"null";
+    if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
+        dbgstr=(char *)"null";
 
-if((game_path=getenv("CELEMPPATH"))==NULL) {
-    fprintf(stderr,"set CELEMPPATH to the appropriate path\n");
-    exit(-1);
-    }
+    if(argc==2) 
+        gm=atoi(argv[1]);
+    else {
+        if((gmstr = getenv("CELEMPGAME")) == NULL) {
+            fprintf(stderr,"set CELEMPGAME to the appropriate game number\n");
+            exit(-1);
+            }
+        gm=atoi(gmstr);
+        }
 
-if(argc==2) 
-	gm=atoi(argv[1]);
-else {
-	if((gmstr = getenv("CELEMPGAME")) == NULL) {
-    	fprintf(stderr,"set CELEMPGAME to the appropriate game number\n");
-    	exit(-1);
-    	}
-	gm=atoi(gmstr);
-	}
+    if((editor = getenv("EDITOR")) == NULL) {
+        strcpy(editor,"vi");
+        }
 
-if((editor = getenv("EDITOR")) == NULL) {
-	strcpy(editor,"vi");
-    }
+    fprintf(stderr,"Reading in galaxy structure\n");
+    if(ReadGalflt()==-1) {
+        fprintf(stderr,"Program terminated\n");
+        exit(-1);
+        }
 
-fprintf(stderr,"Reading in galaxy structure\n");
-if(ReadGalflt()==-1) {
-    fprintf(stderr,"Program terminated\n");
-    exit(-1);
-    }
+    sprintf(tmpstr,"/tmp/gfile%d.orgXXXXXX",gm);
+    mktemp(tmpstr);
+    FilePath("galfile.json", srcfname);
+    sprintf(systr,"cp %s %s", srcfname, tmpstr);
+    (void)system(systr);
 
-sprintf(tmpstr,"/tmp/gfile%d.orgXXXXXX",gm);
-mktemp(tmpstr);
-sprintf(systr,"cp %s%d/galfile.json %s",game_path,gm,tmpstr);
-(void)system(systr);
+    for(;;)
+        MainMenu();
 
-for(;;)
-	MainMenu();
-
-return(0);
+    return(0);
 }
 
 /*****************************************************************************/

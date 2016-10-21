@@ -14,7 +14,6 @@ extern int turn, gm;
 extern Ship shiptr;
 extern Number price[10];
 extern char name[NUMPLAYERS+1][10];
-extern char *game_path;
 extern Flag alliance[NUMPLAYERS+1][NUMPLAYERS+1];
 extern char *dbgstr;
 extern Number ecredit[NUMPLAYERS+1];
@@ -25,13 +24,13 @@ extern int desturn[NUMPLAYERS+1];
 int OpenExhist(const char *mode)
 /*****************************************************************************/
 /* Open the execution history files */
-{ char str[124];
-    int x;
+{ 
+    char filename[BUFSIZ];
 
-    for(x=0;x<NUMPLAYERS+1;x++) {
-        sprintf(str, "%s%d/exhist.%d", game_path, gm, x);
-        if((trns[x]=fopen(str, mode))==NULL) {
-            fprintf(stderr, "file:OpenExhist: Couldn't open %s for writing\n", str);
+    for(int plr=0;plr<NUMPLAYERS+1;plr++) {
+        PlrFile("exhist", plr, filename);
+        if((trns[plr]=fopen(filename, mode)) == NULL) {
+            fprintf(stderr, "file:OpenExhist: Couldn't open %s for writing\n", filename);
             return(-1);
             }
         }
@@ -45,10 +44,47 @@ void CloseExhist(void)
 {
     int x;
 
-    for(x=0;x<NUMPLAYERS+1;x++) {
+    for(x=0; x<NUMPLAYERS+1; x++) {
         fclose(trns[x]);
         }
     return;
+}
+
+/*****************************************************************************/
+const char *GameDir()
+/*****************************************************************************/
+{
+    char *dname;
+    char game_path[BUFSIZ];
+    dname = malloc(BUFSIZ);
+
+    if((getenv("CELEMPPATH")) == NULL) {
+        fprintf(stderr,"set CELEMPPATH to the appropriate directory\n");
+        exit(-1);
+    }
+    else {
+        strncpy(game_path, getenv("CELEMPPATH"), BUFSIZ);
+    }
+
+    sprintf(dname, "%s/game%d", game_path, gm);
+    return dname;
+}
+
+/*****************************************************************************/
+void FilePath(const char *name, char *filename)
+/*****************************************************************************/
+{
+    sprintf(filename, "%s/%s", GameDir(), name);
+}
+
+/*****************************************************************************/
+void PlrFile(const char *name, const Player plr, char *filename)
+/*****************************************************************************/
+{
+    char namepatt[BUFSIZ];
+
+    sprintf(namepatt, "%s.%d", name, plr);
+    FilePath(namepatt, filename);
 }
 
 /*****************************************************************************/
@@ -488,7 +524,7 @@ int ReadGalflt(void)
     json_object *jso = json_object_new_object();
     json_object *jvalue;
 
-    sprintf(fname, "%s%d/galfile.json", game_path, gm);
+    FilePath("galfile.json", fname);
     jso = json_object_from_file(fname);
 
     json_object_object_foreach(jso, key, val) {
@@ -1054,7 +1090,8 @@ void WriteGalflt(void)
     }
     json_object_object_add(jso, "desturn", jdesturn_array);
 
-    sprintf(fname, "%s%d/galfile.json", game_path, gm);
+    FilePath("galfile.json", fname);
+    jso = json_object_from_file(fname);
     int rc = json_object_to_file(fname, jso);
     if (rc < 0) {
         fprintf(stderr, "Error: %d\n", rc);

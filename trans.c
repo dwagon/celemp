@@ -59,7 +59,6 @@ FILE    *df, *nf;		/* File desc for debug type */
 FILE    *bidfp;			/* File containing all the bids */
 char 	name[NUMPLAYERS+1][10];	/* Name array */
 char 	temp[80], temp2[80];
-char 	*game_path;
 int		desturn[NUMPLAYERS+1];
 
 /*****************************************************************************/
@@ -68,16 +67,11 @@ int main(int argc, char **argv)
 /* Do the lot */
 {
     char *gmstr;
-    char str[124];
+    char str[124], cmdout[BUFSIZ], bids[BUFSIZ];
 
     printf("Celestial Empire Version %d.%d Turn translation program\n", VERSION, PATCHLEVEL);
     if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
         dbgstr=(char *)"null";
-
-    if((game_path = getenv("CELEMPPATH")) == NULL) {
-        fprintf(stderr, "set CELEMPPATH to the appropriate directory\n");
-        return(-1);
-        }
 
     if(argc==2) {
         gm=atoi(argv[1]);
@@ -121,10 +115,12 @@ int main(int argc, char **argv)
     TRTRN(printf("Dumping cmdarr to disk\n"));
     CmdDump();
     TRTRN(printf("Sorting array\n"));
-    sprintf(str, "sort -b -k1 -n -o %s%d/cmdout %s", game_path, gm, temp);
+    FilePath("cmdout", cmdout);
+    sprintf(str, "sort -b -k1 -n -o %s %s", cmdout, temp);
     (void)system(str);
     TRTRN(printf("Sorting bids\n"));
-    sprintf(str, "sort -b -k3 -r -o %s%d/bids %s", game_path, gm, temp2);
+    FilePath("bids", bids);
+    sprintf(str, "sort -b -k3 -r -o %s %s", bids,temp2);
     (void)system(str);
     TRTRN(printf("Finished sorting\n"));
     TRTRN(if(0))
@@ -154,12 +150,12 @@ void WriteSord(void)
 void OpenDebug(void)
 /*****************************************************************************/
 {
-    char str[80];
+    char filename[BUFSIZ];
 
     TRTRN(printf("OpenDebug\n"));
-    sprintf(str, "%s%d/transout", game_path, gm);
-    if((df=fopen(str, "w"))==NULL) {
-        fprintf(stderr, "Couldn't open the debug file %s\n", str);
+    FilePath("transout", filename);
+    if((df=fopen(filename, "w"))==NULL) {
+        fprintf(stderr, "Couldn't open the debug file %s\n", filename);
         exit(0);
         }
     return;
@@ -184,26 +180,26 @@ void ReadIn(void)
 /*****************************************************************************/
 /* Read in the information from the plr number 'plr's file   */
 {
-    char infname[80];
+    char infname[BUFSIZ], filename[BUFSIZ];
     FILE *infile;
     char *flag;
 
     TRTRN(printf("ReadIn()\n"));
 
     /* Open the file containing all the plrs cmnd strings     */
-    for(plr=1;plr<NUMPLAYERS+1;plr++) {
+    for(plr=1; plr<NUMPLAYERS+1; plr++) {
     /* Get new orders */
         OUTTR(fprintf(df, "** PLR %d **\n", plr));
-        fprintf(stdout, "Processing player %d\n", plr);
         idx=0;
-        sprintf(infname, "%s%d/plr%d", game_path, gm, plr);
-        if ((infile = fopen(infname, "r")) == NULL) {
-            fprintf(stderr, "ERROR! Cannot open %s for reading.\n", infname);
+        PlrFile("plr", plr, filename);
+        fprintf(stdout, "Processing player %d: %s\n", plr, filename);
+        if ((infile = fopen(filename, "r")) == NULL) {
+            fprintf(stderr, "ERROR! Cannot open %s for reading.\n", filename);
             }
         else {
             /* Read in and pass to parse the strings from the file  */
             flag=(char *)1;
-            while (flag!=NULL) {
+            while (flag != NULL) {
                 flag=fgets(cmnd, 255, infile);
                 if(flag==NULL)
                     break;
@@ -214,7 +210,7 @@ void ReadIn(void)
             fclose(infile);
             }
         OUTTR(fprintf(df, "* STAND PLR %d *\n", plr));
-        sprintf(infname, "%s%d/sord.%d", game_path, gm, plr);
+        PlrFile("sord", plr, infname);
         if((infile=fopen(infname, "r"))==NULL) {
             fprintf(stderr, "ERROR! Cannot open %s for reading.\n", infname);
             continue;
@@ -448,13 +444,13 @@ void Broadcast()
 /* Send a broadcast message to every player */
 {
     FILE *fp;
-    char str[80];
+    char filename[BUFSIZ];
     int x;
 
     TRTRN(printf("Broadcast()\n"));
-    sprintf(str, "%s%d/motd", game_path, gm);
-    if((fp=fopen(str, "a"))==NULL) {
-        fprintf(stderr, "Broadcast:Could not open file %s for appending\n", str);
+    FilePath("motd", filename);
+    if((fp=fopen(filename, "a"))==NULL) {
+        fprintf(stderr, "Broadcast:Could not open file %s for appending\n", filename);
         return;
         }
     fprintf(fp, "%s:", name[plr]);
@@ -472,7 +468,7 @@ void Personal(void)
 /* Send a personal message to a player */
 {
     FILE *fp;
-    char str[80], victname[10];
+    char filename[BUFSIZ], victname[10];
     int x, rec;
 
     TRTRN(printf("Personal()\n"));
@@ -486,9 +482,10 @@ void Personal(void)
             rec=x;
     if(rec<0)
         rec=UserSelect(victname);
-    sprintf(str, "%s%d/spec.%d", game_path, gm, rec);
-    if((fp=fopen(str, "a"))==NULL) {
-        fprintf(stderr, "Personal:Could not open file %s for apending\n", str);
+
+    PlrFile("spec", rec, filename);
+    if((fp=fopen(filename, "a"))==NULL) {
+        fprintf(stderr, "Personal:Could not open file %s for apending\n", filename);
         return;
         }
     fprintf(fp, "From %s:", name[plr]);
@@ -506,7 +503,7 @@ void AllMsg(void)
 /* Send a message to an alliance level */
 {
     FILE *fp, *tf;
-    char tmpname[80], str[80], victname[10];
+    char tmpname[80], filename[BUFSIZ], victname[10], str[80];
     int x, rec;
 
     TRTRN(printf("AllMsg()\n"));
@@ -538,11 +535,11 @@ void AllMsg(void)
     fclose(tf);
 
     /* For every player whom you have at that level send message */
-    for(x=0;x<NUMPLAYERS+1;x++)
-        if(alliance[x][plr]==rec) {
-            sprintf(str, "%s%d/spec.%d", game_path, gm, rec);
-            if((fp=fopen(str, "a"))==NULL) {
-                fprintf(stderr, "AllMsg:Could not open file %s for apending\n", str);
+    for(int plr=0;plr<=NUMPLAYERS;plr++)
+        if(alliance[plr][plr]==rec) {
+            PlrFile("spec", rec, filename);
+            if((fp=fopen(filename, "a"))==NULL) {
+                fprintf(stderr, "AllMsg:Could not open file %s for apending\n", filename);
                 return;
                 }
             if((tf=fopen(tmpname, "r"))==NULL) {
@@ -1800,7 +1797,7 @@ void CmdDump(void)
         exit(0);
         }
 
-    for(c1=1;c1<NUMPLAYERS+1;c1++) {
+    for(c1=1;c1<=NUMPLAYERS;c1++) {
         TRTRN(printf("Player :%d\n", c1));
         fprintf(cf, "%d ", c1);
         for(death=0, c2=0;death==0;c2++) {
@@ -1830,14 +1827,12 @@ void OpenSord(const char *mode)
 /*****************************************************************************/
 /* Open standing order output files */
 {
-    char str[80];
-    int x;
+    char filename[BUFSIZ];
 
-    TRTRN(printf("OpenSord(mode:%s)\n", mode));
-    for(x=1;x<NUMPLAYERS+1;x++) {
-        sprintf(str, "%s%d/sord.%d", game_path, gm, x);
-        if((sord[x]=fopen(str, mode))==NULL) {
-            fprintf(stderr, "Could not open file %s with mode %s\n", str, mode);
+    for(int plr=1; plr<=NUMPLAYERS; plr++) {
+        PlrFile("sort", plr, filename);
+        if((sord[plr] = fopen(filename, mode))==NULL) {
+            fprintf(stderr, "Could not open file %s with mode %s\n", filename, mode);
             exit(-1);
             }
         }
@@ -1851,7 +1846,7 @@ void CloseSord(void)
     int x;
 
     TRTRN(printf("CloseSord()\n"));
-    for(x=1;x<NUMPLAYERS+1;x++) {
+    for(x=1;x<=NUMPLAYERS;x++) {
         fclose(sord[x]);
         }
 }
@@ -1882,15 +1877,13 @@ void CloseBid(void)
 void ValidCheck(void)
 /*****************************************************************************/
 {
-    int x, y;
-
     TRTRN(printf("ValidCheck()\n"));
-    for(x=0;x<NUMPLANETS;x++) {
-        if(galaxy[x].owner>NUMPLAYERS)
-            printf("Owner overload on planet %d:%s", x, cmnd);
-        for(y=0;y<10;y++) 
-            if(galaxy[x].ore[y]<0 || galaxy[x].ore[y]>1000)
-                printf("Ore %d overload on planet %d:%s\n", x, y, cmnd);
+    for(int plr=0;plr<NUMPLANETS;plr++) {
+        if(galaxy[plr].owner>NUMPLAYERS)
+            printf("Owner overload on planet %d:%s", plr, cmnd);
+        for(int rtype=0;rtype<10;rtype++) 
+            if(galaxy[plr].ore[rtype]<0 || galaxy[plr].ore[rtype]>1000)
+                printf("Ore %d overload on planet %d:%s\n", plr, rtype, cmnd);
         }
 }
 

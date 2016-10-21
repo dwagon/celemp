@@ -45,7 +45,6 @@ int     gm;                         /* What game it is */
 int     score[NUMPLAYERS+1];        /* Players scores */
 char    name[NUMPLAYERS+1][10];     /* Name of players empire */
 int     desturn[NUMPLAYERS+1];      /* Desired game length */
-char    *game_path;                     /* Path to find data files */
 int     PlrFlag[]={                 /* Used for ORing a scan */
     PLR0,
     PLR1,   PLR2,   PLR3,
@@ -446,76 +445,75 @@ return;
 int main(int argc,char **argv)
 /***************************************************************************/
 {
-char *gmstr;
-char str[BUFSIZ];
+    char *gmstr;
+    char filename[BUFSIZ], destfile[BUFSIZ];
+    char srcfname[BUFSIZ], dstfname[BUFSIZ];
 
-printf("Celestial Empire Version:%d.%d\n",VERSION,PATCHLEVEL);
+    printf("Celestial Empire Version:%d.%d\n",VERSION,PATCHLEVEL);
 
-if((dbgstr = getenv("CELEMPDEBUG")) == NULL ) { 
-    dbgstr=(char *)"null";
-    }
+    if((dbgstr = getenv("CELEMPDEBUG")) == NULL ) { 
+        dbgstr=(char *)"null";
+        }
 
-if((game_path = getenv("CELEMPPATH")) == NULL) {
-    fprintf(stderr,"set CELEMPPATH to the appropriate path\n");
-    exit(-1);
-    }
+    if(argc==2)
+        gm=atoi(argv[1]);
+    else {
+        if((gmstr = getenv("CELEMPGAME")) == NULL) {
+            fprintf(stderr,"set CELEMPGAME to the appropriate game number\n");
+            exit(-1);
+            }
+        gm=atoi(gmstr);
+        }
 
-if(argc==2)
-    gm=atoi(argv[1]);
-else {
-    if((gmstr = getenv("CELEMPGAME")) == NULL) {
-        fprintf(stderr,"set CELEMPGAME to the appropriate game number\n");
+    TRMAIN(printf("Reading in galaxy structure\n"));
+    if(ReadGalflt()==-1) {
+        fprintf(stderr,"Program terminated\n");
         exit(-1);
         }
-    gm=atoi(gmstr);
-    }
 
-TRMAIN(printf("Reading in galaxy structure\n"));
-if(ReadGalflt()==-1) {
-    fprintf(stderr,"Program terminated\n");
-    exit(-1);
-    }
+    TRMAIN(printf("Opening execution histories\n"));
+    if(OpenExhist("a")==-1) {
+        fprintf(stderr,"Program terminated\n");
+        exit(-1);
+        }
 
-TRMAIN(printf("Opening execution histories\n"));
-if(OpenExhist("a")==-1) {
-    fprintf(stderr,"Program terminated\n");
-    exit(-1);
-    }
+    FilePath("bids", filename);
+    if((bidfp=fopen(filename,"r"))==NULL) {
+        fprintf(stderr, "Could not open file %s for reading\n", filename);
+        exit(-1);
+        }
 
-sprintf(str,"%s%d/bids",game_path,gm);
-if((bidfp=fopen(str,"r"))==NULL) {
-    fprintf(stderr,"Could not open file %s for reading\n",str);
-    exit(-1);
-    }
+    TRMAIN(printf("Reading in turn commands\n"));
+    if(ReadInTurn()==-1) {
+        fprintf(stderr,"Program terminated\n");
+        exit(-1);
+        }
 
-TRMAIN(printf("Reading in turn commands\n"));
-if(ReadInTurn()==-1) {
-    fprintf(stderr,"Program terminated\n");
-    exit(-1);
-    }
+    TRMAIN(printf("Backing up galaxy structure\n"));
+    strncpy(destfile, "galfile.json.%d", turn);
+    FilePath(destfile, dstfname);
+    FilePath("galfile.json", srcfname);
+    sprintf(filename, "cp %s %s", srcfname, dstfname);
+    (void)system(filename);
 
-TRMAIN(printf("Backing up galaxy structure\n"));
-sprintf(str,"cp %s%d/galfile %s%d/galfile.%d",game_path,gm,game_path,gm,turn);
-(void)system(str);
+    TRMAIN(printf("Reseting structures\n"));
+    ResetScan();
+    CalcEarthDmg();
 
-TRMAIN(printf("Reseting structures\n"));
-ResetScan();
-CalcEarthDmg();
+    TRMAIN(printf("Processing turn\n"));
+    ProcessTurn();
 
-TRMAIN(printf("Processing turn\n"));
-ProcessTurn();
+    TRMAIN(printf("End of turn sequence\n"));
+    EndOfTurn();
 
-TRMAIN(printf("End of turn sequence\n"));
-EndOfTurn();
+    TRMAIN(printf("Writing galaxy structure\n"));
+    WriteGalflt();
 
-TRMAIN(printf("Writing galaxy structure\n"));
-WriteGalflt();
+    TRMAIN(printf("Closing execution histories\n"));
+    CloseExhist();
+    fclose(bidfp);
 
-TRMAIN(printf("Closing execution histories\n"));
-CloseExhist();
-fclose(bidfp);
-
-return(0);
+    return(0);
 }
 
 /***************************************************************************/
@@ -568,28 +566,28 @@ int ReadInTurn(void)
 /*****************************************************************************/
 /* Read the commands of the turn into memeory   */
 {
-char str[124];
-FILE *infile;
-int tmp,c1,c2;
+    char cmdout[BUFSIZ];
+    FILE *infile;
+    int tmp,c1,c2;
 
-TRMAIN(printf("ReadInTurn(%d)\n",gm));
-TRMAIN(printf("Reading in turn\n"));
-sprintf(str,"%s%d/cmdout",game_path,gm);
-if((infile=fopen(str,"r"))==NULL) {
-    fprintf(stderr,"ReadInTurn: Unable to open %s for reading\n",str);
-    return(-1);
-    }
-
-for(c1=c2=0;;) {
-    if(fscanf(infile,"%d",&tmp)==EOF)
-        break;
-    if(tmp==ENDCOMMAND) {
-        c1++;
-        c2=0;
+    TRMAIN(printf("ReadInTurn(%d)\n",gm));
+    TRMAIN(printf("Reading in turn\n"));
+    FilePath("cmdout", cmdout);
+    if((infile=fopen(cmdout,"r"))==NULL) {
+        fprintf(stderr,"ReadInTurn: Unable to open %s for reading\n", cmdout);
+        return(-1);
         }
-    else
-        cmdarr[c1][c2++]=tmp;
-    }
-fclose(infile);
-return(0);
+
+    for(c1=c2=0;;) {
+        if(fscanf(infile, "%d", &tmp)==EOF)
+            break;
+        if(tmp==ENDCOMMAND) {
+            c1++;
+            c2=0;
+            }
+        else
+            cmdarr[c1][c2++]=tmp;
+        }
+    fclose(infile);
+    return(0);
 }

@@ -33,7 +33,6 @@ int turn,gm;
 Ship shiptr;
 Number price[10];
 char name[NUMPLAYERS+1][10];
-char *game_path;
 Flag alliance[NUMPLAYERS+1][NUMPLAYERS+1];
 Number ecredit[NUMPLAYERS+1];
 int desturn[NUMPLAYERS+1];
@@ -48,11 +47,6 @@ int count,count2;
 if((dbgstr = getenv("CELEMPDEBUG")) == NULL ) {
 	dbgstr=(char *)"null";
 	}
-
-if((game_path = getenv("CELEMPPATH")) == NULL) {
-    fprintf(stderr,"set CELEMPPATH to the appropriate directory\n");
-    exit(-1);
-    }
 
 if(argc>=2)
     gm=atoi(argv[1]);

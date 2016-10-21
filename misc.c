@@ -28,7 +28,6 @@ extern FILE *trns[NUMPLAYERS+1];
 extern ship fleet[NUMSHIPS];
 extern planet galaxy[NUMPLANETS];
 extern Player plr;
-extern char *game_path;
 extern int gm;
 extern char *dbgstr;
 
@@ -257,19 +256,19 @@ void HelpHelp(const char *target)
 /*****************************************************************************/
 /* Earth is under attack, ask for help */
 {
-FILE *motd;
-char str[80];
+    FILE *motd;
+    char filename[BUFSIZ];
 
-TRMSC(printf("broadcast\n"));
-sprintf(str,"%s%d/motd",game_path,gm);
-if((motd=fopen(str,"a"))==NULL) {
-	fprintf(stderr,"broadcast:Could not open file %s for appending\n",str);
-	return;
-	}
-fprintf(motd,"********** HELP! HELP! **********\n");
-fprintf(motd,"Earth %s under attack by %s\n",target,name[plr]);
-fprintf(motd,"Any help that you can render will be appreciated\n");
-fclose(motd);
-return;
+    TRMSC(printf("broadcast\n"));
+    FilePath("motd", filename);
+    if((motd=fopen(filename, "a"))==NULL) {
+        fprintf(stderr, "broadcast:Could not open file %s for appending\n", filename);
+        return;
+        }
+    fprintf(motd,"********** HELP! HELP! **********\n");
+    fprintf(motd,"Earth %s under attack by %s\n",target,name[plr]);
+    fprintf(motd,"Any help that you can render will be appreciated\n");
+    fclose(motd);
+    return;
 }
 

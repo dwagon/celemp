@@ -8,7 +8,6 @@ Number price[10];
 char name[NUMPLAYERS+1][10];
 game gamedet;
 game ogamedet;
-char *game_path;
 Flag alliance[NUMPLAYERS+1][NUMPLAYERS+1];
 Number ecredit[NUMPLAYERS+1];
 char *dbgstr;
@@ -24,11 +23,6 @@ int count;
 
 if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
 	strcpy(dbgstr,"null");
-
-if((game_path = getenv("CELEMPPATH")) == NULL) {
-    fprintf(stderr,"set CELEMPPATH to the appropriate directory\n");
-    exit(-1);
-    }
 
 if(argc>=2)
     gm=atoi(argv[1]);

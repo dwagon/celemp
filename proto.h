@@ -44,6 +44,9 @@ int OpenExhist(const char *mode);
 void CloseExhist(void);
 int ReadGalflt(void);
 void WriteGalflt(void);
+const char *GameDir(void);
+void FilePath(const char *name, char *filename);
+void PlrFile(const char *name, const Player plr, char *filename);
 
 /* JUMP.C */
 int Chekfuel(Ship shp, Number dist);

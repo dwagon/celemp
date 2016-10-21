@@ -29,7 +29,6 @@ int plrflag[NUMPLAYERS+1]={
 	PLR1, 	PLR2, 	PLR3,
 	PLR4, 	PLR5, 	PLR6,
 	PLR7, 	PLR8, 	PLR9	};
-char *game_path;
 
 /*****************************************************************************/
 int main(int argc, char **argv)
@@ -41,11 +40,6 @@ int main(int argc, char **argv)
 
     if((dbgstr = getenv("CELEMPDEBUG")) == NULL )
         dbgstr=(char *)"null";
-
-    if((game_path = getenv("CELEMPPATH")) == NULL) {
-        fprintf(stderr, "set CELEMPPATH to the appropriate directory\n");
-        exit(-1);
-        }
 
     if(argc>=2)
         gm=atoi(argv[1]);
@@ -205,19 +199,21 @@ void Process(Player plr)
 /* Process each players turn */
 {
     FILE *output, *dotfile;
-    char filename[BUFSIZ];
+    char filename[BUFSIZ], turnsheet[BUFSIZ];
 
     TRTUR(printf("Process(plr:%d)\n", plr));
 
     /* Open file for outputing information */
-    sprintf(filename, "%s%d/turn%d.%d.tex", game_path, gm, turn, plr);
+    sprintf(turnsheet, "turn%d.%d.tex", turn, plr);
+    FilePath(turnsheet, filename);
     if((output=fopen(filename, "w"))==NULL) {
         fprintf(stderr, "Could not open %s for writing\n", filename);
         return;
 	}
 
     /* Open file for outputing dot information */
-    sprintf(filename, "%s%d/turn%d.%d.dot", game_path, gm, turn, plr);
+    sprintf(turnsheet, "turn%d.%d.dot", turn, plr);
+    FilePath(turnsheet, filename);
     if((dotfile=fopen(filename, "w"))==NULL) {
         fprintf(stderr, "Could not open %s for writing\n", filename);
         return;
@@ -342,7 +338,7 @@ void EarthDetails(Player plr, FILE *output)
 
 
 /*****************************************************************************/
-void CatExhist(FILE *output, Player plyr)
+void CatExhist(FILE *output, Player plr)
 /*****************************************************************************/
 /* Cat the execution history into the turn sheet */
 {
@@ -351,8 +347,7 @@ void CatExhist(FILE *output, Player plyr)
     char command[BUFSIZ];
     int commands = 0;
 
-    TRTUR(printf("CatExhist(plyr:%d)\n", plyr));
-    sprintf(filename, "%s%d/exhist.%d", game_path, gm, plyr);
+    PlrFile("exhist", plr, filename);
     if((exechist = fopen(filename, "r")) == NULL) {
         fprintf(stderr, "CatExhist:Could not open exhist file: %s\n", filename);
         return;
@@ -404,8 +399,7 @@ void CatMotd(FILE *output)
     char filename[BUFSIZ];
     char strng[BUFSIZ];
 
-    TRTUR(printf("CatMotd(output)\n"));
-    sprintf(filename, "%s%d/motd", game_path, gm);
+    FilePath("motd", filename);
     if((motd = fopen(filename, "r")) == NULL) {
         TRTUR(fprintf(stderr, "CatMotd:Could not open motd file:%s\n", filename));
         return;
@@ -430,8 +424,8 @@ void CatSpec(FILE *output, Player plr)
     char strng[256];
     char filename[BUFSIZ];
 
-    TRTUR(printf("CatSpec(output, plr:%d)\n", plr));
-    sprintf(filename, "%s%d/spec.%d", game_path, gm, plr);
+    PlrFile("spec", plr, filename);
+
     if((spec=fopen(filename, "r"))==NULL) {
         TRTUR(fprintf(stderr, "CatSpec:Could not open spec file:%s\n", filename));
         return;
