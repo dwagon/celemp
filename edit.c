@@ -171,7 +171,7 @@ void PlanetEdit(void)
     scanf("%hd", &num);
     if(num<100 || num>NUMPLANETS+100)
         return;
-    num-=100;
+    num -= 100;
 
     strcpy(tmpstr, "/tmp/ZDpeXXXXXX");
     mktemp(tmpstr);
@@ -200,7 +200,7 @@ FILE *ef;				/* Edit file */
 if(num<0) {
 	printf("Enter ship to edit (100-%d): ",shiptr+99);
 	scanf("%hd",&num);
-	num-=100;
+	num -= 100;
 	if(num<0 || num>shiptr-1)
 		return;
 	}
@@ -338,21 +338,22 @@ fprintf(ef,"\n");
 void PrintAlliance(FILE *ef)
 /*****************************************************************************/
 {
-int x,y;
+    int x, y;
 
-fprintf(ef,"Alliance Details\n");
-fprintf(ef,"ALLY:%c\tFRIEND:%c\tNEUTRAL:%c\tENEMY:%c\n",allsym[ALLY],allsym[FRIEND],allsym[NEUTRAL],allsym[ENEMY]);
-fprintf(ef,"           ");
-for(x=0;x<=NUMPLAYERS;x++)
-	fprintf(ef,"%-3d ",x);
-fprintf(ef,"\n");
-for(x=0;x<=NUMPLAYERS;x++) {
-	fprintf(ef,"%-9s  ",name[x]);
-	for(y=0;y<=NUMPLAYERS;y++) {
-		fprintf(ef,"%c   ",allsym[alliance[x][y]]);
-		}
-	fprintf(ef,"\n");
-	}
+    fprintf(ef, "Alliance Details\n");
+    fprintf(ef, "ALLY:%c\tFRIEND:%c\tNEUTRAL:%c\tENEMY:%c\n", allsym[ALLY], allsym[FRIEND], allsym[NEUTRAL], allsym[ENEMY]);
+    fprintf(ef, "           ");
+    for(x=0;x<=NUMPLAYERS;x++) {
+        fprintf(ef, "%-3d ", x);
+    }
+    fprintf(ef, "\n");
+    for(x=0;x<=NUMPLAYERS;x++) {
+        fprintf(ef, "%-9s  ", name[x]);
+        for(y=0;y<=NUMPLAYERS;y++) {
+            fprintf(ef, "%c   ", allsym[alliance[x][y]]);
+            }
+        fprintf(ef, "\n");
+        }
 }
 
 /*****************************************************************************/
@@ -680,7 +681,7 @@ for(x=0;x<10;x++)
 
 tmp.cargleft=tmp.cargo-20*tmp.mines-10*tmp.ind-2*tmp.pdu-tmp.spacemines;
 for(x=0;x<10;x++)
-	tmp.cargleft-=tmp.ore[x];
+	tmp.cargleft -= tmp.ore[x];
 tmp.engage=0;
 tmp.moved=0;
 tmp.hits=0;
@@ -714,74 +715,74 @@ else {
 void AnalyzeAlliance(char filename[80])
 /*****************************************************************************/
 {
-FILE *ef;
-char buff[80],*tok;
-int x,y;
-Flag tmpall[NUMPLAYERS+1][NUMPLAYERS+1];
+    FILE *ef;
+    char buff[80], *tok;
+    int x, y;
+    Flag tmpall[NUMPLAYERS+1][NUMPLAYERS+1];
 
-/* File format
-Alliance Details
-ALLY:A	FRIEND:F	NEUTRAL:N	ENEMY:E
-     0   1   2   3   4   5   6   7   8   
-0    N   N   N   N   N   N   N   N   N   
-1    N   N   N   N   N   N   N   N   N   
-2    N   N   N   N   N   N   N   N   N   
-3    N   N   N   N   N   A   N   N   N   
-4    N   F   N   N   N   N   N   N   N   
-5    N   N   N   N   E   N   N   N   N   
-6    N   N   N   N   N   N   N   N   N   
-7    N   N   N   N   N   N   N   N   N   
-8    N   N   N   N   N   N   N   N   N   
-*/
+    /* File format
+    Alliance Details
+    ALLY:A	FRIEND:F	NEUTRAL:N	ENEMY:E
+         0   1   2   3   4   5   6   7   8   
+    0    N   N   N   N   N   N   N   N   N   
+    1    N   N   N   N   N   N   N   N   N   
+    2    N   N   N   N   N   N   N   N   N   
+    3    N   N   N   N   N   A   N   N   N   
+    4    N   F   N   N   N   N   N   N   N   
+    5    N   N   N   N   E   N   N   N   N   
+    6    N   N   N   N   N   N   N   N   N   
+    7    N   N   N   N   N   N   N   N   N   
+    8    N   N   N   N   N   N   N   N   N   
+    */
 
-if((ef=fopen(filename,"r"))==NULL) {
-	fprintf(stderr,"Could not open %s for reading\n",filename);
-	return;
-	}
-fgets(buff,sizeof(buff),ef);	/* Absorb first three lines */
-fgets(buff,sizeof(buff),ef);
-fgets(buff,sizeof(buff),ef);
-printf("Alliance Details\n");
-printf("ALLY:%d\tFRIEND:%d\tNEUTRAL:%d\tENEMY:%d\n",ALLY,FRIEND,NEUTRAL,ENEMY);
-printf("     ");
-for(x=0;x<=NUMPLAYERS;x++)
-	printf("%-3d ",x);
-printf("\n");
-for(x=0;x<=NUMPLAYERS;x++) {
-	fgets(buff,sizeof(buff),ef);
-	tok=strtok(buff,": \t");
-	printf("%-3d  ",x);
-	for(y=0;y<=NUMPLAYERS;y++) {
-		tmpall[x][y]=(int)strtok(NULL,": \t")[0];
-		switch(tmpall[x][y]) {
-			case 'A':	case 'a':
-				tmpall[x][y]=ALLY;
-				break;
-			case 'F':	case 'f':
-				tmpall[x][y]=FRIEND;
-				break;
-			case 'N':	case 'n':
-				tmpall[x][y]=NEUTRAL;
-				break;
-			case 'E':	case 'e':
-				tmpall[x][y]=ENEMY;
-				break;
-			default:
-				fprintf(stderr,"Invalid alliance level\n");
-				tmpall[x][y]=NEUTRAL;
-				}
-		printf("%-3c ",allsym[tmpall[x][y]]);
-		}
-	printf("\n");
-	}
-fclose(ef);
+    if((ef=fopen(filename, "r"))==NULL) {
+        fprintf(stderr, "Could not open %s for reading\n", filename);
+        return;
+        }
+    fgets(buff, sizeof(buff), ef);	/* Absorb first three lines */
+    fgets(buff, sizeof(buff), ef);
+    fgets(buff, sizeof(buff), ef);
+    printf("Alliance Details\n");
+    printf("ALLY:%d\tFRIEND:%d\tNEUTRAL:%d\tENEMY:%d\n", ALLY, FRIEND, NEUTRAL, ENEMY);
+    printf("     ");
+    for(x=0;x<=NUMPLAYERS;x++)
+        printf("%-3d ", x);
+    printf("\n");
+    for(x=0;x<=NUMPLAYERS;x++) {
+        fgets(buff, sizeof(buff), ef);
+        tok=strtok(buff, ": \t");
+        printf("%-3d  ", x);
+        for(y=0;y<=NUMPLAYERS;y++) {
+            tmpall[x][y]=(int)strtok(NULL, ": \t")[0];
+            switch(tmpall[x][y]) {
+                case 'A':	case 'a':
+                    tmpall[x][y]=ALLY;
+                    break;
+                case 'F':	case 'f':
+                    tmpall[x][y]=FRIEND;
+                    break;
+                case 'N':	case 'n':
+                    tmpall[x][y]=NEUTRAL;
+                    break;
+                case 'E':	case 'e':
+                    tmpall[x][y]=ENEMY;
+                    break;
+                default:
+                    fprintf(stderr, "Invalid alliance level\n");
+                    tmpall[x][y]=NEUTRAL;
+                    }
+            printf("%-3c ", allsym[tmpall[x][y]]);
+            }
+        printf("\n");
+        }
+    fclose(ef);
 
-printf("Confirm the changes to alliance?");
-fgets(buff, sizeof(buff), stdin);
-if(buff[0]=='n' || buff[0]=='N')
-	printf("Alliance changes discarded\n");
-else
-	bcopy(&tmpall,&alliance,sizeof(tmpall));
+    printf("Confirm the changes to alliance?");
+    fgets(buff, sizeof(buff), stdin);
+    if(buff[0]=='n' || buff[0]=='N')
+        printf("Alliance changes discarded\n");
+    else
+        bcopy(&tmpall, &alliance, sizeof(tmpall));
 }
 
 /*****************************************************************************/
@@ -898,7 +899,6 @@ else
 void Validate(void)
 /*****************************************************************************/
 {
-int x,y;
 Units cgl;
 Number inc;
 
@@ -906,51 +906,52 @@ Number inc;
 printf("Validating ships\n");
 /* Validate cargleft */
 TREDIT(printf("Validating cargo :"));
-for(x=0;x<shiptr;x++) {
+for(int shp=0;shp<shiptr;shp++) {
 	TREDIT(printf("."));
-	if(fleet[x].ind<0) {
-		fprintf(stderr,"Ship %d Industry %d\n",x,fleet[x].ind);
+	if(fleet[shp].ind<0) {
+		fprintf(stderr,"Ship %d Industry %d\n",shp,fleet[shp].ind);
 		continue;
 		}
-	if(fleet[x].mines<0) {
-		fprintf(stderr,"Ship %d Mines %d\n",x,fleet[x].mines);
+	if(fleet[shp].mines<0) {
+		fprintf(stderr,"Ship %d Mines %d\n",shp,fleet[shp].mines);
 		continue;
 		}
-	if(fleet[x].pdu<0) {
-		fprintf(stderr,"Ship %d PDUs %d\n",x,fleet[x].pdu);
+	if(fleet[shp].pdu<0) {
+		fprintf(stderr,"Ship %d PDUs %d\n",shp,fleet[shp].pdu);
 		continue;
 		}
-	if(fleet[x].spacemines<0) {
-		fprintf(stderr,"Ship %d Spacemines %d\n",x,fleet[x].spacemines);
+	if(fleet[shp].spacemines<0) {
+		fprintf(stderr,"Ship %d Spacemines %d\n",shp,fleet[shp].spacemines);
 		continue;
 		}
-	inc=CalcType(x);
-	if(fleet[x].type!=inc) {
-		fprintf(stderr,"Ship %d type mismatch Is:%s Was:%s\n",x+100,stypes[inc],stypes[fleet[x].type]);
-		fleet[x].type=inc;
+	inc=CalcType(shp);
+	if(fleet[shp].type!=inc) {
+		fprintf(stderr,"Ship %d type mismatch Is:%s Was:%s\n",shp+100,stypes[inc],stypes[fleet[shp].type]);
+		fleet[shp].type=inc;
 		}
-	cgl=fleet[x].cargo;
-	cgl-=fleet[x].mines*20;
-	cgl-=fleet[x].ind*10;
-	cgl-=fleet[x].pdu*2;
-	cgl-=fleet[x].spacemines;
-	for(y=0;y<10;y++) {
-		cgl-=fleet[x].ore[y];
-		if(fleet[x].ore[y]<0) {
-			fprintf(stderr,"Ship %d Ore[%d] %d\n",x,y,fleet[x].ore[y]);
+	cgl=fleet[shp].cargo;
+	cgl -= fleet[shp].mines*20;
+	cgl -= fleet[shp].ind*10;
+	cgl -= fleet[shp].pdu*2;
+	cgl -= fleet[shp].spacemines;
+	for(int rtype=0;rtype<10;rtype++) {
+		cgl -= fleet[shp].ore[rtype];
+		if(fleet[shp].ore[rtype]<0) {
+			fprintf(stderr,"Ship %d Ore[%d] %d\n",shp,rtype,fleet[shp].ore[rtype]);
 			continue;
 			}
 		}
-	if(fleet[x].cargleft!=cgl) {
-		printf("Cargoleft incompatable:%d: Calculated:%d Stored:%d\n",x,cgl,fleet[x].cargleft);
-		fleet[x].cargleft=cgl;
+	if(fleet[shp].cargleft!=cgl) {
+		printf("Cargoleft incompatable:%d: Calculated:%d Stored:%d\n",shp,cgl,fleet[shp].cargleft);
+		fleet[shp].cargleft=cgl;
 		if(cgl<0) {
 			printf("Too much cargo...\nPlease edit ship\n");
 			getchar();
-			ShipEdit(x);
+			ShipEdit(shp);
 			Validate();
 			}
 		}
+    galaxy[fleet[shp].planet].knows[fleet[shp].owner]=1;
 	}
 TREDIT(printf("\n"));
 
@@ -958,30 +959,37 @@ TREDIT(printf("\n"));
 printf("Validating planets\n");
 /* Validate income */
 TREDIT(printf("Validating income :"));
-for(x=0;x<NUMPLANETS;x++) {
+for(int pln=0;pln<NUMPLANETS;pln++) {
 	TREDIT(printf("."));
-	if(galaxy[x].owner>9) {
-		fprintf(stderr,"Owner out of range planet:%d owner:%d\n",x,galaxy[x].owner);
-		galaxy[x].owner=9;
+	if(galaxy[pln].owner>9) {
+		fprintf(stderr,"Owner out of range planet:%d owner:%d\n",pln,galaxy[pln].owner);
+		galaxy[pln].owner=9;
 		}
-	inc=20+galaxy[x].ind*5;
-	for(y=0;y<10;y++)
-		inc+=galaxy[x].mine[y];
-	if(galaxy[x].income!=inc) {
-		printf("Incomes incompatable:%d: Calculated:%d Stored:%d\n",x,inc,galaxy[x].income);
-		galaxy[x].income=inc;
+	inc=20+galaxy[pln].ind*5;
+	for(int rtype=0;rtype<10;rtype++)
+		inc+=galaxy[pln].mine[rtype];
+	if(galaxy[pln].income!=inc) {
+		printf("Incomes incompatable:%d: Calculated:%d Stored:%d\n",pln,inc,galaxy[pln].income);
+		galaxy[pln].income=inc;
 		}
 	}
 TREDIT(printf("\n"));
 
+/* Validate know */
+for(int pln=0;pln<NUMPLANETS;pln++) {
+    if(galaxy[pln].owner != 0) {
+        galaxy[pln].knows[galaxy[pln].owner] = 1;
+    }
+}
+
 /* Validate links */
 TREDIT(printf("Validating links:"));
-for(x=0;x<NUMPLANETS;x++) {
+for(int pln=0;pln<NUMPLANETS;pln++) {
 	TREDIT(printf("."));
-	for(y=0;y<4;y++)
-		if(galaxy[x].link[y]>=0)
-			if(ValidateLink(x,galaxy[x].link[y]))
-				printf("Invalid link:%d(%d):Link:%d\n",x,y,galaxy[x].link[y]);
+	for(int lnk=0;lnk<4;lnk++)
+		if(galaxy[pln].link[lnk]>=0)
+			if(ValidateLink(pln,galaxy[pln].link[lnk]))
+				printf("Invalid link:%d(%d):Link:%d\n",pln,lnk,galaxy[pln].link[lnk]);
 	}
 TREDIT(printf("\n"));
 }
@@ -1106,7 +1114,7 @@ int origc,origf,origt,origs,origeff,nowc,nowf,nowt,nows,noweff;
 TREDIT(printf("UnitIncrease()\n"));
 printf("Enter ship number (100-%d):",shiptr+99);
 scanf("%d",&num);
-num-=100;
+num -= 100;
 if(num<0 || num>shiptr-1) {
 	printf("Ship number out of range\n");
 	return;
