@@ -192,6 +192,7 @@ void LoadAlliance(json_object *jso)
 {
     json_object *jval1, *jval2;
     int arraylen1, arraylen2;
+    char str[BUFSIZ];
 
     arraylen1 = json_object_array_length(jso);
     for (int plra = 0; plra < arraylen1; plra++) {
@@ -199,7 +200,22 @@ void LoadAlliance(json_object *jso)
         arraylen2 = json_object_array_length(jval1);
         for (int plrb = 0; plrb < arraylen2; plrb++) {
             jval2 = json_object_array_get_idx(jval1, plrb);
-            alliance[plra][plrb] = json_object_get_int(jval2);
+            strncpy(str, json_object_get_string(jval2), BUFSIZ);
+            if(strcmp(str, "Ally")==0) {
+                alliance[plra][plrb] = ALLY;
+            }
+            else if(strcmp(str, "Friend")==0) {
+                alliance[plra][plrb] = FRIEND;
+            }
+            else if(strcmp(str, "Neutral")==0) {
+                alliance[plra][plrb] = NEUTRAL;
+            }
+            else if(strcmp(str, "Enemy")==0) {
+                alliance[plra][plrb] = ENEMY;
+            }
+            else {
+                fprintf(stderr, "Unknown alliance: %s\n", str);
+            }
         }
     }
 }
@@ -1063,7 +1079,23 @@ void WriteGalflt(void)
     for (int splr = 0; splr <= NUMPLAYERS; splr++) {
         json_object *tmp_array = json_object_new_array();
         for (int dplr = 0; dplr <= NUMPLAYERS; dplr++) {
-            json_object *jall = json_object_new_int(alliance[splr][dplr]);
+            json_object *jall = NULL;
+            switch(alliance[splr][dplr]) {
+                case ENEMY:
+                    jall = json_object_new_string("Enemy");
+                    break;
+                case NEUTRAL:
+                    jall = json_object_new_string("Neutral");
+                    break;
+                case FRIEND:
+                    jall = json_object_new_string("Friend");
+                    break;
+                case ALLY:
+                    jall = json_object_new_string("Ally");
+                    break;
+                default:
+                    fprintf(stderr, "Unknown alliance %d:%d %d\n", splr, dplr, alliance[splr][dplr]);
+            }
             json_object_array_add(tmp_array, jall);
         }
         json_object_array_add(jalliance_array, tmp_array);
@@ -1091,7 +1123,6 @@ void WriteGalflt(void)
     json_object_object_add(jso, "desturn", jdesturn_array);
 
     FilePath("galfile.json", fname);
-    jso = json_object_from_file(fname);
     int rc = json_object_to_file(fname, jso);
     if (rc < 0) {
         fprintf(stderr, "Error: %d\n", rc);
