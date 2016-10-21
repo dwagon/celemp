@@ -705,33 +705,34 @@ void ChekShip(Ship shp, Player plr, FILE *output)
 
     TRTUR2(printf("ChekShip(ship:%d, plr:%d)\n", shp, plr));
     /* Print ship details */
-    fprintf(output, "S%d & f=%d & c=%d(%d) & t=%d & s=%d(%d)", shp+100, fleet[shp].fight, fleet[shp].cargo, fleet[shp].cargleft, fleet[shp].tractor, fleet[shp].shield, Shields(shp));
+    fprintf(output, "S%d & fighter=%d & cargo=%d(%d) & tractor=%d & shield=%d(%d)", shp+100, fleet[shp].fight, fleet[shp].cargo, fleet[shp].cargleft, fleet[shp].tractor, fleet[shp].shield, Shields(shp));
     fprintf(output, " & eff=%-1d(%d) & shots=%d", fleet[shp].efficiency, EffEff(shp), Shots(shp, fleet[shp].fight));
     fprintf(output, "%s\\\\\n", fleet[shp].name);
-    fprintf(output, "& Planet: %d & \\multicolumn{3}{l}{%s} & Standing: & ", fleet[shp].planet+100, stypes[fleet[shp].type]);
+    fprintf(output, "& Planet: %d & \\multicolumn{2}{l}{%s} & Standing: & \\multicolumn{2}{l}{", fleet[shp].planet+100, stypes[fleet[shp].type]);
     if(fleet[shp].stndord[0]==0)
-        fprintf(output, "None \\\\\n");
+        fprintf(output, "None} \\\\\n");
     else
-        fprintf(output, "S%d%s \\\\\n", shp+100, fleet[shp].stndord);
+        fprintf(output, "S%d%s} \\\\\n", shp+100, fleet[shp].stndord);
     /* Print out cargo details */
     fprintf(output, "& \\multicolumn{6}{l}{");
     if(fleet[shp].ind!=0) {
-        fprintf(output, "I %d ", fleet[shp].ind);
+        fprintf(output, "Ind=%d; ", fleet[shp].ind);
         }
     if(fleet[shp].mines!=0) {
-        fprintf(output, "M %d ", fleet[shp].mines);
+        fprintf(output, "Mines=%d; ", fleet[shp].mines);
         }
     if(fleet[shp].pdu!=0) {
-        fprintf(output, "D %d ", fleet[shp].pdu);
+        fprintf(output, "PDU=%d; ", fleet[shp].pdu);
         }
     if(fleet[shp].spacemines!=0) {
-        fprintf(output, "SM %d ", fleet[shp].spacemines);
+        fprintf(output, "SM=%d; ", fleet[shp].spacemines);
         }
     for(count=0;count<10;count++)
         if(fleet[shp].ore[count]!=0) {
-            fprintf(output, "R%d %d.", count, fleet[shp].ore[count]);
+            fprintf(output, "Ore %d=%d;", count, fleet[shp].ore[count]);
             }
     fprintf(output, "}\\\\\n");
+    fprintf(output, "\\\\\n");
     return;
 }
 
