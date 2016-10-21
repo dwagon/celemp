@@ -348,12 +348,12 @@ int x,y;
 fprintf(ef,"Alliance Details\n");
 fprintf(ef,"ALLY:%c\tFRIEND:%c\tNEUTRAL:%c\tENEMY:%c\n",allsym[ALLY],allsym[FRIEND],allsym[NEUTRAL],allsym[ENEMY]);
 fprintf(ef,"           ");
-for(x=0;x<NUMPLAYERS;x++)
+for(x=0;x<=NUMPLAYERS;x++)
 	fprintf(ef,"%-3d ",x);
 fprintf(ef,"\n");
-for(x=0;x<NUMPLAYERS;x++) {
+for(x=0;x<=NUMPLAYERS;x++) {
 	fprintf(ef,"%-9s  ",name[x]);
-	for(y=0;y<NUMPLAYERS;y++) {
+	for(y=0;y<=NUMPLAYERS;y++) {
 		fprintf(ef,"%c   ",allsym[alliance[x][y]]);
 		}
 	fprintf(ef,"\n");
@@ -722,7 +722,7 @@ void AnalyzeAlliance(char filename[80])
 FILE *ef;
 char buff[80],*tok;
 int x,y;
-Flag tmpall[NUMPLAYERS][NUMPLAYERS];
+Flag tmpall[NUMPLAYERS+1][NUMPLAYERS+1];
 
 /* File format
 Alliance Details
@@ -749,14 +749,14 @@ fgets(buff,sizeof(buff),ef);
 printf("Alliance Details\n");
 printf("ALLY:%d\tFRIEND:%d\tNEUTRAL:%d\tENEMY:%d\n",ALLY,FRIEND,NEUTRAL,ENEMY);
 printf("     ");
-for(x=0;x<NUMPLAYERS;x++)
+for(x=0;x<=NUMPLAYERS;x++)
 	printf("%-3d ",x);
 printf("\n");
-for(x=0;x<NUMPLAYERS;x++) {
+for(x=0;x<=NUMPLAYERS;x++) {
 	fgets(buff,sizeof(buff),ef);
 	tok=strtok(buff,": \t");
 	printf("%-3d  ",x);
-	for(y=0;y<NUMPLAYERS;y++) {
+	for(y=0;y<=NUMPLAYERS;y++) {
 		tmpall[x][y]=(int)strtok(NULL,": \t")[0];
 		switch(tmpall[x][y]) {
 			case 'A':	case 'a':
