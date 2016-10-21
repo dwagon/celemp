@@ -177,9 +177,12 @@ void GraphPlanet(Planet plan, Player plr, FILE *dotfile)
                 fprintf(dotfile, "S%d [label=\"S%d\"; shape=\"hexagon\"; style=\"filled\";];\n", ship+100, ship+100);
                 fprintf(dotfile, "S%d -- %d;\n", ship+100, plan+100);
             }
+        else {
+            fprintf(dotfile, "S%d [label=\"S%d\"; shape=\"hexagon\"; style=\"filled\"; color=\"red\";];\n", ship+100, ship+100);
+            fprintf(dotfile, "S%d -- %d;\n", ship+100, plan+100);
+            }
         }
     }
-
 }
 
 /*****************************************************************************/
