@@ -141,24 +141,29 @@ void GraphPlanet(Planet plan, Player plr, FILE *dotfile)
     if(galaxy[plan].owner != NEUTPLR) {
         fprintf(dotfile, "shape=\"rectangle\";");
     }
-    if(galaxy[plan].spec<0) {
+    if(galaxy[plan].spec == -plr) {
         fprintf(dotfile, "shape=\"square\"; color=\"dodgerblue3\"; style=\"filled\"");
     }
+    else {
+        if(galaxy[plan].spec < 0) {
+            fprintf(dotfile, "shape=\"square\"; color=\"firebrick1\"; style=\"filled\"");
+        }
+    }
     if(plan==earth) {
-        fprintf(dotfile, "shape=\"hexagon\"; color=\"green\"; style=\"filled\"");
+        fprintf(dotfile, "shape=\"hexagon\"; color=\"chartreuse\"; style=\"filled\"");
     }
 
     // Colour up "A" ring planets as well
     for(int count=0; count<4; count++) {
-        if(galaxy[galaxy[plan].link[count]].spec<0) {
-            fprintf(dotfile, "color=\"cyan\"; style=\"filled\"");
+        if(galaxy[galaxy[plan].link[count]].spec == -plr) {
+            fprintf(dotfile, "color=\"dodgerblue1\"; style=\"filled\"");
         }
     }
 
     // Colour up Earth "A" ring planets as well
     for(int count=0; count<4; count++) {
         if(galaxy[plan].link[count] == earth) {
-            fprintf(dotfile, "color=\"greenyellow\"; style=\"filled\"");
+            fprintf(dotfile, "color=\"chartreuse3\"; style=\"filled\"");
         }
     }
     fprintf(dotfile, "];\n");
@@ -178,7 +183,7 @@ void GraphPlanet(Planet plan, Player plr, FILE *dotfile)
                 fprintf(dotfile, "S%d -- %d;\n", ship+100, plan+100);
             }
         else {
-            fprintf(dotfile, "S%d [label=\"S%d\"; shape=\"hexagon\"; style=\"filled\"; color=\"red\";];\n", ship+100, ship+100);
+            fprintf(dotfile, "S%d [label=\"S%d\"; shape=\"hexagon\"; style=\"filled\"; color=\"firebrick2\";];\n", ship+100, ship+100);
             fprintf(dotfile, "S%d -- %d;\n", ship+100, plan+100);
             }
         }
