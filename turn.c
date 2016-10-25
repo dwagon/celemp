@@ -22,6 +22,7 @@ char name[NUMPLAYERS+1][10];
 char duedate[15];
 int price[10];
 char *dbgstr;
+Planet ring_b[20];
 int earth;
 int desturn[NUMPLAYERS+1];
 int plrflag[NUMPLAYERS+1]={
@@ -130,43 +131,110 @@ void TitlePage(FILE *output)
 }
 
 /*****************************************************************************/
+void getRingA(const Player plr, Planet *a_ring)
+/*****************************************************************************/
+{
+    for(Planet pln=0; pln<NUMPLANETS; pln++) {
+        if(galaxy[pln].spec == -plr) {
+            for(int link=0; link<4; link++) {
+                a_ring[link] = galaxy[pln].link[link];
+            }
+        break;
+        }
+    }
+}
+
+/*****************************************************************************/
+void getRingB(const Player plr, Planet *b_ring)
+/*****************************************************************************/
+{
+    Planet *a_ring = malloc(sizeof(Planet) * 4);
+    int counter=0;
+    Planet ring;
+    getRingA(plr, a_ring);
+
+    for(Planet a_ctr=0; a_ctr<4; a_ctr++) {
+        ring = a_ring[a_ctr];
+        for(Planet pln=0; pln<NUMPLANETS; pln++) {
+            for(int link=0; link<4; link++) {
+                if(galaxy[pln].link[link] == ring) {
+                    if(galaxy[pln].spec < 0) {
+                        continue;
+                    }
+                    b_ring[counter++] = pln;
+                }
+            }
+        }
+    }
+    b_ring[counter] = -1;
+}
+
+/*****************************************************************************/
 void GraphPlanet(Planet plan, Player plr, FILE *dotfile)
 /*****************************************************************************/
 {
-    fprintf(dotfile, "%d [ label=\"%d %s", plan+100, plan+100, galaxy[plan].name);
+    char shape[BUFSIZ] = "oval";
+    char colour[BUFSIZ] = "black";
+    char style[BUFSIZ] = "";
+    char label[BUFSIZ];
+
+    sprintf(label, "%d %s", plan+100, galaxy[plan].name);
     if(IsResearch(plan)) {
-        fprintf(dotfile, "(RP)");
-    }
-    fprintf(dotfile, "\";");
-    if(galaxy[plan].owner != NEUTPLR) {
-        fprintf(dotfile, "shape=\"rectangle\";");
-    }
-    if(galaxy[plan].spec == -plr) {
-        fprintf(dotfile, "shape=\"square\"; color=\"dodgerblue3\"; style=\"filled\"");
-    }
-    else {
-        if(galaxy[plan].spec < 0) {
-            fprintf(dotfile, "shape=\"square\"; color=\"firebrick1\"; style=\"filled\"");
-        }
-    }
-    if(plan==earth) {
-        fprintf(dotfile, "shape=\"hexagon\"; color=\"chartreuse\"; style=\"filled\"");
+        strncat(label, "(RP)", BUFSIZ);
     }
 
-    // Colour up "A" ring planets as well
-    for(int count=0; count<4; count++) {
-        if(galaxy[galaxy[plan].link[count]].spec == -plr) {
-            fprintf(dotfile, "color=\"dodgerblue1\"; style=\"filled\"");
+    if(galaxy[plan].owner == plr) {
+        strncpy(shape, "rectangle", BUFSIZ);
+        /* Home planet */
+        if(galaxy[plan].spec == -plr) {
+            strncpy(shape, "square", BUFSIZ);
+            strncpy(colour, "dodgerblue4", BUFSIZ);
+            strncpy(style, "filled", BUFSIZ);
+        }
+        // Colour up "A" ring planets as well
+        for(int count=0; count<4; count++) {
+            if(galaxy[galaxy[plan].link[count]].spec == -plr) {
+                strncpy(colour, "dodgerblue3", BUFSIZ);
+                strncpy(style, "filled", BUFSIZ);
+            }
+        }
+        // Colour up "B" ring planets as well
+        for(Planet b_cnt = 0; ring_b[b_cnt] >= 0; b_cnt++) {
+            if(ring_b[b_cnt] == plan) {
+                strncpy(colour, "deepskyblue2", BUFSIZ);
+                strncpy(style, "filled", BUFSIZ);
+            }
         }
     }
+    else {
+        if(galaxy[plan].owner != NEUTPLR) {
+            strncpy(colour, "firebrick1", BUFSIZ);
+            strncpy(style, "filled", BUFSIZ);
+        }
+        if(galaxy[plan].spec < 0) {
+            strncpy(shape, "square", BUFSIZ);
+        }
+    }
+
+    if(plan==earth) {
+        strncpy(shape, "hexagon", BUFSIZ);
+        if(galaxy[plan].owner == NEUTPLR) {
+            strncpy(colour, "chartreuse", BUFSIZ);
+            strncpy(style, "filled", BUFSIZ);
+        }
+    }
+
 
     // Colour up Earth "A" ring planets as well
     for(int count=0; count<4; count++) {
         if(galaxy[plan].link[count] == earth) {
-            fprintf(dotfile, "color=\"chartreuse3\"; style=\"filled\"");
+            if(galaxy[plan].owner == NEUTPLR) {
+                strncpy(colour, "chartreuse3", BUFSIZ);
+                strncpy(style, "filled", BUFSIZ);
+            }
         }
     }
-    fprintf(dotfile, "];\n");
+    fprintf(dotfile, "%d [label=\"%s\"; color=\"%s\"; shape=\"%s\"; style=\"%s\"];\n", plan+100, label, colour, shape, style);
 
     // Planet links
     for(int count=0; count<4; count++) {
@@ -209,7 +277,7 @@ void Process(Player plr)
     FILE *output, *dotfile;
     char filename[BUFSIZ], turnsheet[BUFSIZ];
 
-    TRTUR(printf("Process(plr:%d)\n", plr));
+    getRingB(plr, ring_b);
 
     /* Open file for outputing information */
     sprintf(turnsheet, "turn%d.%d.tex", turn, plr);
@@ -456,7 +524,6 @@ int Interest(Player plr, Planet plan)
 {
     int r;
 
-    TRTUR2(printf("Interest(plr:%d, plan:%d)\n", plr, plan));
     /* Check for ownership */
     if(galaxy[plan].owner==plr)
         return(1);
@@ -474,8 +541,6 @@ void DoPlanet(Planet plan, Player plr, FILE *output)
 /* Do the main part of the display */
 {
     int count;
-
-    TRTUR2(printf("DoPlanet(plan:%d, plr:%d)\n", plan, plr));
 
     fprintf(output, "\\subsection*{%d %s", plan+100, galaxy[plan].name);
     if(IsResearch(plan)) {
@@ -626,8 +691,6 @@ int ChekPlan(Planet plan, Player plr, FILE *output)
 /*****************************************************************************/
 /* Get details of the planet for the planet summary */
 {
-    TRTUR2(printf("ChekPlan(plan:%d, plr:%d)\n", plan, plr));
-
     if(galaxy[plan].owner!=plr && plr!=NEUTPLR)
         return(0);
 
@@ -711,7 +774,6 @@ void ChekShip(Ship shp, Player plr, FILE *output)
     if(fleet[shp].owner!=plr && plr!=NEUTPLR) 
         return;
 
-    TRTUR2(printf("ChekShip(ship:%d, plr:%d)\n", shp, plr));
     /* Print ship details */
     fprintf(output, "S%d & fighter=%d & cargo=%d(%d) & tractor=%d & shield=%d(%d)", shp+100, fleet[shp].fight, fleet[shp].cargo, fleet[shp].cargleft, fleet[shp].tractor, fleet[shp].shield, Shields(shp));
     fprintf(output, " & eff=%-1d(%d) & shots=%d", fleet[shp].efficiency, EffEff(shp), Shots(shp, fleet[shp].fight));
@@ -1091,8 +1153,6 @@ void ChekShipTot(Player plr, FILE *output)
 /* Print the ore totals that are stored on ships */
 {
     int count, tmp, oretot[12];
-
-    TRTUR2(printf("ChekShipTot(plr:%d)\n", plr));
 
     /* Clear total array */
     for(tmp=0;tmp<12;tmp++)

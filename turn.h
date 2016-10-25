@@ -2,7 +2,6 @@
 /* (c) 2016 Dougal Scott */
 
 #define TRTUR(x)    if(strstr(dbgstr,"TURN") || strstr(dbgstr,"turn")) x
-#define TRTUR2(x)	if(strstr(dbgstr,"TUR2") || strstr(dbgstr,"turn2")) x
 
 #include <string.h>
 
@@ -39,4 +38,6 @@ void	CostDetails(FILE *stream);
 void	TitlePage(FILE *stream);
 char	*TexName(char *str);
 char	*ShipName(Ship shp);
-void	ChekShipTot(Player plr,FILE *stream);
+void	ChekShipTot(Player plr, FILE *stream);
+void    getRingA(const Player plr, Planet *ring_a);
+void    getRingB(const Player plr, Planet *ring_b);
