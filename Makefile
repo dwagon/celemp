@@ -32,7 +32,7 @@ LDFLAGS += $(shell pkg-config --libs json-c)
 .dvi.txt:
 	dvi2tty -w 132 $< > $*.txt
 
-all: libproto.a librfs.a $(UTIL) celemp galcreat turn trans edit celemp.pdf celemp.txt admin.pdf admin.txt
+all: libproto.a librfs.a $(UTIL) celemp galcreat turn trans edit texproc celemp.pdf celemp.txt admin.pdf admin.txt
 
 everything: all dox admin src 
 
